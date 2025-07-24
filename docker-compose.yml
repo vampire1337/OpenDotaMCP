@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mcp-graphql:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NAME=stratz-graphql-mcp
+      - ENDPOINT=https://api.stratz.com/graphql
+      - SCHEMA=./schema.graphql
+      - PORT=3001
+      - HOST=0.0.0.0
+      - ALLOW_MUTATIONS=false
+      - HEADERS={"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiOTllMjFhZDMtNjEzMi00MzM2LThkMmItYTllOWFkNTM1Yjc1IiwiU3RlYW1JZCI6IjExNDYwMDkwNTEiLCJBUElVc2VyIjoidHJ1ZSIsIm5iZiI6MTc1MzI4NzM2OSwiZXhwIjoxNzg0ODIzMzY5LCJpYXQiOjE3NTMyODczNjksImlzcyI6Imh0dHBzOi8vYXBpLnN0cmF0ei5jb20ifQ.ntpKNm3d0pOMt6cbQY90NLNRqMJur86f30Xgqeb3fwE"}
+    restart: unless-stopped

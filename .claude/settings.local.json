@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__exa-search__github_search_exa",
+      "mcp__exa-search__crawling_exa",
+      "mcp__exa-search__web_search_exa",
+      "WebFetch(domain:github.com)",
+      "mcp__exa-search__deep_researcher_start",
+      "mcp__exa-search__deep_researcher_check",
+      "mcp__github__search_repositories",
+      "WebFetch(domain:www.npmjs.com)",
+      "mcp__github__get_repository",
+      "mcp__github__get_file_contents",
+      "mcp__github__search_code",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(SCHEMA=./schema.graphql ENDPOINT=https://api.opendota.com/api/graphql node dist/index.js --help)",
+      "Bash(timeout:*)",
+      "Bash(true)",
+      "Bash(npm start)",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_snapshot",
+      "Bash(docker-compose up:*)",
+      "Bash(docker compose:*)"
+    ],
+    "deny": []
+  }
+}

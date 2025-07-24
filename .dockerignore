@@ -1,0 +1,8 @@
+node_modules
+src
+.git
+.env*
+*.md
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
