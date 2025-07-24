@@ -4693,8 +4693,8 @@ var require_devAssert = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.devAssert = devAssert2;
-  function devAssert2(condition, message) {
+  exports.devAssert = devAssert;
+  function devAssert(condition, message) {
     const booleanCondition = Boolean(condition);
     if (!booleanCondition) {
       throw new Error(message);
@@ -4718,8 +4718,8 @@ var require_isObjectLike = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.isObjectLike = isObjectLike2;
-  function isObjectLike2(value) {
+  exports.isObjectLike = isObjectLike;
+  function isObjectLike(value) {
     return typeof value == "object" && value !== null;
   }
 });
@@ -4729,8 +4729,8 @@ var require_invariant = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.invariant = invariant2;
-  function invariant2(condition, message) {
+  exports.invariant = invariant;
+  function invariant(condition, message) {
     const booleanCondition = Boolean(condition);
     if (!booleanCondition) {
       throw new Error(message != null ? message : "Unexpected invariant triggered.");
@@ -4743,13 +4743,13 @@ var require_location = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.getLocation = getLocation2;
+  exports.getLocation = getLocation;
   var _invariant = require_invariant();
-  var LineRegExp2 = /\r\n|[\n\r]/g;
-  function getLocation2(source, position) {
+  var LineRegExp = /\r\n|[\n\r]/g;
+  function getLocation(source, position) {
     let lastLineStart = 0;
     let line = 1;
-    for (const match of source.body.matchAll(LineRegExp2)) {
+    for (const match of source.body.matchAll(LineRegExp)) {
       typeof match.index === "number" || (0, _invariant.invariant)(false);
       if (match.index >= position) {
         break;
@@ -4769,13 +4769,13 @@ var require_printLocation = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.printLocation = printLocation2;
-  exports.printSourceLocation = printSourceLocation2;
+  exports.printLocation = printLocation;
+  exports.printSourceLocation = printSourceLocation;
   var _location = require_location();
-  function printLocation2(location) {
-    return printSourceLocation2(location.source, (0, _location.getLocation)(location.source, location.start));
+  function printLocation(location) {
+    return printSourceLocation(location.source, (0, _location.getLocation)(location.source, location.start));
   }
-  function printSourceLocation2(source, sourceLocation) {
+  function printSourceLocation(source, sourceLocation) {
     const firstLineColumnOffset = source.locationOffset.column - 1;
     const body = "".padStart(firstLineColumnOffset) + source.body;
     const lineIndex = sourceLocation.line - 1;
@@ -4794,21 +4794,21 @@ var require_printLocation = __commonJS((exports) => {
       for (let i = 0;i < locationLine.length; i += 80) {
         subLines.push(locationLine.slice(i, i + 80));
       }
-      return locationStr + printPrefixedLines2([
+      return locationStr + printPrefixedLines([
         [`${lineNum} |`, subLines[0]],
         ...subLines.slice(1, subLineIndex + 1).map((subLine) => ["|", subLine]),
         ["|", "^".padStart(subLineColumnNum)],
         ["|", subLines[subLineIndex + 1]]
       ]);
     }
-    return locationStr + printPrefixedLines2([
+    return locationStr + printPrefixedLines([
       [`${lineNum - 1} |`, lines[lineIndex - 1]],
       [`${lineNum} |`, locationLine],
       ["|", "^".padStart(columnNum)],
       [`${lineNum + 1} |`, lines[lineIndex + 1]]
     ]);
   }
-  function printPrefixedLines2(lines) {
+  function printPrefixedLines(lines) {
     const existingLines = lines.filter(([_, line]) => line !== undefined);
     const padLen = Math.max(...existingLines.map(([prefix]) => prefix.length));
     return existingLines.map(([prefix, line]) => prefix.padStart(padLen) + (line ? " " + line : "")).join(`
@@ -4827,7 +4827,7 @@ var require_GraphQLError = __commonJS((exports) => {
   var _isObjectLike = require_isObjectLike();
   var _location = require_location();
   var _printLocation = require_printLocation();
-  function toNormalizedOptions2(args) {
+  function toNormalizedOptions(args) {
     const firstArg = args[0];
     if (firstArg == null || "kind" in firstArg || "length" in firstArg) {
       return {
@@ -4842,16 +4842,16 @@ var require_GraphQLError = __commonJS((exports) => {
     return firstArg;
   }
 
-  class GraphQLError2 extends Error {
+  class GraphQLError extends Error {
     constructor(message, ...rawArgs) {
       var _this$nodes, _nodeLocations$, _ref;
-      const { nodes, source, positions, path, originalError, extensions } = toNormalizedOptions2(rawArgs);
+      const { nodes, source, positions, path, originalError, extensions } = toNormalizedOptions(rawArgs);
       super(message);
       this.name = "GraphQLError";
       this.path = path !== null && path !== undefined ? path : undefined;
       this.originalError = originalError !== null && originalError !== undefined ? originalError : undefined;
-      this.nodes = undefinedIfEmpty2(Array.isArray(nodes) ? nodes : nodes ? [nodes] : undefined);
-      const nodeLocations = undefinedIfEmpty2((_this$nodes = this.nodes) === null || _this$nodes === undefined ? undefined : _this$nodes.map((node) => node.loc).filter((loc) => loc != null));
+      this.nodes = undefinedIfEmpty(Array.isArray(nodes) ? nodes : nodes ? [nodes] : undefined);
+      const nodeLocations = undefinedIfEmpty((_this$nodes = this.nodes) === null || _this$nodes === undefined ? undefined : _this$nodes.map((node) => node.loc).filter((loc) => loc != null));
       this.source = source !== null && source !== undefined ? source : nodeLocations === null || nodeLocations === undefined ? undefined : (_nodeLocations$ = nodeLocations[0]) === null || _nodeLocations$ === undefined ? undefined : _nodeLocations$.source;
       this.positions = positions !== null && positions !== undefined ? positions : nodeLocations === null || nodeLocations === undefined ? undefined : nodeLocations.map((loc) => loc.start);
       this.locations = positions && source ? positions.map((pos) => (0, _location.getLocation)(source, pos)) : nodeLocations === null || nodeLocations === undefined ? undefined : nodeLocations.map((loc) => (0, _location.getLocation)(loc.source, loc.start));
@@ -4885,7 +4885,7 @@ var require_GraphQLError = __commonJS((exports) => {
           configurable: true
         });
       } else if (Error.captureStackTrace) {
-        Error.captureStackTrace(this, GraphQLError2);
+        Error.captureStackTrace(this, GraphQLError);
       } else {
         Object.defineProperty(this, "stack", {
           value: Error().stack,
@@ -4932,8 +4932,8 @@ var require_GraphQLError = __commonJS((exports) => {
       return formattedError;
     }
   }
-  exports.GraphQLError = GraphQLError2;
-  function undefinedIfEmpty2(array2) {
+  exports.GraphQLError = GraphQLError;
+  function undefinedIfEmpty(array2) {
     return array2 === undefined || array2.length === 0 ? undefined : array2;
   }
   function printError(error) {
@@ -4949,9 +4949,9 @@ var require_syntaxError = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.syntaxError = syntaxError2;
+  exports.syntaxError = syntaxError;
   var _GraphQLError = require_GraphQLError();
-  function syntaxError2(source, position, description) {
+  function syntaxError(source, position, description) {
     return new _GraphQLError.GraphQLError(`Syntax Error: ${description}`, {
       source,
       positions: [position]
@@ -4967,7 +4967,7 @@ var require_ast = __commonJS((exports) => {
   exports.Token = exports.QueryDocumentKeys = exports.OperationTypeNode = exports.Location = undefined;
   exports.isNode = isNode;
 
-  class Location2 {
+  class Location {
     constructor(startToken, endToken, source) {
       this.start = startToken.start;
       this.end = endToken.end;
@@ -4985,9 +4985,9 @@ var require_ast = __commonJS((exports) => {
       };
     }
   }
-  exports.Location = Location2;
+  exports.Location = Location;
 
-  class Token2 {
+  class Token {
     constructor(kind, start, end, line, column, value) {
       this.kind = kind;
       this.start = start;
@@ -5010,8 +5010,8 @@ var require_ast = __commonJS((exports) => {
       };
     }
   }
-  exports.Token = Token2;
-  var QueryDocumentKeys2 = {
+  exports.Token = Token;
+  var QueryDocumentKeys = {
     Name: [],
     Document: ["definitions"],
     OperationDefinition: [
@@ -5085,19 +5085,19 @@ var require_ast = __commonJS((exports) => {
     EnumTypeExtension: ["name", "directives", "values"],
     InputObjectTypeExtension: ["name", "directives", "fields"]
   };
-  exports.QueryDocumentKeys = QueryDocumentKeys2;
-  var kindValues2 = new Set(Object.keys(QueryDocumentKeys2));
+  exports.QueryDocumentKeys = QueryDocumentKeys;
+  var kindValues = new Set(Object.keys(QueryDocumentKeys));
   function isNode(maybeNode) {
     const maybeKind = maybeNode === null || maybeNode === undefined ? undefined : maybeNode.kind;
-    return typeof maybeKind === "string" && kindValues2.has(maybeKind);
+    return typeof maybeKind === "string" && kindValues.has(maybeKind);
   }
-  var OperationTypeNode2;
-  exports.OperationTypeNode = OperationTypeNode2;
-  (function(OperationTypeNode3) {
-    OperationTypeNode3["QUERY"] = "query";
-    OperationTypeNode3["MUTATION"] = "mutation";
-    OperationTypeNode3["SUBSCRIPTION"] = "subscription";
-  })(OperationTypeNode2 || (exports.OperationTypeNode = OperationTypeNode2 = {}));
+  var OperationTypeNode;
+  exports.OperationTypeNode = OperationTypeNode;
+  (function(OperationTypeNode2) {
+    OperationTypeNode2["QUERY"] = "query";
+    OperationTypeNode2["MUTATION"] = "mutation";
+    OperationTypeNode2["SUBSCRIPTION"] = "subscription";
+  })(OperationTypeNode || (exports.OperationTypeNode = OperationTypeNode = {}));
 });
 
 // node_modules/graphql/language/directiveLocation.js
@@ -5106,29 +5106,29 @@ var require_directiveLocation = __commonJS((exports) => {
     value: true
   });
   exports.DirectiveLocation = undefined;
-  var DirectiveLocation2;
-  exports.DirectiveLocation = DirectiveLocation2;
-  (function(DirectiveLocation3) {
-    DirectiveLocation3["QUERY"] = "QUERY";
-    DirectiveLocation3["MUTATION"] = "MUTATION";
-    DirectiveLocation3["SUBSCRIPTION"] = "SUBSCRIPTION";
-    DirectiveLocation3["FIELD"] = "FIELD";
-    DirectiveLocation3["FRAGMENT_DEFINITION"] = "FRAGMENT_DEFINITION";
-    DirectiveLocation3["FRAGMENT_SPREAD"] = "FRAGMENT_SPREAD";
-    DirectiveLocation3["INLINE_FRAGMENT"] = "INLINE_FRAGMENT";
-    DirectiveLocation3["VARIABLE_DEFINITION"] = "VARIABLE_DEFINITION";
-    DirectiveLocation3["SCHEMA"] = "SCHEMA";
-    DirectiveLocation3["SCALAR"] = "SCALAR";
-    DirectiveLocation3["OBJECT"] = "OBJECT";
-    DirectiveLocation3["FIELD_DEFINITION"] = "FIELD_DEFINITION";
-    DirectiveLocation3["ARGUMENT_DEFINITION"] = "ARGUMENT_DEFINITION";
-    DirectiveLocation3["INTERFACE"] = "INTERFACE";
-    DirectiveLocation3["UNION"] = "UNION";
-    DirectiveLocation3["ENUM"] = "ENUM";
-    DirectiveLocation3["ENUM_VALUE"] = "ENUM_VALUE";
-    DirectiveLocation3["INPUT_OBJECT"] = "INPUT_OBJECT";
-    DirectiveLocation3["INPUT_FIELD_DEFINITION"] = "INPUT_FIELD_DEFINITION";
-  })(DirectiveLocation2 || (exports.DirectiveLocation = DirectiveLocation2 = {}));
+  var DirectiveLocation;
+  exports.DirectiveLocation = DirectiveLocation;
+  (function(DirectiveLocation2) {
+    DirectiveLocation2["QUERY"] = "QUERY";
+    DirectiveLocation2["MUTATION"] = "MUTATION";
+    DirectiveLocation2["SUBSCRIPTION"] = "SUBSCRIPTION";
+    DirectiveLocation2["FIELD"] = "FIELD";
+    DirectiveLocation2["FRAGMENT_DEFINITION"] = "FRAGMENT_DEFINITION";
+    DirectiveLocation2["FRAGMENT_SPREAD"] = "FRAGMENT_SPREAD";
+    DirectiveLocation2["INLINE_FRAGMENT"] = "INLINE_FRAGMENT";
+    DirectiveLocation2["VARIABLE_DEFINITION"] = "VARIABLE_DEFINITION";
+    DirectiveLocation2["SCHEMA"] = "SCHEMA";
+    DirectiveLocation2["SCALAR"] = "SCALAR";
+    DirectiveLocation2["OBJECT"] = "OBJECT";
+    DirectiveLocation2["FIELD_DEFINITION"] = "FIELD_DEFINITION";
+    DirectiveLocation2["ARGUMENT_DEFINITION"] = "ARGUMENT_DEFINITION";
+    DirectiveLocation2["INTERFACE"] = "INTERFACE";
+    DirectiveLocation2["UNION"] = "UNION";
+    DirectiveLocation2["ENUM"] = "ENUM";
+    DirectiveLocation2["ENUM_VALUE"] = "ENUM_VALUE";
+    DirectiveLocation2["INPUT_OBJECT"] = "INPUT_OBJECT";
+    DirectiveLocation2["INPUT_FIELD_DEFINITION"] = "INPUT_FIELD_DEFINITION";
+  })(DirectiveLocation || (exports.DirectiveLocation = DirectiveLocation = {}));
 });
 
 // node_modules/graphql/language/kinds.js
@@ -5137,53 +5137,53 @@ var require_kinds = __commonJS((exports) => {
     value: true
   });
   exports.Kind = undefined;
-  var Kind2;
-  exports.Kind = Kind2;
-  (function(Kind3) {
-    Kind3["NAME"] = "Name";
-    Kind3["DOCUMENT"] = "Document";
-    Kind3["OPERATION_DEFINITION"] = "OperationDefinition";
-    Kind3["VARIABLE_DEFINITION"] = "VariableDefinition";
-    Kind3["SELECTION_SET"] = "SelectionSet";
-    Kind3["FIELD"] = "Field";
-    Kind3["ARGUMENT"] = "Argument";
-    Kind3["FRAGMENT_SPREAD"] = "FragmentSpread";
-    Kind3["INLINE_FRAGMENT"] = "InlineFragment";
-    Kind3["FRAGMENT_DEFINITION"] = "FragmentDefinition";
-    Kind3["VARIABLE"] = "Variable";
-    Kind3["INT"] = "IntValue";
-    Kind3["FLOAT"] = "FloatValue";
-    Kind3["STRING"] = "StringValue";
-    Kind3["BOOLEAN"] = "BooleanValue";
-    Kind3["NULL"] = "NullValue";
-    Kind3["ENUM"] = "EnumValue";
-    Kind3["LIST"] = "ListValue";
-    Kind3["OBJECT"] = "ObjectValue";
-    Kind3["OBJECT_FIELD"] = "ObjectField";
-    Kind3["DIRECTIVE"] = "Directive";
-    Kind3["NAMED_TYPE"] = "NamedType";
-    Kind3["LIST_TYPE"] = "ListType";
-    Kind3["NON_NULL_TYPE"] = "NonNullType";
-    Kind3["SCHEMA_DEFINITION"] = "SchemaDefinition";
-    Kind3["OPERATION_TYPE_DEFINITION"] = "OperationTypeDefinition";
-    Kind3["SCALAR_TYPE_DEFINITION"] = "ScalarTypeDefinition";
-    Kind3["OBJECT_TYPE_DEFINITION"] = "ObjectTypeDefinition";
-    Kind3["FIELD_DEFINITION"] = "FieldDefinition";
-    Kind3["INPUT_VALUE_DEFINITION"] = "InputValueDefinition";
-    Kind3["INTERFACE_TYPE_DEFINITION"] = "InterfaceTypeDefinition";
-    Kind3["UNION_TYPE_DEFINITION"] = "UnionTypeDefinition";
-    Kind3["ENUM_TYPE_DEFINITION"] = "EnumTypeDefinition";
-    Kind3["ENUM_VALUE_DEFINITION"] = "EnumValueDefinition";
-    Kind3["INPUT_OBJECT_TYPE_DEFINITION"] = "InputObjectTypeDefinition";
-    Kind3["DIRECTIVE_DEFINITION"] = "DirectiveDefinition";
-    Kind3["SCHEMA_EXTENSION"] = "SchemaExtension";
-    Kind3["SCALAR_TYPE_EXTENSION"] = "ScalarTypeExtension";
-    Kind3["OBJECT_TYPE_EXTENSION"] = "ObjectTypeExtension";
-    Kind3["INTERFACE_TYPE_EXTENSION"] = "InterfaceTypeExtension";
-    Kind3["UNION_TYPE_EXTENSION"] = "UnionTypeExtension";
-    Kind3["ENUM_TYPE_EXTENSION"] = "EnumTypeExtension";
-    Kind3["INPUT_OBJECT_TYPE_EXTENSION"] = "InputObjectTypeExtension";
-  })(Kind2 || (exports.Kind = Kind2 = {}));
+  var Kind;
+  exports.Kind = Kind;
+  (function(Kind2) {
+    Kind2["NAME"] = "Name";
+    Kind2["DOCUMENT"] = "Document";
+    Kind2["OPERATION_DEFINITION"] = "OperationDefinition";
+    Kind2["VARIABLE_DEFINITION"] = "VariableDefinition";
+    Kind2["SELECTION_SET"] = "SelectionSet";
+    Kind2["FIELD"] = "Field";
+    Kind2["ARGUMENT"] = "Argument";
+    Kind2["FRAGMENT_SPREAD"] = "FragmentSpread";
+    Kind2["INLINE_FRAGMENT"] = "InlineFragment";
+    Kind2["FRAGMENT_DEFINITION"] = "FragmentDefinition";
+    Kind2["VARIABLE"] = "Variable";
+    Kind2["INT"] = "IntValue";
+    Kind2["FLOAT"] = "FloatValue";
+    Kind2["STRING"] = "StringValue";
+    Kind2["BOOLEAN"] = "BooleanValue";
+    Kind2["NULL"] = "NullValue";
+    Kind2["ENUM"] = "EnumValue";
+    Kind2["LIST"] = "ListValue";
+    Kind2["OBJECT"] = "ObjectValue";
+    Kind2["OBJECT_FIELD"] = "ObjectField";
+    Kind2["DIRECTIVE"] = "Directive";
+    Kind2["NAMED_TYPE"] = "NamedType";
+    Kind2["LIST_TYPE"] = "ListType";
+    Kind2["NON_NULL_TYPE"] = "NonNullType";
+    Kind2["SCHEMA_DEFINITION"] = "SchemaDefinition";
+    Kind2["OPERATION_TYPE_DEFINITION"] = "OperationTypeDefinition";
+    Kind2["SCALAR_TYPE_DEFINITION"] = "ScalarTypeDefinition";
+    Kind2["OBJECT_TYPE_DEFINITION"] = "ObjectTypeDefinition";
+    Kind2["FIELD_DEFINITION"] = "FieldDefinition";
+    Kind2["INPUT_VALUE_DEFINITION"] = "InputValueDefinition";
+    Kind2["INTERFACE_TYPE_DEFINITION"] = "InterfaceTypeDefinition";
+    Kind2["UNION_TYPE_DEFINITION"] = "UnionTypeDefinition";
+    Kind2["ENUM_TYPE_DEFINITION"] = "EnumTypeDefinition";
+    Kind2["ENUM_VALUE_DEFINITION"] = "EnumValueDefinition";
+    Kind2["INPUT_OBJECT_TYPE_DEFINITION"] = "InputObjectTypeDefinition";
+    Kind2["DIRECTIVE_DEFINITION"] = "DirectiveDefinition";
+    Kind2["SCHEMA_EXTENSION"] = "SchemaExtension";
+    Kind2["SCALAR_TYPE_EXTENSION"] = "ScalarTypeExtension";
+    Kind2["OBJECT_TYPE_EXTENSION"] = "ObjectTypeExtension";
+    Kind2["INTERFACE_TYPE_EXTENSION"] = "InterfaceTypeExtension";
+    Kind2["UNION_TYPE_EXTENSION"] = "UnionTypeExtension";
+    Kind2["ENUM_TYPE_EXTENSION"] = "EnumTypeExtension";
+    Kind2["INPUT_OBJECT_TYPE_EXTENSION"] = "InputObjectTypeExtension";
+  })(Kind || (exports.Kind = Kind = {}));
 });
 
 // node_modules/graphql/language/characterClasses.js
@@ -5191,25 +5191,25 @@ var require_characterClasses = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.isDigit = isDigit2;
-  exports.isLetter = isLetter2;
-  exports.isNameContinue = isNameContinue2;
-  exports.isNameStart = isNameStart2;
-  exports.isWhiteSpace = isWhiteSpace2;
-  function isWhiteSpace2(code) {
+  exports.isDigit = isDigit;
+  exports.isLetter = isLetter;
+  exports.isNameContinue = isNameContinue;
+  exports.isNameStart = isNameStart;
+  exports.isWhiteSpace = isWhiteSpace;
+  function isWhiteSpace(code) {
     return code === 9 || code === 32;
   }
-  function isDigit2(code) {
+  function isDigit(code) {
     return code >= 48 && code <= 57;
   }
-  function isLetter2(code) {
+  function isLetter(code) {
     return code >= 97 && code <= 122 || code >= 65 && code <= 90;
   }
-  function isNameStart2(code) {
-    return isLetter2(code) || code === 95;
+  function isNameStart(code) {
+    return isLetter(code) || code === 95;
   }
-  function isNameContinue2(code) {
-    return isLetter2(code) || isDigit2(code) || code === 95;
+  function isNameContinue(code) {
+    return isLetter(code) || isDigit(code) || code === 95;
   }
 });
 
@@ -5218,11 +5218,11 @@ var require_blockString = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.dedentBlockStringLines = dedentBlockStringLines2;
+  exports.dedentBlockStringLines = dedentBlockStringLines;
   exports.isPrintableAsBlockString = isPrintableAsBlockString;
   exports.printBlockString = printBlockString;
   var _characterClasses = require_characterClasses();
-  function dedentBlockStringLines2(lines) {
+  function dedentBlockStringLines(lines) {
     var _firstNonEmptyLine2;
     let commonIndent = Number.MAX_SAFE_INTEGER;
     let firstNonEmptyLine = null;
@@ -5230,7 +5230,7 @@ var require_blockString = __commonJS((exports) => {
     for (let i = 0;i < lines.length; ++i) {
       var _firstNonEmptyLine;
       const line = lines[i];
-      const indent = leadingWhitespace2(line);
+      const indent = leadingWhitespace(line);
       if (indent === line.length) {
         continue;
       }
@@ -5242,7 +5242,7 @@ var require_blockString = __commonJS((exports) => {
     }
     return lines.map((line, i) => i === 0 ? line : line.slice(commonIndent)).slice((_firstNonEmptyLine2 = firstNonEmptyLine) !== null && _firstNonEmptyLine2 !== undefined ? _firstNonEmptyLine2 : 0, lastNonEmptyLine + 1);
   }
-  function leadingWhitespace2(str) {
+  function leadingWhitespace(str) {
     let i = 0;
     while (i < str.length && (0, _characterClasses.isWhiteSpace)(str.charCodeAt(i))) {
       ++i;
@@ -5331,32 +5331,32 @@ var require_tokenKind = __commonJS((exports) => {
     value: true
   });
   exports.TokenKind = undefined;
-  var TokenKind2;
-  exports.TokenKind = TokenKind2;
-  (function(TokenKind3) {
-    TokenKind3["SOF"] = "<SOF>";
-    TokenKind3["EOF"] = "<EOF>";
-    TokenKind3["BANG"] = "!";
-    TokenKind3["DOLLAR"] = "$";
-    TokenKind3["AMP"] = "&";
-    TokenKind3["PAREN_L"] = "(";
-    TokenKind3["PAREN_R"] = ")";
-    TokenKind3["SPREAD"] = "...";
-    TokenKind3["COLON"] = ":";
-    TokenKind3["EQUALS"] = "=";
-    TokenKind3["AT"] = "@";
-    TokenKind3["BRACKET_L"] = "[";
-    TokenKind3["BRACKET_R"] = "]";
-    TokenKind3["BRACE_L"] = "{";
-    TokenKind3["PIPE"] = "|";
-    TokenKind3["BRACE_R"] = "}";
-    TokenKind3["NAME"] = "Name";
-    TokenKind3["INT"] = "Int";
-    TokenKind3["FLOAT"] = "Float";
-    TokenKind3["STRING"] = "String";
-    TokenKind3["BLOCK_STRING"] = "BlockString";
-    TokenKind3["COMMENT"] = "Comment";
-  })(TokenKind2 || (exports.TokenKind = TokenKind2 = {}));
+  var TokenKind;
+  exports.TokenKind = TokenKind;
+  (function(TokenKind2) {
+    TokenKind2["SOF"] = "<SOF>";
+    TokenKind2["EOF"] = "<EOF>";
+    TokenKind2["BANG"] = "!";
+    TokenKind2["DOLLAR"] = "$";
+    TokenKind2["AMP"] = "&";
+    TokenKind2["PAREN_L"] = "(";
+    TokenKind2["PAREN_R"] = ")";
+    TokenKind2["SPREAD"] = "...";
+    TokenKind2["COLON"] = ":";
+    TokenKind2["EQUALS"] = "=";
+    TokenKind2["AT"] = "@";
+    TokenKind2["BRACKET_L"] = "[";
+    TokenKind2["BRACKET_R"] = "]";
+    TokenKind2["BRACE_L"] = "{";
+    TokenKind2["PIPE"] = "|";
+    TokenKind2["BRACE_R"] = "}";
+    TokenKind2["NAME"] = "Name";
+    TokenKind2["INT"] = "Int";
+    TokenKind2["FLOAT"] = "Float";
+    TokenKind2["STRING"] = "String";
+    TokenKind2["BLOCK_STRING"] = "BlockString";
+    TokenKind2["COMMENT"] = "Comment";
+  })(TokenKind || (exports.TokenKind = TokenKind = {}));
 });
 
 // node_modules/graphql/language/lexer.js
@@ -5365,14 +5365,14 @@ var require_lexer = __commonJS((exports) => {
     value: true
   });
   exports.Lexer = undefined;
-  exports.isPunctuatorTokenKind = isPunctuatorTokenKind2;
+  exports.isPunctuatorTokenKind = isPunctuatorTokenKind;
   var _syntaxError = require_syntaxError();
   var _ast = require_ast();
   var _blockString = require_blockString();
   var _characterClasses = require_characterClasses();
   var _tokenKind = require_tokenKind();
 
-  class Lexer2 {
+  class Lexer {
     constructor(source) {
       const startOfFileToken = new _ast.Token(_tokenKind.TokenKind.SOF, 0, 0, 0, 0);
       this.source = source;
@@ -5396,7 +5396,7 @@ var require_lexer = __commonJS((exports) => {
           if (token.next) {
             token = token.next;
           } else {
-            const nextToken = readNextToken2(this, token.end);
+            const nextToken = readNextToken(this, token.end);
             token.next = nextToken;
             nextToken.prev = token;
             token = nextToken;
@@ -5406,23 +5406,23 @@ var require_lexer = __commonJS((exports) => {
       return token;
     }
   }
-  exports.Lexer = Lexer2;
-  function isPunctuatorTokenKind2(kind) {
+  exports.Lexer = Lexer;
+  function isPunctuatorTokenKind(kind) {
     return kind === _tokenKind.TokenKind.BANG || kind === _tokenKind.TokenKind.DOLLAR || kind === _tokenKind.TokenKind.AMP || kind === _tokenKind.TokenKind.PAREN_L || kind === _tokenKind.TokenKind.PAREN_R || kind === _tokenKind.TokenKind.SPREAD || kind === _tokenKind.TokenKind.COLON || kind === _tokenKind.TokenKind.EQUALS || kind === _tokenKind.TokenKind.AT || kind === _tokenKind.TokenKind.BRACKET_L || kind === _tokenKind.TokenKind.BRACKET_R || kind === _tokenKind.TokenKind.BRACE_L || kind === _tokenKind.TokenKind.PIPE || kind === _tokenKind.TokenKind.BRACE_R;
   }
-  function isUnicodeScalarValue2(code) {
+  function isUnicodeScalarValue(code) {
     return code >= 0 && code <= 55295 || code >= 57344 && code <= 1114111;
   }
-  function isSupplementaryCodePoint2(body, location) {
-    return isLeadingSurrogate2(body.charCodeAt(location)) && isTrailingSurrogate2(body.charCodeAt(location + 1));
+  function isSupplementaryCodePoint(body, location) {
+    return isLeadingSurrogate(body.charCodeAt(location)) && isTrailingSurrogate(body.charCodeAt(location + 1));
   }
-  function isLeadingSurrogate2(code) {
+  function isLeadingSurrogate(code) {
     return code >= 55296 && code <= 56319;
   }
-  function isTrailingSurrogate2(code) {
+  function isTrailingSurrogate(code) {
     return code >= 56320 && code <= 57343;
   }
-  function printCodePointAt2(lexer, location) {
+  function printCodePointAt(lexer, location) {
     const code = lexer.source.body.codePointAt(location);
     if (code === undefined) {
       return _tokenKind.TokenKind.EOF;
@@ -5432,12 +5432,12 @@ var require_lexer = __commonJS((exports) => {
     }
     return "U+" + code.toString(16).toUpperCase().padStart(4, "0");
   }
-  function createToken2(lexer, kind, start, end, value) {
+  function createToken(lexer, kind, start, end, value) {
     const line = lexer.line;
     const col = 1 + start - lexer.lineStart;
     return new _ast.Token(kind, start, end, line, col, value);
   }
-  function readNextToken2(lexer, start) {
+  function readNextToken(lexer, start) {
     const body = lexer.source.body;
     const bodyLength = body.length;
     let position = start;
@@ -5465,55 +5465,55 @@ var require_lexer = __commonJS((exports) => {
           lexer.lineStart = position;
           continue;
         case 35:
-          return readComment2(lexer, position);
+          return readComment(lexer, position);
         case 33:
-          return createToken2(lexer, _tokenKind.TokenKind.BANG, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.BANG, position, position + 1);
         case 36:
-          return createToken2(lexer, _tokenKind.TokenKind.DOLLAR, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.DOLLAR, position, position + 1);
         case 38:
-          return createToken2(lexer, _tokenKind.TokenKind.AMP, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.AMP, position, position + 1);
         case 40:
-          return createToken2(lexer, _tokenKind.TokenKind.PAREN_L, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.PAREN_L, position, position + 1);
         case 41:
-          return createToken2(lexer, _tokenKind.TokenKind.PAREN_R, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.PAREN_R, position, position + 1);
         case 46:
           if (body.charCodeAt(position + 1) === 46 && body.charCodeAt(position + 2) === 46) {
-            return createToken2(lexer, _tokenKind.TokenKind.SPREAD, position, position + 3);
+            return createToken(lexer, _tokenKind.TokenKind.SPREAD, position, position + 3);
           }
           break;
         case 58:
-          return createToken2(lexer, _tokenKind.TokenKind.COLON, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.COLON, position, position + 1);
         case 61:
-          return createToken2(lexer, _tokenKind.TokenKind.EQUALS, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.EQUALS, position, position + 1);
         case 64:
-          return createToken2(lexer, _tokenKind.TokenKind.AT, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.AT, position, position + 1);
         case 91:
-          return createToken2(lexer, _tokenKind.TokenKind.BRACKET_L, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.BRACKET_L, position, position + 1);
         case 93:
-          return createToken2(lexer, _tokenKind.TokenKind.BRACKET_R, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.BRACKET_R, position, position + 1);
         case 123:
-          return createToken2(lexer, _tokenKind.TokenKind.BRACE_L, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.BRACE_L, position, position + 1);
         case 124:
-          return createToken2(lexer, _tokenKind.TokenKind.PIPE, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.PIPE, position, position + 1);
         case 125:
-          return createToken2(lexer, _tokenKind.TokenKind.BRACE_R, position, position + 1);
+          return createToken(lexer, _tokenKind.TokenKind.BRACE_R, position, position + 1);
         case 34:
           if (body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34) {
-            return readBlockString2(lexer, position);
+            return readBlockString(lexer, position);
           }
-          return readString2(lexer, position);
+          return readString(lexer, position);
       }
       if ((0, _characterClasses.isDigit)(code) || code === 45) {
-        return readNumber2(lexer, position, code);
+        return readNumber(lexer, position, code);
       }
       if ((0, _characterClasses.isNameStart)(code)) {
-        return readName2(lexer, position);
+        return readName(lexer, position);
       }
-      throw (0, _syntaxError.syntaxError)(lexer.source, position, code === 39 ? `Unexpected single quote character ('), did you mean to use a double quote (")?` : isUnicodeScalarValue2(code) || isSupplementaryCodePoint2(body, position) ? `Unexpected character: ${printCodePointAt2(lexer, position)}.` : `Invalid character: ${printCodePointAt2(lexer, position)}.`);
+      throw (0, _syntaxError.syntaxError)(lexer.source, position, code === 39 ? `Unexpected single quote character ('), did you mean to use a double quote (")?` : isUnicodeScalarValue(code) || isSupplementaryCodePoint(body, position) ? `Unexpected character: ${printCodePointAt(lexer, position)}.` : `Invalid character: ${printCodePointAt(lexer, position)}.`);
     }
-    return createToken2(lexer, _tokenKind.TokenKind.EOF, bodyLength, bodyLength);
+    return createToken(lexer, _tokenKind.TokenKind.EOF, bodyLength, bodyLength);
   }
-  function readComment2(lexer, start) {
+  function readComment(lexer, start) {
     const body = lexer.source.body;
     const bodyLength = body.length;
     let position = start + 1;
@@ -5522,17 +5522,17 @@ var require_lexer = __commonJS((exports) => {
       if (code === 10 || code === 13) {
         break;
       }
-      if (isUnicodeScalarValue2(code)) {
+      if (isUnicodeScalarValue(code)) {
         ++position;
-      } else if (isSupplementaryCodePoint2(body, position)) {
+      } else if (isSupplementaryCodePoint(body, position)) {
         position += 2;
       } else {
         break;
       }
     }
-    return createToken2(lexer, _tokenKind.TokenKind.COMMENT, start, position, body.slice(start + 1, position));
+    return createToken(lexer, _tokenKind.TokenKind.COMMENT, start, position, body.slice(start + 1, position));
   }
-  function readNumber2(lexer, start, firstCode) {
+  function readNumber(lexer, start, firstCode) {
     const body = lexer.source.body;
     let position = start;
     let code = firstCode;
@@ -5543,16 +5543,16 @@ var require_lexer = __commonJS((exports) => {
     if (code === 48) {
       code = body.charCodeAt(++position);
       if ((0, _characterClasses.isDigit)(code)) {
-        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid number, unexpected digit after 0: ${printCodePointAt2(lexer, position)}.`);
+        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid number, unexpected digit after 0: ${printCodePointAt(lexer, position)}.`);
       }
     } else {
-      position = readDigits2(lexer, position, code);
+      position = readDigits(lexer, position, code);
       code = body.charCodeAt(position);
     }
     if (code === 46) {
       isFloat = true;
       code = body.charCodeAt(++position);
-      position = readDigits2(lexer, position, code);
+      position = readDigits(lexer, position, code);
       code = body.charCodeAt(position);
     }
     if (code === 69 || code === 101) {
@@ -5561,17 +5561,17 @@ var require_lexer = __commonJS((exports) => {
       if (code === 43 || code === 45) {
         code = body.charCodeAt(++position);
       }
-      position = readDigits2(lexer, position, code);
+      position = readDigits(lexer, position, code);
       code = body.charCodeAt(position);
     }
     if (code === 46 || (0, _characterClasses.isNameStart)(code)) {
-      throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid number, expected digit but got: ${printCodePointAt2(lexer, position)}.`);
+      throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid number, expected digit but got: ${printCodePointAt(lexer, position)}.`);
     }
-    return createToken2(lexer, isFloat ? _tokenKind.TokenKind.FLOAT : _tokenKind.TokenKind.INT, start, position, body.slice(start, position));
+    return createToken(lexer, isFloat ? _tokenKind.TokenKind.FLOAT : _tokenKind.TokenKind.INT, start, position, body.slice(start, position));
   }
-  function readDigits2(lexer, start, firstCode) {
+  function readDigits(lexer, start, firstCode) {
     if (!(0, _characterClasses.isDigit)(firstCode)) {
-      throw (0, _syntaxError.syntaxError)(lexer.source, start, `Invalid number, expected digit but got: ${printCodePointAt2(lexer, start)}.`);
+      throw (0, _syntaxError.syntaxError)(lexer.source, start, `Invalid number, expected digit but got: ${printCodePointAt(lexer, start)}.`);
     }
     const body = lexer.source.body;
     let position = start + 1;
@@ -5580,7 +5580,7 @@ var require_lexer = __commonJS((exports) => {
     }
     return position;
   }
-  function readString2(lexer, start) {
+  function readString(lexer, start) {
     const body = lexer.source.body;
     const bodyLength = body.length;
     let position = start + 1;
@@ -5590,11 +5590,11 @@ var require_lexer = __commonJS((exports) => {
       const code = body.charCodeAt(position);
       if (code === 34) {
         value += body.slice(chunkStart, position);
-        return createToken2(lexer, _tokenKind.TokenKind.STRING, start, position + 1, value);
+        return createToken(lexer, _tokenKind.TokenKind.STRING, start, position + 1, value);
       }
       if (code === 92) {
         value += body.slice(chunkStart, position);
-        const escape2 = body.charCodeAt(position + 1) === 117 ? body.charCodeAt(position + 2) === 123 ? readEscapedUnicodeVariableWidth2(lexer, position) : readEscapedUnicodeFixedWidth2(lexer, position) : readEscapedCharacter2(lexer, position);
+        const escape2 = body.charCodeAt(position + 1) === 117 ? body.charCodeAt(position + 2) === 123 ? readEscapedUnicodeVariableWidth(lexer, position) : readEscapedUnicodeFixedWidth(lexer, position) : readEscapedCharacter(lexer, position);
         value += escape2.value;
         position += escape2.size;
         chunkStart = position;
@@ -5603,24 +5603,24 @@ var require_lexer = __commonJS((exports) => {
       if (code === 10 || code === 13) {
         break;
       }
-      if (isUnicodeScalarValue2(code)) {
+      if (isUnicodeScalarValue(code)) {
         ++position;
-      } else if (isSupplementaryCodePoint2(body, position)) {
+      } else if (isSupplementaryCodePoint(body, position)) {
         position += 2;
       } else {
-        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid character within String: ${printCodePointAt2(lexer, position)}.`);
+        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid character within String: ${printCodePointAt(lexer, position)}.`);
       }
     }
     throw (0, _syntaxError.syntaxError)(lexer.source, position, "Unterminated string.");
   }
-  function readEscapedUnicodeVariableWidth2(lexer, position) {
+  function readEscapedUnicodeVariableWidth(lexer, position) {
     const body = lexer.source.body;
     let point = 0;
     let size = 3;
     while (size < 12) {
       const code = body.charCodeAt(position + size++);
       if (code === 125) {
-        if (size < 5 || !isUnicodeScalarValue2(point)) {
+        if (size < 5 || !isUnicodeScalarValue(point)) {
           break;
         }
         return {
@@ -5628,26 +5628,26 @@ var require_lexer = __commonJS((exports) => {
           size
         };
       }
-      point = point << 4 | readHexDigit2(code);
+      point = point << 4 | readHexDigit(code);
       if (point < 0) {
         break;
       }
     }
     throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid Unicode escape sequence: "${body.slice(position, position + size)}".`);
   }
-  function readEscapedUnicodeFixedWidth2(lexer, position) {
+  function readEscapedUnicodeFixedWidth(lexer, position) {
     const body = lexer.source.body;
-    const code = read16BitHexCode2(body, position + 2);
-    if (isUnicodeScalarValue2(code)) {
+    const code = read16BitHexCode(body, position + 2);
+    if (isUnicodeScalarValue(code)) {
       return {
         value: String.fromCodePoint(code),
         size: 6
       };
     }
-    if (isLeadingSurrogate2(code)) {
+    if (isLeadingSurrogate(code)) {
       if (body.charCodeAt(position + 6) === 92 && body.charCodeAt(position + 7) === 117) {
-        const trailingCode = read16BitHexCode2(body, position + 8);
-        if (isTrailingSurrogate2(trailingCode)) {
+        const trailingCode = read16BitHexCode(body, position + 8);
+        if (isTrailingSurrogate(trailingCode)) {
           return {
             value: String.fromCodePoint(code, trailingCode),
             size: 12
@@ -5657,13 +5657,13 @@ var require_lexer = __commonJS((exports) => {
     }
     throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid Unicode escape sequence: "${body.slice(position, position + 6)}".`);
   }
-  function read16BitHexCode2(body, position) {
-    return readHexDigit2(body.charCodeAt(position)) << 12 | readHexDigit2(body.charCodeAt(position + 1)) << 8 | readHexDigit2(body.charCodeAt(position + 2)) << 4 | readHexDigit2(body.charCodeAt(position + 3));
+  function read16BitHexCode(body, position) {
+    return readHexDigit(body.charCodeAt(position)) << 12 | readHexDigit(body.charCodeAt(position + 1)) << 8 | readHexDigit(body.charCodeAt(position + 2)) << 4 | readHexDigit(body.charCodeAt(position + 3));
   }
-  function readHexDigit2(code) {
+  function readHexDigit(code) {
     return code >= 48 && code <= 57 ? code - 48 : code >= 65 && code <= 70 ? code - 55 : code >= 97 && code <= 102 ? code - 87 : -1;
   }
-  function readEscapedCharacter2(lexer, position) {
+  function readEscapedCharacter(lexer, position) {
     const body = lexer.source.body;
     const code = body.charCodeAt(position + 1);
     switch (code) {
@@ -5711,7 +5711,7 @@ var require_lexer = __commonJS((exports) => {
     }
     throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid character escape sequence: "${body.slice(position, position + 2)}".`);
   }
-  function readBlockString2(lexer, start) {
+  function readBlockString(lexer, start) {
     const body = lexer.source.body;
     const bodyLength = body.length;
     let lineStart = lexer.lineStart;
@@ -5724,7 +5724,7 @@ var require_lexer = __commonJS((exports) => {
       if (code === 34 && body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34) {
         currentLine += body.slice(chunkStart, position);
         blockLines.push(currentLine);
-        const token = createToken2(lexer, _tokenKind.TokenKind.BLOCK_STRING, start, position + 3, (0, _blockString.dedentBlockStringLines)(blockLines).join(`
+        const token = createToken(lexer, _tokenKind.TokenKind.BLOCK_STRING, start, position + 3, (0, _blockString.dedentBlockStringLines)(blockLines).join(`
 `));
         lexer.line += blockLines.length - 1;
         lexer.lineStart = lineStart;
@@ -5749,17 +5749,17 @@ var require_lexer = __commonJS((exports) => {
         lineStart = position;
         continue;
       }
-      if (isUnicodeScalarValue2(code)) {
+      if (isUnicodeScalarValue(code)) {
         ++position;
-      } else if (isSupplementaryCodePoint2(body, position)) {
+      } else if (isSupplementaryCodePoint(body, position)) {
         position += 2;
       } else {
-        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid character within String: ${printCodePointAt2(lexer, position)}.`);
+        throw (0, _syntaxError.syntaxError)(lexer.source, position, `Invalid character within String: ${printCodePointAt(lexer, position)}.`);
       }
     }
     throw (0, _syntaxError.syntaxError)(lexer.source, position, "Unterminated string.");
   }
-  function readName2(lexer, start) {
+  function readName(lexer, start) {
     const body = lexer.source.body;
     const bodyLength = body.length;
     let position = start + 1;
@@ -5771,7 +5771,7 @@ var require_lexer = __commonJS((exports) => {
         break;
       }
     }
-    return createToken2(lexer, _tokenKind.TokenKind.NAME, start, position, body.slice(start, position));
+    return createToken(lexer, _tokenKind.TokenKind.NAME, start, position, body.slice(start, position));
   }
 });
 
@@ -5780,25 +5780,25 @@ var require_inspect = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.inspect = inspect2;
-  var MAX_ARRAY_LENGTH2 = 10;
-  var MAX_RECURSIVE_DEPTH2 = 2;
-  function inspect2(value) {
-    return formatValue2(value, []);
+  exports.inspect = inspect;
+  var MAX_ARRAY_LENGTH = 10;
+  var MAX_RECURSIVE_DEPTH = 2;
+  function inspect(value) {
+    return formatValue(value, []);
   }
-  function formatValue2(value, seenValues) {
+  function formatValue(value, seenValues) {
     switch (typeof value) {
       case "string":
         return JSON.stringify(value);
       case "function":
         return value.name ? `[function ${value.name}]` : "[function]";
       case "object":
-        return formatObjectValue2(value, seenValues);
+        return formatObjectValue(value, seenValues);
       default:
         return String(value);
     }
   }
-  function formatObjectValue2(value, previouslySeenValues) {
+  function formatObjectValue(value, previouslySeenValues) {
     if (value === null) {
       return "null";
     }
@@ -5806,42 +5806,42 @@ var require_inspect = __commonJS((exports) => {
       return "[Circular]";
     }
     const seenValues = [...previouslySeenValues, value];
-    if (isJSONable2(value)) {
+    if (isJSONable(value)) {
       const jsonValue = value.toJSON();
       if (jsonValue !== value) {
-        return typeof jsonValue === "string" ? jsonValue : formatValue2(jsonValue, seenValues);
+        return typeof jsonValue === "string" ? jsonValue : formatValue(jsonValue, seenValues);
       }
     } else if (Array.isArray(value)) {
-      return formatArray2(value, seenValues);
+      return formatArray(value, seenValues);
     }
-    return formatObject2(value, seenValues);
+    return formatObject(value, seenValues);
   }
-  function isJSONable2(value) {
+  function isJSONable(value) {
     return typeof value.toJSON === "function";
   }
-  function formatObject2(object2, seenValues) {
+  function formatObject(object2, seenValues) {
     const entries = Object.entries(object2);
     if (entries.length === 0) {
       return "{}";
     }
-    if (seenValues.length > MAX_RECURSIVE_DEPTH2) {
-      return "[" + getObjectTag2(object2) + "]";
+    if (seenValues.length > MAX_RECURSIVE_DEPTH) {
+      return "[" + getObjectTag(object2) + "]";
     }
-    const properties = entries.map(([key, value]) => key + ": " + formatValue2(value, seenValues));
+    const properties = entries.map(([key, value]) => key + ": " + formatValue(value, seenValues));
     return "{ " + properties.join(", ") + " }";
   }
-  function formatArray2(array2, seenValues) {
+  function formatArray(array2, seenValues) {
     if (array2.length === 0) {
       return "[]";
     }
-    if (seenValues.length > MAX_RECURSIVE_DEPTH2) {
+    if (seenValues.length > MAX_RECURSIVE_DEPTH) {
       return "[Array]";
     }
-    const len = Math.min(MAX_ARRAY_LENGTH2, array2.length);
+    const len = Math.min(MAX_ARRAY_LENGTH, array2.length);
     const remaining = array2.length - len;
     const items = [];
     for (let i = 0;i < len; ++i) {
-      items.push(formatValue2(array2[i], seenValues));
+      items.push(formatValue(array2[i], seenValues));
     }
     if (remaining === 1) {
       items.push("... 1 more item");
@@ -5850,7 +5850,7 @@ var require_inspect = __commonJS((exports) => {
     }
     return "[" + items.join(", ") + "]";
   }
-  function getObjectTag2(object2) {
+  function getObjectTag(object2) {
     const tag = Object.prototype.toString.call(object2).replace(/^\[object /, "").replace(/]$/, "");
     if (tag === "Object" && typeof object2.constructor === "function") {
       const name = object2.constructor.name;
@@ -5869,8 +5869,8 @@ var require_instanceOf = __commonJS((exports) => {
   });
   exports.instanceOf = undefined;
   var _inspect = require_inspect();
-  var isProduction2 = globalThis.process && false;
-  var instanceOf4 = isProduction2 ? function instanceOf(value, constructor) {
+  var isProduction = globalThis.process && false;
+  var instanceOf = isProduction ? function instanceOf(value, constructor) {
     return value instanceof constructor;
   } : function instanceOf(value, constructor) {
     if (value instanceof constructor) {
@@ -5898,7 +5898,7 @@ spurious results.`);
     }
     return false;
   };
-  exports.instanceOf = instanceOf4;
+  exports.instanceOf = instanceOf;
 });
 
 // node_modules/graphql/language/source.js
@@ -5907,12 +5907,12 @@ var require_source = __commonJS((exports) => {
     value: true
   });
   exports.Source = undefined;
-  exports.isSource = isSource2;
+  exports.isSource = isSource;
   var _devAssert = require_devAssert();
   var _inspect = require_inspect();
   var _instanceOf = require_instanceOf();
 
-  class Source2 {
+  class Source {
     constructor(body, name = "GraphQL request", locationOffset = {
       line: 1,
       column: 1
@@ -5928,9 +5928,9 @@ var require_source = __commonJS((exports) => {
       return "Source";
     }
   }
-  exports.Source = Source2;
-  function isSource2(source) {
-    return (0, _instanceOf.instanceOf)(source, Source2);
+  exports.Source = Source;
+  function isSource(source) {
+    return (0, _instanceOf.instanceOf)(source, Source);
   }
 });
 
@@ -5940,10 +5940,10 @@ var require_parser = __commonJS((exports) => {
     value: true
   });
   exports.Parser = undefined;
-  exports.parse = parse2;
-  exports.parseConstValue = parseConstValue2;
-  exports.parseType = parseType2;
-  exports.parseValue = parseValue2;
+  exports.parse = parse;
+  exports.parseConstValue = parseConstValue;
+  exports.parseType = parseType;
+  exports.parseValue = parseValue;
   var _syntaxError = require_syntaxError();
   var _ast = require_ast();
   var _directiveLocation = require_directiveLocation();
@@ -5951,8 +5951,8 @@ var require_parser = __commonJS((exports) => {
   var _lexer = require_lexer();
   var _source = require_source();
   var _tokenKind = require_tokenKind();
-  function parse2(source, options) {
-    const parser = new Parser2(source, options);
+  function parse(source, options) {
+    const parser = new Parser(source, options);
     const document2 = parser.parseDocument();
     Object.defineProperty(document2, "tokenCount", {
       enumerable: false,
@@ -5960,29 +5960,29 @@ var require_parser = __commonJS((exports) => {
     });
     return document2;
   }
-  function parseValue2(source, options) {
-    const parser = new Parser2(source, options);
+  function parseValue(source, options) {
+    const parser = new Parser(source, options);
     parser.expectToken(_tokenKind.TokenKind.SOF);
     const value = parser.parseValueLiteral(false);
     parser.expectToken(_tokenKind.TokenKind.EOF);
     return value;
   }
-  function parseConstValue2(source, options) {
-    const parser = new Parser2(source, options);
+  function parseConstValue(source, options) {
+    const parser = new Parser(source, options);
     parser.expectToken(_tokenKind.TokenKind.SOF);
     const value = parser.parseConstValueLiteral();
     parser.expectToken(_tokenKind.TokenKind.EOF);
     return value;
   }
-  function parseType2(source, options) {
-    const parser = new Parser2(source, options);
+  function parseType(source, options) {
+    const parser = new Parser(source, options);
     parser.expectToken(_tokenKind.TokenKind.SOF);
     const type = parser.parseTypeReference();
     parser.expectToken(_tokenKind.TokenKind.EOF);
     return type;
   }
 
-  class Parser2 {
+  class Parser {
     constructor(source, options = {}) {
       const sourceObj = (0, _source.isSource)(source) ? source : new _source.Source(source);
       this._lexer = new _lexer.Lexer(sourceObj);
@@ -6512,7 +6512,7 @@ var require_parser = __commonJS((exports) => {
     }
     parseEnumValueName() {
       if (this._lexer.token.value === "true" || this._lexer.token.value === "false" || this._lexer.token.value === "null") {
-        throw (0, _syntaxError.syntaxError)(this._lexer.source, this._lexer.token.start, `${getTokenDesc2(this._lexer.token)} is reserved and cannot be used for an enum value.`);
+        throw (0, _syntaxError.syntaxError)(this._lexer.source, this._lexer.token.start, `${getTokenDesc(this._lexer.token)} is reserved and cannot be used for an enum value.`);
       }
       return this.parseName();
     }
@@ -6720,7 +6720,7 @@ var require_parser = __commonJS((exports) => {
         this.advanceLexer();
         return token;
       }
-      throw (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Expected ${getTokenKindDesc2(kind)}, found ${getTokenDesc2(token)}.`);
+      throw (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Expected ${getTokenKindDesc(kind)}, found ${getTokenDesc(token)}.`);
     }
     expectOptionalToken(kind) {
       const token = this._lexer.token;
@@ -6735,7 +6735,7 @@ var require_parser = __commonJS((exports) => {
       if (token.kind === _tokenKind.TokenKind.NAME && token.value === value) {
         this.advanceLexer();
       } else {
-        throw (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Expected "${value}", found ${getTokenDesc2(token)}.`);
+        throw (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Expected "${value}", found ${getTokenDesc(token)}.`);
       }
     }
     expectOptionalKeyword(value) {
@@ -6748,7 +6748,7 @@ var require_parser = __commonJS((exports) => {
     }
     unexpected(atToken) {
       const token = atToken !== null && atToken !== undefined ? atToken : this._lexer.token;
-      return (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Unexpected ${getTokenDesc2(token)}.`);
+      return (0, _syntaxError.syntaxError)(this._lexer.source, token.start, `Unexpected ${getTokenDesc(token)}.`);
     }
     any(openKind, parseFn, closeKind) {
       this.expectToken(openKind);
@@ -6795,12 +6795,12 @@ var require_parser = __commonJS((exports) => {
       }
     }
   }
-  exports.Parser = Parser2;
-  function getTokenDesc2(token) {
+  exports.Parser = Parser;
+  function getTokenDesc(token) {
     const value = token.value;
-    return getTokenKindDesc2(token.kind) + (value != null ? ` "${value}"` : "");
+    return getTokenKindDesc(token.kind) + (value != null ? ` "${value}"` : "");
   }
-  function getTokenKindDesc2(kind) {
+  function getTokenKindDesc(kind) {
     return (0, _lexer.isPunctuatorTokenKind)(kind) ? `"${kind}"` : kind;
   }
 });
@@ -6901,19 +6901,19 @@ var require_naturalCompare = __commonJS((exports) => {
     while (aIndex < aStr.length && bIndex < bStr.length) {
       let aChar = aStr.charCodeAt(aIndex);
       let bChar = bStr.charCodeAt(bIndex);
-      if (isDigit2(aChar) && isDigit2(bChar)) {
+      if (isDigit(aChar) && isDigit(bChar)) {
         let aNum = 0;
         do {
           ++aIndex;
           aNum = aNum * 10 + aChar - DIGIT_0;
           aChar = aStr.charCodeAt(aIndex);
-        } while (isDigit2(aChar) && aNum > 0);
+        } while (isDigit(aChar) && aNum > 0);
         let bNum = 0;
         do {
           ++bIndex;
           bNum = bNum * 10 + bChar - DIGIT_0;
           bChar = bStr.charCodeAt(bIndex);
-        } while (isDigit2(bChar) && bNum > 0);
+        } while (isDigit(bChar) && bNum > 0);
         if (aNum < bNum) {
           return -1;
         }
@@ -6935,7 +6935,7 @@ var require_naturalCompare = __commonJS((exports) => {
   }
   var DIGIT_0 = 48;
   var DIGIT_9 = 57;
-  function isDigit2(code) {
+  function isDigit(code) {
     return !isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9;
   }
 });
@@ -8010,13 +8010,13 @@ var require_definition = __commonJS((exports) => {
   class GraphQLScalarType {
     constructor(config) {
       var _config$parseValue, _config$serialize, _config$parseLiteral, _config$extensionASTN;
-      const parseValue2 = (_config$parseValue = config.parseValue) !== null && _config$parseValue !== undefined ? _config$parseValue : _identityFunc.identityFunc;
+      const parseValue = (_config$parseValue = config.parseValue) !== null && _config$parseValue !== undefined ? _config$parseValue : _identityFunc.identityFunc;
       this.name = (0, _assertName.assertName)(config.name);
       this.description = config.description;
       this.specifiedByURL = config.specifiedByURL;
       this.serialize = (_config$serialize = config.serialize) !== null && _config$serialize !== undefined ? _config$serialize : _identityFunc.identityFunc;
-      this.parseValue = parseValue2;
-      this.parseLiteral = (_config$parseLiteral = config.parseLiteral) !== null && _config$parseLiteral !== undefined ? _config$parseLiteral : (node, variables) => parseValue2((0, _valueFromASTUntyped.valueFromASTUntyped)(node, variables));
+      this.parseValue = parseValue;
+      this.parseLiteral = (_config$parseLiteral = config.parseLiteral) !== null && _config$parseLiteral !== undefined ? _config$parseLiteral : (node, variables) => parseValue((0, _valueFromASTUntyped.valueFromASTUntyped)(node, variables));
       this.extensions = (0, _toObjMap.toObjMap)(config.extensions);
       this.astNode = config.astNode;
       this.extensionASTNodes = (_config$extensionASTN = config.extensionASTNodes) !== null && _config$extensionASTN !== undefined ? _config$extensionASTN : [];
@@ -13865,9 +13865,9 @@ var require_graphql = __commonJS((exports) => {
     let document2;
     try {
       document2 = (0, _parser.parse)(source);
-    } catch (syntaxError2) {
+    } catch (syntaxError) {
       return {
-        errors: [syntaxError2]
+        errors: [syntaxError]
       };
     }
     const validationErrors = (0, _validate2.validate)(schema, document2);
@@ -18585,13 +18585,13 @@ var require_ms = __commonJS((exports, module) => {
     options = options || {};
     var type = typeof val;
     if (type === "string" && val.length > 0) {
-      return parse2(val);
+      return parse(val);
     } else if (type === "number" && isNaN(val) === false) {
       return options.long ? fmtLong(val) : fmtShort(val);
     }
     throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
   };
-  function parse2(str) {
+  function parse(str) {
     str = String(str);
     if (str.length > 100) {
       return;
@@ -22701,7 +22701,7 @@ var require_read = __commonJS((exports, module) => {
   var unpipe = require_unpipe();
   var zlib = __require("zlib");
   module.exports = read;
-  function read(req, res, next, parse2, debug, options) {
+  function read(req, res, next, parse, debug, options) {
     var length;
     var opts = options;
     var stream;
@@ -22760,7 +22760,7 @@ var require_read = __commonJS((exports, module) => {
       try {
         debug("parse body");
         str = typeof body !== "string" && encoding !== null ? iconv.decode(body, encoding) : body;
-        req.body = parse2(str);
+        req.body = parse(str);
       } catch (err) {
         next(createError(400, err, {
           body: str,
@@ -22831,7 +22831,7 @@ var require_media_typer = __commonJS((exports) => {
   var typeNameRegExp = /^[A-Za-z0-9][A-Za-z0-9!#$&^_-]{0,126}$/;
   var typeRegExp = /^ *([A-Za-z0-9][A-Za-z0-9!#$&^_-]{0,126})\/([A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}) *$/;
   exports.format = format;
-  exports.parse = parse2;
+  exports.parse = parse;
   function format(obj) {
     if (!obj || typeof obj !== "object") {
       throw new TypeError("argument obj is required");
@@ -22866,7 +22866,7 @@ var require_media_typer = __commonJS((exports) => {
     }
     return string2;
   }
-  function parse2(string2) {
+  function parse(string2) {
     if (!string2) {
       throw new TypeError("argument string is required");
     }
@@ -31708,7 +31708,7 @@ var require_json = __commonJS((exports, module) => {
       throw new TypeError("option verify must be function");
     }
     var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
-    function parse2(body) {
+    function parse(body) {
       if (body.length === 0) {
         return {};
       }
@@ -31756,7 +31756,7 @@ var require_json = __commonJS((exports, module) => {
         }));
         return;
       }
-      read(req, res, next, parse2, debug, {
+      read(req, res, next, parse, debug, {
         encoding: charset,
         inflate,
         limit,
@@ -31837,7 +31837,7 @@ var require_raw = __commonJS((exports, module) => {
       throw new TypeError("option verify must be function");
     }
     var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
-    function parse2(buf) {
+    function parse(buf) {
       return buf;
     }
     return function rawParser(req, res, next) {
@@ -31858,7 +31858,7 @@ var require_raw = __commonJS((exports, module) => {
         next();
         return;
       }
-      read(req, res, next, parse2, debug, {
+      read(req, res, next, parse, debug, {
         encoding: null,
         inflate,
         limit,
@@ -31897,7 +31897,7 @@ var require_text = __commonJS((exports, module) => {
       throw new TypeError("option verify must be function");
     }
     var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
-    function parse2(buf) {
+    function parse(buf) {
       return buf;
     }
     return function textParser(req, res, next) {
@@ -31919,7 +31919,7 @@ var require_text = __commonJS((exports, module) => {
         return;
       }
       var charset = getCharset(req) || defaultCharset;
-      read(req, res, next, parse2, debug, {
+      read(req, res, next, parse, debug, {
         encoding: charset,
         inflate,
         limit,
@@ -32072,7 +32072,7 @@ var require_object_inspect = __commonJS((exports, module) => {
     } else if (indexOf(seen, obj) >= 0) {
       return "[Circular]";
     }
-    function inspect2(value, from, noIndent) {
+    function inspect(value, from, noIndent) {
       if (from) {
         seen = $arrSlice.call(seen);
         seen.push(from);
@@ -32090,7 +32090,7 @@ var require_object_inspect = __commonJS((exports, module) => {
     }
     if (typeof obj === "function" && !isRegExp(obj)) {
       var name = nameOf(obj);
-      var keys = arrObjKeys(obj, inspect2);
+      var keys = arrObjKeys(obj, inspect);
       return "[Function" + (name ? ": " + name : " (anonymous)") + "]" + (keys.length > 0 ? " { " + $join.call(keys, ", ") + " }" : "");
     }
     if (isSymbol(obj)) {
@@ -32114,16 +32114,16 @@ var require_object_inspect = __commonJS((exports, module) => {
       if (obj.length === 0) {
         return "[]";
       }
-      var xs = arrObjKeys(obj, inspect2);
+      var xs = arrObjKeys(obj, inspect);
       if (indent && !singleLineValues(xs)) {
         return "[" + indentedJoin(xs, indent) + "]";
       }
       return "[ " + $join.call(xs, ", ") + " ]";
     }
     if (isError(obj)) {
-      var parts = arrObjKeys(obj, inspect2);
+      var parts = arrObjKeys(obj, inspect);
       if (!("cause" in Error.prototype) && "cause" in obj && !isEnumerable.call(obj, "cause")) {
-        return "{ [" + String(obj) + "] " + $join.call($concat.call("[cause]: " + inspect2(obj.cause), parts), ", ") + " }";
+        return "{ [" + String(obj) + "] " + $join.call($concat.call("[cause]: " + inspect(obj.cause), parts), ", ") + " }";
       }
       if (parts.length === 0) {
         return "[" + String(obj) + "]";
@@ -32141,7 +32141,7 @@ var require_object_inspect = __commonJS((exports, module) => {
       var mapParts = [];
       if (mapForEach) {
         mapForEach.call(obj, function(value, key) {
-          mapParts.push(inspect2(key, obj, true) + " => " + inspect2(value, obj));
+          mapParts.push(inspect(key, obj, true) + " => " + inspect(value, obj));
         });
       }
       return collectionOf("Map", mapSize.call(obj), mapParts, indent);
@@ -32150,7 +32150,7 @@ var require_object_inspect = __commonJS((exports, module) => {
       var setParts = [];
       if (setForEach) {
         setForEach.call(obj, function(value) {
-          setParts.push(inspect2(value, obj));
+          setParts.push(inspect(value, obj));
         });
       }
       return collectionOf("Set", setSize.call(obj), setParts, indent);
@@ -32165,16 +32165,16 @@ var require_object_inspect = __commonJS((exports, module) => {
       return weakCollectionOf("WeakRef");
     }
     if (isNumber(obj)) {
-      return markBoxed(inspect2(Number(obj)));
+      return markBoxed(inspect(Number(obj)));
     }
     if (isBigInt(obj)) {
-      return markBoxed(inspect2(bigIntValueOf.call(obj)));
+      return markBoxed(inspect(bigIntValueOf.call(obj)));
     }
     if (isBoolean(obj)) {
       return markBoxed(booleanValueOf.call(obj));
     }
     if (isString(obj)) {
-      return markBoxed(inspect2(String(obj)));
+      return markBoxed(inspect(String(obj)));
     }
     if (typeof window !== "undefined" && obj === window) {
       return "{ [object Window] }";
@@ -32183,7 +32183,7 @@ var require_object_inspect = __commonJS((exports, module) => {
       return "{ [object globalThis] }";
     }
     if (!isDate(obj) && !isRegExp(obj)) {
-      var ys = arrObjKeys(obj, inspect2);
+      var ys = arrObjKeys(obj, inspect);
       var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
       var protoTag = obj instanceof Object ? "" : "null prototype";
       var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr(obj), 8, -1) : protoTag ? "Object" : "";
@@ -32433,13 +32433,13 @@ var require_object_inspect = __commonJS((exports, module) => {
     return lineJoiner + $join.call(xs, "," + lineJoiner) + `
 ` + indent.prev;
   }
-  function arrObjKeys(obj, inspect2) {
+  function arrObjKeys(obj, inspect) {
     var isArr = isArray(obj);
     var xs = [];
     if (isArr) {
       xs.length = obj.length;
       for (var i = 0;i < obj.length; i++) {
-        xs[i] = has(obj, i) ? inspect2(obj[i], obj) : "";
+        xs[i] = has(obj, i) ? inspect(obj[i], obj) : "";
       }
     }
     var syms = typeof gOPS === "function" ? gOPS(obj) : [];
@@ -32460,15 +32460,15 @@ var require_object_inspect = __commonJS((exports, module) => {
       if (hasShammedSymbols && symMap["$" + key] instanceof Symbol) {
         continue;
       } else if ($test.call(/[^\w$]/, key)) {
-        xs.push(inspect2(key, obj) + ": " + inspect2(obj[key], obj));
+        xs.push(inspect(key, obj) + ": " + inspect(obj[key], obj));
       } else {
-        xs.push(key + ": " + inspect2(obj[key], obj));
+        xs.push(key + ": " + inspect(obj[key], obj));
       }
     }
     if (typeof gOPS === "function") {
       for (var j = 0;j < syms.length; j++) {
         if (isEnumerable.call(obj, syms[j])) {
-          xs.push("[" + inspect2(syms[j]) + "]: " + inspect2(obj[syms[j]], obj));
+          xs.push("[" + inspect(syms[j]) + "]: " + inspect(obj[syms[j]], obj));
         }
       }
     }
@@ -32478,7 +32478,7 @@ var require_object_inspect = __commonJS((exports, module) => {
 
 // node_modules/side-channel-list/index.js
 var require_side_channel_list = __commonJS((exports, module) => {
-  var inspect2 = require_object_inspect();
+  var inspect = require_object_inspect();
   var $TypeError = require_type2();
   var listGetNode = function(list, key, isDelete) {
     var prev = list;
@@ -32529,7 +32529,7 @@ var require_side_channel_list = __commonJS((exports, module) => {
     var channel = {
       assert: function(key) {
         if (!channel.has(key)) {
-          throw new $TypeError("Side channel does not contain " + inspect2(key));
+          throw new $TypeError("Side channel does not contain " + inspect(key));
         }
       },
       delete: function(key) {
@@ -33253,7 +33253,7 @@ var require_call_bound = __commonJS((exports, module) => {
 var require_side_channel_map = __commonJS((exports, module) => {
   var GetIntrinsic = require_get_intrinsic();
   var callBound = require_call_bound();
-  var inspect2 = require_object_inspect();
+  var inspect = require_object_inspect();
   var $TypeError = require_type2();
   var $Map = GetIntrinsic("%Map%", true);
   var $mapGet = callBound("Map.prototype.get", true);
@@ -33266,7 +33266,7 @@ var require_side_channel_map = __commonJS((exports, module) => {
     var channel = {
       assert: function(key) {
         if (!channel.has(key)) {
-          throw new $TypeError("Side channel does not contain " + inspect2(key));
+          throw new $TypeError("Side channel does not contain " + inspect(key));
         }
       },
       delete: function(key) {
@@ -33305,7 +33305,7 @@ var require_side_channel_map = __commonJS((exports, module) => {
 var require_side_channel_weakmap = __commonJS((exports, module) => {
   var GetIntrinsic = require_get_intrinsic();
   var callBound = require_call_bound();
-  var inspect2 = require_object_inspect();
+  var inspect = require_object_inspect();
   var getSideChannelMap = require_side_channel_map();
   var $TypeError = require_type2();
   var $WeakMap = GetIntrinsic("%WeakMap%", true);
@@ -33319,7 +33319,7 @@ var require_side_channel_weakmap = __commonJS((exports, module) => {
     var channel = {
       assert: function(key) {
         if (!channel.has(key)) {
-          throw new $TypeError("Side channel does not contain " + inspect2(key));
+          throw new $TypeError("Side channel does not contain " + inspect(key));
         }
       },
       delete: function(key) {
@@ -33371,7 +33371,7 @@ var require_side_channel_weakmap = __commonJS((exports, module) => {
 // node_modules/side-channel/index.js
 var require_side_channel = __commonJS((exports, module) => {
   var $TypeError = require_type2();
-  var inspect2 = require_object_inspect();
+  var inspect = require_object_inspect();
   var getSideChannelList = require_side_channel_list();
   var getSideChannelMap = require_side_channel_map();
   var getSideChannelWeakMap = require_side_channel_weakmap();
@@ -33381,7 +33381,7 @@ var require_side_channel = __commonJS((exports, module) => {
     var channel = {
       assert: function(key) {
         if (!channel.has(key)) {
-          throw new $TypeError("Side channel does not contain " + inspect2(key));
+          throw new $TypeError("Side channel does not contain " + inspect(key));
         }
       },
       delete: function(key) {
@@ -34090,11 +34090,11 @@ var require_parse = __commonJS((exports, module) => {
 // node_modules/qs/lib/index.js
 var require_lib3 = __commonJS((exports, module) => {
   var stringify = require_stringify();
-  var parse2 = require_parse();
+  var parse = require_parse();
   var formats = require_formats();
   module.exports = {
     formats,
-    parse: parse2,
+    parse,
     stringify
   };
 });
@@ -34132,7 +34132,7 @@ var require_urlencoded = __commonJS((exports, module) => {
     }
     var queryparse = extended ? extendedparser(opts) : simpleparser(opts);
     var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
-    function parse2(body) {
+    function parse(body) {
       return body.length ? queryparse(body) : {};
     }
     return function urlencodedParser(req, res, next) {
@@ -34162,7 +34162,7 @@ var require_urlencoded = __commonJS((exports, module) => {
         }));
         return;
       }
-      read(req, res, next, parse2, debug, {
+      read(req, res, next, parse, debug, {
         debug,
         encoding: charset,
         inflate,
@@ -34175,7 +34175,7 @@ var require_urlencoded = __commonJS((exports, module) => {
   function extendedparser(options) {
     var parameterLimit = options.parameterLimit !== undefined ? options.parameterLimit : 1000;
     var depth = typeof options.depth !== "number" ? Number(options.depth || 32) : options.depth;
-    var parse2 = parser("qs");
+    var parse = parser("qs");
     if (isNaN(parameterLimit) || parameterLimit < 1) {
       throw new TypeError("option parameterLimit must be a positive number");
     }
@@ -34196,7 +34196,7 @@ var require_urlencoded = __commonJS((exports, module) => {
       var arrayLimit = Math.max(100, paramCount);
       debug("parse extended urlencoding");
       try {
-        return parse2(body, {
+        return parse(body, {
           allowPrototypes: true,
           arrayLimit,
           depth,
@@ -34251,7 +34251,7 @@ var require_urlencoded = __commonJS((exports, module) => {
   }
   function simpleparser(options) {
     var parameterLimit = options.parameterLimit !== undefined ? options.parameterLimit : 1000;
-    var parse2 = parser("querystring");
+    var parse = parser("querystring");
     if (isNaN(parameterLimit) || parameterLimit < 1) {
       throw new TypeError("option parameterLimit must be a positive number");
     }
@@ -34267,7 +34267,7 @@ var require_urlencoded = __commonJS((exports, module) => {
         });
       }
       debug("parse urlencoding");
-      return parse2(body, undefined, undefined, { maxKeys: parameterLimit });
+      return parse(body, undefined, undefined, { maxKeys: parameterLimit });
     };
   }
   function typeChecker(type) {
@@ -34461,7 +34461,7 @@ var require_parseurl = __commonJS((exports, module) => {
    * MIT Licensed
    */
   var url = __require("url");
-  var parse2 = url.parse;
+  var parse = url.parse;
   var Url = url.Url;
   module.exports = parseurl;
   module.exports.original = originalurl;
@@ -34493,7 +34493,7 @@ var require_parseurl = __commonJS((exports, module) => {
   }
   function fastparse(str) {
     if (typeof str !== "string" || str.charCodeAt(0) !== 47) {
-      return parse2(str);
+      return parse(str);
     }
     var pathname = str;
     var query = null;
@@ -34515,7 +34515,7 @@ var require_parseurl = __commonJS((exports, module) => {
         case 35:
         case 160:
         case 65279:
-          return parse2(str);
+          return parse(str);
       }
     }
     var url2 = Url !== undefined ? new Url : {};
@@ -35701,7 +35701,7 @@ var require_content_disposition = __commonJS((exports, module) => {
    * MIT Licensed
    */
   module.exports = contentDisposition;
-  module.exports.parse = parse2;
+  module.exports.parse = parse;
   var basename = __require("path").basename;
   var Buffer2 = require_safe_buffer().Buffer;
   var ENCODE_URL_ATTR_CHAR_REGEXP = /[\x00-\x20"'()*,/:;<=>?@[\\\]{}\x7f]/g;
@@ -35792,7 +35792,7 @@ var require_content_disposition = __commonJS((exports, module) => {
   function getlatin1(val) {
     return String(val).replace(NON_LATIN1_REGEXP, "?");
   }
-  function parse2(string2) {
+  function parse(string2) {
     if (!string2 || typeof string2 !== "string") {
       throw new TypeError("argument string is required");
     }
@@ -36063,13 +36063,13 @@ var require_ms2 = __commonJS((exports, module) => {
     options = options || {};
     var type = typeof val;
     if (type === "string" && val.length > 0) {
-      return parse2(val);
+      return parse(val);
     } else if (type === "number" && isFinite(val)) {
       return options.long ? fmtLong(val) : fmtShort(val);
     }
     throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
   };
-  function parse2(str) {
+  function parse(str) {
     str = String(str);
     if (str.length > 100) {
       return;
@@ -36818,7 +36818,7 @@ var require_forwarded = __commonJS((exports, module) => {
     if (!req) {
       throw new TypeError("argument req is required");
     }
-    var proxyAddrs = parse2(req.headers["x-forwarded-for"] || "");
+    var proxyAddrs = parse(req.headers["x-forwarded-for"] || "");
     var socketAddr = getSocketAddr(req);
     var addrs = [socketAddr].concat(proxyAddrs);
     return addrs;
@@ -36826,7 +36826,7 @@ var require_forwarded = __commonJS((exports, module) => {
   function getSocketAddr(req) {
     return req.socket ? req.socket.remoteAddress : req.connection.remoteAddress;
   }
-  function parse2(header) {
+  function parse(header) {
     var end = header.length;
     var list = [];
     var start = header.length;
@@ -38655,7 +38655,7 @@ var require_request = __commonJS((exports, module) => {
   var http = __require("http");
   var fresh = require_fresh();
   var parseRange = require_range_parser();
-  var parse2 = require_parseurl();
+  var parse = require_parseurl();
   var proxyaddr = require_proxy_addr();
   var req = Object.create(http.IncomingMessage.prototype);
   module.exports = req;
@@ -38756,7 +38756,7 @@ var require_request = __commonJS((exports, module) => {
     return subdomains.slice(offset);
   });
   defineGetter(req, "path", function path() {
-    return parse2(this).pathname;
+    return parse(this).pathname;
   });
   defineGetter(req, "hostname", function hostname() {
     var trust = this.app.get("trust proxy fn");
@@ -38836,14 +38836,14 @@ var require_cookie = __commonJS((exports) => {
    * Copyright(c) 2015 Douglas Christopher Wilson
    * MIT Licensed
    */
-  exports.parse = parse2;
+  exports.parse = parse;
   exports.serialize = serialize;
   var __toString = Object.prototype.toString;
   var cookieNameRegExp = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
   var cookieValueRegExp = /^("?)[\u0021\u0023-\u002B\u002D-\u003A\u003C-\u005B\u005D-\u007E]*\1$/;
   var domainValueRegExp = /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
   var pathValueRegExp = /^[\u0020-\u003A\u003D-\u007E]*$/;
-  function parse2(str, opt) {
+  function parse(str, opt) {
     if (typeof str !== "string") {
       throw new TypeError("argument str must be a string");
     }
@@ -39018,7 +39018,7 @@ var require_vary = __commonJS((exports, module) => {
     if (!field) {
       throw new TypeError("field argument is required");
     }
-    var fields = !Array.isArray(field) ? parse2(String(field)) : field;
+    var fields = !Array.isArray(field) ? parse(String(field)) : field;
     for (var j = 0;j < fields.length; j++) {
       if (!FIELD_NAME_REGEXP.test(fields[j])) {
         throw new TypeError("field argument contains an invalid header name");
@@ -39028,7 +39028,7 @@ var require_vary = __commonJS((exports, module) => {
       return header;
     }
     var val = header;
-    var vals = parse2(header.toLowerCase());
+    var vals = parse(header.toLowerCase());
     if (fields.indexOf("*") !== -1 || vals.indexOf("*") !== -1) {
       return "*";
     }
@@ -39041,7 +39041,7 @@ var require_vary = __commonJS((exports, module) => {
     }
     return val;
   }
-  function parse2(header) {
+  function parse(header) {
     var end = 0;
     var list = [];
     var start = 0;
@@ -47189,1843 +47189,9 @@ class StreamableHTTPServerTransport {
   }
 }
 
-// node_modules/graphql/jsutils/devAssert.mjs
-function devAssert(condition, message) {
-  const booleanCondition = Boolean(condition);
-  if (!booleanCondition) {
-    throw new Error(message);
-  }
-}
+// src/index.ts
+var import_graphql3 = __toESM(require_graphql2(), 1);
 
-// node_modules/graphql/jsutils/inspect.mjs
-var MAX_ARRAY_LENGTH = 10;
-var MAX_RECURSIVE_DEPTH = 2;
-function inspect(value) {
-  return formatValue(value, []);
-}
-function formatValue(value, seenValues) {
-  switch (typeof value) {
-    case "string":
-      return JSON.stringify(value);
-    case "function":
-      return value.name ? `[function ${value.name}]` : "[function]";
-    case "object":
-      return formatObjectValue(value, seenValues);
-    default:
-      return String(value);
-  }
-}
-function formatObjectValue(value, previouslySeenValues) {
-  if (value === null) {
-    return "null";
-  }
-  if (previouslySeenValues.includes(value)) {
-    return "[Circular]";
-  }
-  const seenValues = [...previouslySeenValues, value];
-  if (isJSONable(value)) {
-    const jsonValue = value.toJSON();
-    if (jsonValue !== value) {
-      return typeof jsonValue === "string" ? jsonValue : formatValue(jsonValue, seenValues);
-    }
-  } else if (Array.isArray(value)) {
-    return formatArray(value, seenValues);
-  }
-  return formatObject(value, seenValues);
-}
-function isJSONable(value) {
-  return typeof value.toJSON === "function";
-}
-function formatObject(object2, seenValues) {
-  const entries = Object.entries(object2);
-  if (entries.length === 0) {
-    return "{}";
-  }
-  if (seenValues.length > MAX_RECURSIVE_DEPTH) {
-    return "[" + getObjectTag(object2) + "]";
-  }
-  const properties = entries.map(([key, value]) => key + ": " + formatValue(value, seenValues));
-  return "{ " + properties.join(", ") + " }";
-}
-function formatArray(array2, seenValues) {
-  if (array2.length === 0) {
-    return "[]";
-  }
-  if (seenValues.length > MAX_RECURSIVE_DEPTH) {
-    return "[Array]";
-  }
-  const len = Math.min(MAX_ARRAY_LENGTH, array2.length);
-  const remaining = array2.length - len;
-  const items = [];
-  for (let i = 0;i < len; ++i) {
-    items.push(formatValue(array2[i], seenValues));
-  }
-  if (remaining === 1) {
-    items.push("... 1 more item");
-  } else if (remaining > 1) {
-    items.push(`... ${remaining} more items`);
-  }
-  return "[" + items.join(", ") + "]";
-}
-function getObjectTag(object2) {
-  const tag = Object.prototype.toString.call(object2).replace(/^\[object /, "").replace(/]$/, "");
-  if (tag === "Object" && typeof object2.constructor === "function") {
-    const name = object2.constructor.name;
-    if (typeof name === "string" && name !== "") {
-      return name;
-    }
-  }
-  return tag;
-}
-
-// node_modules/graphql/jsutils/instanceOf.mjs
-var isProduction = globalThis.process && false;
-var instanceOf = isProduction ? function instanceOf2(value, constructor) {
-  return value instanceof constructor;
-} : function instanceOf3(value, constructor) {
-  if (value instanceof constructor) {
-    return true;
-  }
-  if (typeof value === "object" && value !== null) {
-    var _value$constructor;
-    const className = constructor.prototype[Symbol.toStringTag];
-    const valueClassName = Symbol.toStringTag in value ? value[Symbol.toStringTag] : (_value$constructor = value.constructor) === null || _value$constructor === undefined ? undefined : _value$constructor.name;
-    if (className === valueClassName) {
-      const stringifiedValue = inspect(value);
-      throw new Error(`Cannot use ${className} "${stringifiedValue}" from another module or realm.
-
-Ensure that there is only one instance of "graphql" in the node_modules
-directory. If different versions of "graphql" are the dependencies of other
-relied on modules, use "resolutions" to ensure only one version is installed.
-
-https://yarnpkg.com/en/docs/selective-version-resolutions
-
-Duplicate "graphql" modules cannot be used at the same time since different
-versions may have different capabilities and behavior. The data from one
-version used in the function from another could produce confusing and
-spurious results.`);
-    }
-  }
-  return false;
-};
-
-// node_modules/graphql/language/source.mjs
-class Source {
-  constructor(body, name = "GraphQL request", locationOffset = {
-    line: 1,
-    column: 1
-  }) {
-    typeof body === "string" || devAssert(false, `Body must be a string. Received: ${inspect(body)}.`);
-    this.body = body;
-    this.name = name;
-    this.locationOffset = locationOffset;
-    this.locationOffset.line > 0 || devAssert(false, "line in locationOffset is 1-indexed and must be positive.");
-    this.locationOffset.column > 0 || devAssert(false, "column in locationOffset is 1-indexed and must be positive.");
-  }
-  get [Symbol.toStringTag]() {
-    return "Source";
-  }
-}
-function isSource(source) {
-  return instanceOf(source, Source);
-}
-
-// node_modules/graphql/jsutils/invariant.mjs
-function invariant(condition, message) {
-  const booleanCondition = Boolean(condition);
-  if (!booleanCondition) {
-    throw new Error(message != null ? message : "Unexpected invariant triggered.");
-  }
-}
-
-// node_modules/graphql/language/location.mjs
-var LineRegExp = /\r\n|[\n\r]/g;
-function getLocation(source, position) {
-  let lastLineStart = 0;
-  let line = 1;
-  for (const match of source.body.matchAll(LineRegExp)) {
-    typeof match.index === "number" || invariant(false);
-    if (match.index >= position) {
-      break;
-    }
-    lastLineStart = match.index + match[0].length;
-    line += 1;
-  }
-  return {
-    line,
-    column: position + 1 - lastLineStart
-  };
-}
-
-// node_modules/graphql/language/printLocation.mjs
-function printLocation(location) {
-  return printSourceLocation(location.source, getLocation(location.source, location.start));
-}
-function printSourceLocation(source, sourceLocation) {
-  const firstLineColumnOffset = source.locationOffset.column - 1;
-  const body = "".padStart(firstLineColumnOffset) + source.body;
-  const lineIndex = sourceLocation.line - 1;
-  const lineOffset = source.locationOffset.line - 1;
-  const lineNum = sourceLocation.line + lineOffset;
-  const columnOffset = sourceLocation.line === 1 ? firstLineColumnOffset : 0;
-  const columnNum = sourceLocation.column + columnOffset;
-  const locationStr = `${source.name}:${lineNum}:${columnNum}
-`;
-  const lines = body.split(/\r\n|[\n\r]/g);
-  const locationLine = lines[lineIndex];
-  if (locationLine.length > 120) {
-    const subLineIndex = Math.floor(columnNum / 80);
-    const subLineColumnNum = columnNum % 80;
-    const subLines = [];
-    for (let i = 0;i < locationLine.length; i += 80) {
-      subLines.push(locationLine.slice(i, i + 80));
-    }
-    return locationStr + printPrefixedLines([
-      [`${lineNum} |`, subLines[0]],
-      ...subLines.slice(1, subLineIndex + 1).map((subLine) => ["|", subLine]),
-      ["|", "^".padStart(subLineColumnNum)],
-      ["|", subLines[subLineIndex + 1]]
-    ]);
-  }
-  return locationStr + printPrefixedLines([
-    [`${lineNum - 1} |`, lines[lineIndex - 1]],
-    [`${lineNum} |`, locationLine],
-    ["|", "^".padStart(columnNum)],
-    [`${lineNum + 1} |`, lines[lineIndex + 1]]
-  ]);
-}
-function printPrefixedLines(lines) {
-  const existingLines = lines.filter(([_, line]) => line !== undefined);
-  const padLen = Math.max(...existingLines.map(([prefix]) => prefix.length));
-  return existingLines.map(([prefix, line]) => prefix.padStart(padLen) + (line ? " " + line : "")).join(`
-`);
-}
-
-// node_modules/graphql/language/kinds.mjs
-var Kind;
-(function(Kind2) {
-  Kind2["NAME"] = "Name";
-  Kind2["DOCUMENT"] = "Document";
-  Kind2["OPERATION_DEFINITION"] = "OperationDefinition";
-  Kind2["VARIABLE_DEFINITION"] = "VariableDefinition";
-  Kind2["SELECTION_SET"] = "SelectionSet";
-  Kind2["FIELD"] = "Field";
-  Kind2["ARGUMENT"] = "Argument";
-  Kind2["FRAGMENT_SPREAD"] = "FragmentSpread";
-  Kind2["INLINE_FRAGMENT"] = "InlineFragment";
-  Kind2["FRAGMENT_DEFINITION"] = "FragmentDefinition";
-  Kind2["VARIABLE"] = "Variable";
-  Kind2["INT"] = "IntValue";
-  Kind2["FLOAT"] = "FloatValue";
-  Kind2["STRING"] = "StringValue";
-  Kind2["BOOLEAN"] = "BooleanValue";
-  Kind2["NULL"] = "NullValue";
-  Kind2["ENUM"] = "EnumValue";
-  Kind2["LIST"] = "ListValue";
-  Kind2["OBJECT"] = "ObjectValue";
-  Kind2["OBJECT_FIELD"] = "ObjectField";
-  Kind2["DIRECTIVE"] = "Directive";
-  Kind2["NAMED_TYPE"] = "NamedType";
-  Kind2["LIST_TYPE"] = "ListType";
-  Kind2["NON_NULL_TYPE"] = "NonNullType";
-  Kind2["SCHEMA_DEFINITION"] = "SchemaDefinition";
-  Kind2["OPERATION_TYPE_DEFINITION"] = "OperationTypeDefinition";
-  Kind2["SCALAR_TYPE_DEFINITION"] = "ScalarTypeDefinition";
-  Kind2["OBJECT_TYPE_DEFINITION"] = "ObjectTypeDefinition";
-  Kind2["FIELD_DEFINITION"] = "FieldDefinition";
-  Kind2["INPUT_VALUE_DEFINITION"] = "InputValueDefinition";
-  Kind2["INTERFACE_TYPE_DEFINITION"] = "InterfaceTypeDefinition";
-  Kind2["UNION_TYPE_DEFINITION"] = "UnionTypeDefinition";
-  Kind2["ENUM_TYPE_DEFINITION"] = "EnumTypeDefinition";
-  Kind2["ENUM_VALUE_DEFINITION"] = "EnumValueDefinition";
-  Kind2["INPUT_OBJECT_TYPE_DEFINITION"] = "InputObjectTypeDefinition";
-  Kind2["DIRECTIVE_DEFINITION"] = "DirectiveDefinition";
-  Kind2["SCHEMA_EXTENSION"] = "SchemaExtension";
-  Kind2["SCALAR_TYPE_EXTENSION"] = "ScalarTypeExtension";
-  Kind2["OBJECT_TYPE_EXTENSION"] = "ObjectTypeExtension";
-  Kind2["INTERFACE_TYPE_EXTENSION"] = "InterfaceTypeExtension";
-  Kind2["UNION_TYPE_EXTENSION"] = "UnionTypeExtension";
-  Kind2["ENUM_TYPE_EXTENSION"] = "EnumTypeExtension";
-  Kind2["INPUT_OBJECT_TYPE_EXTENSION"] = "InputObjectTypeExtension";
-})(Kind || (Kind = {}));
-
-// node_modules/graphql/language/tokenKind.mjs
-var TokenKind;
-(function(TokenKind2) {
-  TokenKind2["SOF"] = "<SOF>";
-  TokenKind2["EOF"] = "<EOF>";
-  TokenKind2["BANG"] = "!";
-  TokenKind2["DOLLAR"] = "$";
-  TokenKind2["AMP"] = "&";
-  TokenKind2["PAREN_L"] = "(";
-  TokenKind2["PAREN_R"] = ")";
-  TokenKind2["SPREAD"] = "...";
-  TokenKind2["COLON"] = ":";
-  TokenKind2["EQUALS"] = "=";
-  TokenKind2["AT"] = "@";
-  TokenKind2["BRACKET_L"] = "[";
-  TokenKind2["BRACKET_R"] = "]";
-  TokenKind2["BRACE_L"] = "{";
-  TokenKind2["PIPE"] = "|";
-  TokenKind2["BRACE_R"] = "}";
-  TokenKind2["NAME"] = "Name";
-  TokenKind2["INT"] = "Int";
-  TokenKind2["FLOAT"] = "Float";
-  TokenKind2["STRING"] = "String";
-  TokenKind2["BLOCK_STRING"] = "BlockString";
-  TokenKind2["COMMENT"] = "Comment";
-})(TokenKind || (TokenKind = {}));
-
-// node_modules/graphql/jsutils/isObjectLike.mjs
-function isObjectLike(value) {
-  return typeof value == "object" && value !== null;
-}
-
-// node_modules/graphql/error/GraphQLError.mjs
-function toNormalizedOptions(args) {
-  const firstArg = args[0];
-  if (firstArg == null || "kind" in firstArg || "length" in firstArg) {
-    return {
-      nodes: firstArg,
-      source: args[1],
-      positions: args[2],
-      path: args[3],
-      originalError: args[4],
-      extensions: args[5]
-    };
-  }
-  return firstArg;
-}
-
-class GraphQLError extends Error {
-  constructor(message, ...rawArgs) {
-    var _this$nodes, _nodeLocations$, _ref;
-    const { nodes, source, positions, path, originalError, extensions } = toNormalizedOptions(rawArgs);
-    super(message);
-    this.name = "GraphQLError";
-    this.path = path !== null && path !== undefined ? path : undefined;
-    this.originalError = originalError !== null && originalError !== undefined ? originalError : undefined;
-    this.nodes = undefinedIfEmpty(Array.isArray(nodes) ? nodes : nodes ? [nodes] : undefined);
-    const nodeLocations = undefinedIfEmpty((_this$nodes = this.nodes) === null || _this$nodes === undefined ? undefined : _this$nodes.map((node) => node.loc).filter((loc) => loc != null));
-    this.source = source !== null && source !== undefined ? source : nodeLocations === null || nodeLocations === undefined ? undefined : (_nodeLocations$ = nodeLocations[0]) === null || _nodeLocations$ === undefined ? undefined : _nodeLocations$.source;
-    this.positions = positions !== null && positions !== undefined ? positions : nodeLocations === null || nodeLocations === undefined ? undefined : nodeLocations.map((loc) => loc.start);
-    this.locations = positions && source ? positions.map((pos) => getLocation(source, pos)) : nodeLocations === null || nodeLocations === undefined ? undefined : nodeLocations.map((loc) => getLocation(loc.source, loc.start));
-    const originalExtensions = isObjectLike(originalError === null || originalError === undefined ? undefined : originalError.extensions) ? originalError === null || originalError === undefined ? undefined : originalError.extensions : undefined;
-    this.extensions = (_ref = extensions !== null && extensions !== undefined ? extensions : originalExtensions) !== null && _ref !== undefined ? _ref : Object.create(null);
-    Object.defineProperties(this, {
-      message: {
-        writable: true,
-        enumerable: true
-      },
-      name: {
-        enumerable: false
-      },
-      nodes: {
-        enumerable: false
-      },
-      source: {
-        enumerable: false
-      },
-      positions: {
-        enumerable: false
-      },
-      originalError: {
-        enumerable: false
-      }
-    });
-    if (originalError !== null && originalError !== undefined && originalError.stack) {
-      Object.defineProperty(this, "stack", {
-        value: originalError.stack,
-        writable: true,
-        configurable: true
-      });
-    } else if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, GraphQLError);
-    } else {
-      Object.defineProperty(this, "stack", {
-        value: Error().stack,
-        writable: true,
-        configurable: true
-      });
-    }
-  }
-  get [Symbol.toStringTag]() {
-    return "GraphQLError";
-  }
-  toString() {
-    let output = this.message;
-    if (this.nodes) {
-      for (const node of this.nodes) {
-        if (node.loc) {
-          output += `
-
-` + printLocation(node.loc);
-        }
-      }
-    } else if (this.source && this.locations) {
-      for (const location of this.locations) {
-        output += `
-
-` + printSourceLocation(this.source, location);
-      }
-    }
-    return output;
-  }
-  toJSON() {
-    const formattedError = {
-      message: this.message
-    };
-    if (this.locations != null) {
-      formattedError.locations = this.locations;
-    }
-    if (this.path != null) {
-      formattedError.path = this.path;
-    }
-    if (this.extensions != null && Object.keys(this.extensions).length > 0) {
-      formattedError.extensions = this.extensions;
-    }
-    return formattedError;
-  }
-}
-function undefinedIfEmpty(array2) {
-  return array2 === undefined || array2.length === 0 ? undefined : array2;
-}
-
-// node_modules/graphql/error/syntaxError.mjs
-function syntaxError(source, position, description) {
-  return new GraphQLError(`Syntax Error: ${description}`, {
-    source,
-    positions: [position]
-  });
-}
-
-// node_modules/graphql/language/ast.mjs
-class Location {
-  constructor(startToken, endToken, source) {
-    this.start = startToken.start;
-    this.end = endToken.end;
-    this.startToken = startToken;
-    this.endToken = endToken;
-    this.source = source;
-  }
-  get [Symbol.toStringTag]() {
-    return "Location";
-  }
-  toJSON() {
-    return {
-      start: this.start,
-      end: this.end
-    };
-  }
-}
-
-class Token {
-  constructor(kind, start, end, line, column, value) {
-    this.kind = kind;
-    this.start = start;
-    this.end = end;
-    this.line = line;
-    this.column = column;
-    this.value = value;
-    this.prev = null;
-    this.next = null;
-  }
-  get [Symbol.toStringTag]() {
-    return "Token";
-  }
-  toJSON() {
-    return {
-      kind: this.kind,
-      value: this.value,
-      line: this.line,
-      column: this.column
-    };
-  }
-}
-var QueryDocumentKeys = {
-  Name: [],
-  Document: ["definitions"],
-  OperationDefinition: [
-    "name",
-    "variableDefinitions",
-    "directives",
-    "selectionSet"
-  ],
-  VariableDefinition: ["variable", "type", "defaultValue", "directives"],
-  Variable: ["name"],
-  SelectionSet: ["selections"],
-  Field: ["alias", "name", "arguments", "directives", "selectionSet"],
-  Argument: ["name", "value"],
-  FragmentSpread: ["name", "directives"],
-  InlineFragment: ["typeCondition", "directives", "selectionSet"],
-  FragmentDefinition: [
-    "name",
-    "variableDefinitions",
-    "typeCondition",
-    "directives",
-    "selectionSet"
-  ],
-  IntValue: [],
-  FloatValue: [],
-  StringValue: [],
-  BooleanValue: [],
-  NullValue: [],
-  EnumValue: [],
-  ListValue: ["values"],
-  ObjectValue: ["fields"],
-  ObjectField: ["name", "value"],
-  Directive: ["name", "arguments"],
-  NamedType: ["name"],
-  ListType: ["type"],
-  NonNullType: ["type"],
-  SchemaDefinition: ["description", "directives", "operationTypes"],
-  OperationTypeDefinition: ["type"],
-  ScalarTypeDefinition: ["description", "name", "directives"],
-  ObjectTypeDefinition: [
-    "description",
-    "name",
-    "interfaces",
-    "directives",
-    "fields"
-  ],
-  FieldDefinition: ["description", "name", "arguments", "type", "directives"],
-  InputValueDefinition: [
-    "description",
-    "name",
-    "type",
-    "defaultValue",
-    "directives"
-  ],
-  InterfaceTypeDefinition: [
-    "description",
-    "name",
-    "interfaces",
-    "directives",
-    "fields"
-  ],
-  UnionTypeDefinition: ["description", "name", "directives", "types"],
-  EnumTypeDefinition: ["description", "name", "directives", "values"],
-  EnumValueDefinition: ["description", "name", "directives"],
-  InputObjectTypeDefinition: ["description", "name", "directives", "fields"],
-  DirectiveDefinition: ["description", "name", "arguments", "locations"],
-  SchemaExtension: ["directives", "operationTypes"],
-  ScalarTypeExtension: ["name", "directives"],
-  ObjectTypeExtension: ["name", "interfaces", "directives", "fields"],
-  InterfaceTypeExtension: ["name", "interfaces", "directives", "fields"],
-  UnionTypeExtension: ["name", "directives", "types"],
-  EnumTypeExtension: ["name", "directives", "values"],
-  InputObjectTypeExtension: ["name", "directives", "fields"]
-};
-var kindValues = new Set(Object.keys(QueryDocumentKeys));
-var OperationTypeNode;
-(function(OperationTypeNode2) {
-  OperationTypeNode2["QUERY"] = "query";
-  OperationTypeNode2["MUTATION"] = "mutation";
-  OperationTypeNode2["SUBSCRIPTION"] = "subscription";
-})(OperationTypeNode || (OperationTypeNode = {}));
-
-// node_modules/graphql/language/characterClasses.mjs
-function isWhiteSpace(code) {
-  return code === 9 || code === 32;
-}
-function isDigit(code) {
-  return code >= 48 && code <= 57;
-}
-function isLetter(code) {
-  return code >= 97 && code <= 122 || code >= 65 && code <= 90;
-}
-function isNameStart(code) {
-  return isLetter(code) || code === 95;
-}
-function isNameContinue(code) {
-  return isLetter(code) || isDigit(code) || code === 95;
-}
-
-// node_modules/graphql/language/blockString.mjs
-function dedentBlockStringLines(lines) {
-  var _firstNonEmptyLine2;
-  let commonIndent = Number.MAX_SAFE_INTEGER;
-  let firstNonEmptyLine = null;
-  let lastNonEmptyLine = -1;
-  for (let i = 0;i < lines.length; ++i) {
-    var _firstNonEmptyLine;
-    const line = lines[i];
-    const indent = leadingWhitespace(line);
-    if (indent === line.length) {
-      continue;
-    }
-    firstNonEmptyLine = (_firstNonEmptyLine = firstNonEmptyLine) !== null && _firstNonEmptyLine !== undefined ? _firstNonEmptyLine : i;
-    lastNonEmptyLine = i;
-    if (i !== 0 && indent < commonIndent) {
-      commonIndent = indent;
-    }
-  }
-  return lines.map((line, i) => i === 0 ? line : line.slice(commonIndent)).slice((_firstNonEmptyLine2 = firstNonEmptyLine) !== null && _firstNonEmptyLine2 !== undefined ? _firstNonEmptyLine2 : 0, lastNonEmptyLine + 1);
-}
-function leadingWhitespace(str) {
-  let i = 0;
-  while (i < str.length && isWhiteSpace(str.charCodeAt(i))) {
-    ++i;
-  }
-  return i;
-}
-
-// node_modules/graphql/language/lexer.mjs
-class Lexer {
-  constructor(source) {
-    const startOfFileToken = new Token(TokenKind.SOF, 0, 0, 0, 0);
-    this.source = source;
-    this.lastToken = startOfFileToken;
-    this.token = startOfFileToken;
-    this.line = 1;
-    this.lineStart = 0;
-  }
-  get [Symbol.toStringTag]() {
-    return "Lexer";
-  }
-  advance() {
-    this.lastToken = this.token;
-    const token = this.token = this.lookahead();
-    return token;
-  }
-  lookahead() {
-    let token = this.token;
-    if (token.kind !== TokenKind.EOF) {
-      do {
-        if (token.next) {
-          token = token.next;
-        } else {
-          const nextToken = readNextToken(this, token.end);
-          token.next = nextToken;
-          nextToken.prev = token;
-          token = nextToken;
-        }
-      } while (token.kind === TokenKind.COMMENT);
-    }
-    return token;
-  }
-}
-function isPunctuatorTokenKind(kind) {
-  return kind === TokenKind.BANG || kind === TokenKind.DOLLAR || kind === TokenKind.AMP || kind === TokenKind.PAREN_L || kind === TokenKind.PAREN_R || kind === TokenKind.SPREAD || kind === TokenKind.COLON || kind === TokenKind.EQUALS || kind === TokenKind.AT || kind === TokenKind.BRACKET_L || kind === TokenKind.BRACKET_R || kind === TokenKind.BRACE_L || kind === TokenKind.PIPE || kind === TokenKind.BRACE_R;
-}
-function isUnicodeScalarValue(code) {
-  return code >= 0 && code <= 55295 || code >= 57344 && code <= 1114111;
-}
-function isSupplementaryCodePoint(body, location) {
-  return isLeadingSurrogate(body.charCodeAt(location)) && isTrailingSurrogate(body.charCodeAt(location + 1));
-}
-function isLeadingSurrogate(code) {
-  return code >= 55296 && code <= 56319;
-}
-function isTrailingSurrogate(code) {
-  return code >= 56320 && code <= 57343;
-}
-function printCodePointAt(lexer, location) {
-  const code = lexer.source.body.codePointAt(location);
-  if (code === undefined) {
-    return TokenKind.EOF;
-  } else if (code >= 32 && code <= 126) {
-    const char = String.fromCodePoint(code);
-    return char === '"' ? `'"'` : `"${char}"`;
-  }
-  return "U+" + code.toString(16).toUpperCase().padStart(4, "0");
-}
-function createToken(lexer, kind, start, end, value) {
-  const line = lexer.line;
-  const col = 1 + start - lexer.lineStart;
-  return new Token(kind, start, end, line, col, value);
-}
-function readNextToken(lexer, start) {
-  const body = lexer.source.body;
-  const bodyLength = body.length;
-  let position = start;
-  while (position < bodyLength) {
-    const code = body.charCodeAt(position);
-    switch (code) {
-      case 65279:
-      case 9:
-      case 32:
-      case 44:
-        ++position;
-        continue;
-      case 10:
-        ++position;
-        ++lexer.line;
-        lexer.lineStart = position;
-        continue;
-      case 13:
-        if (body.charCodeAt(position + 1) === 10) {
-          position += 2;
-        } else {
-          ++position;
-        }
-        ++lexer.line;
-        lexer.lineStart = position;
-        continue;
-      case 35:
-        return readComment(lexer, position);
-      case 33:
-        return createToken(lexer, TokenKind.BANG, position, position + 1);
-      case 36:
-        return createToken(lexer, TokenKind.DOLLAR, position, position + 1);
-      case 38:
-        return createToken(lexer, TokenKind.AMP, position, position + 1);
-      case 40:
-        return createToken(lexer, TokenKind.PAREN_L, position, position + 1);
-      case 41:
-        return createToken(lexer, TokenKind.PAREN_R, position, position + 1);
-      case 46:
-        if (body.charCodeAt(position + 1) === 46 && body.charCodeAt(position + 2) === 46) {
-          return createToken(lexer, TokenKind.SPREAD, position, position + 3);
-        }
-        break;
-      case 58:
-        return createToken(lexer, TokenKind.COLON, position, position + 1);
-      case 61:
-        return createToken(lexer, TokenKind.EQUALS, position, position + 1);
-      case 64:
-        return createToken(lexer, TokenKind.AT, position, position + 1);
-      case 91:
-        return createToken(lexer, TokenKind.BRACKET_L, position, position + 1);
-      case 93:
-        return createToken(lexer, TokenKind.BRACKET_R, position, position + 1);
-      case 123:
-        return createToken(lexer, TokenKind.BRACE_L, position, position + 1);
-      case 124:
-        return createToken(lexer, TokenKind.PIPE, position, position + 1);
-      case 125:
-        return createToken(lexer, TokenKind.BRACE_R, position, position + 1);
-      case 34:
-        if (body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34) {
-          return readBlockString(lexer, position);
-        }
-        return readString(lexer, position);
-    }
-    if (isDigit(code) || code === 45) {
-      return readNumber(lexer, position, code);
-    }
-    if (isNameStart(code)) {
-      return readName(lexer, position);
-    }
-    throw syntaxError(lexer.source, position, code === 39 ? `Unexpected single quote character ('), did you mean to use a double quote (")?` : isUnicodeScalarValue(code) || isSupplementaryCodePoint(body, position) ? `Unexpected character: ${printCodePointAt(lexer, position)}.` : `Invalid character: ${printCodePointAt(lexer, position)}.`);
-  }
-  return createToken(lexer, TokenKind.EOF, bodyLength, bodyLength);
-}
-function readComment(lexer, start) {
-  const body = lexer.source.body;
-  const bodyLength = body.length;
-  let position = start + 1;
-  while (position < bodyLength) {
-    const code = body.charCodeAt(position);
-    if (code === 10 || code === 13) {
-      break;
-    }
-    if (isUnicodeScalarValue(code)) {
-      ++position;
-    } else if (isSupplementaryCodePoint(body, position)) {
-      position += 2;
-    } else {
-      break;
-    }
-  }
-  return createToken(lexer, TokenKind.COMMENT, start, position, body.slice(start + 1, position));
-}
-function readNumber(lexer, start, firstCode) {
-  const body = lexer.source.body;
-  let position = start;
-  let code = firstCode;
-  let isFloat = false;
-  if (code === 45) {
-    code = body.charCodeAt(++position);
-  }
-  if (code === 48) {
-    code = body.charCodeAt(++position);
-    if (isDigit(code)) {
-      throw syntaxError(lexer.source, position, `Invalid number, unexpected digit after 0: ${printCodePointAt(lexer, position)}.`);
-    }
-  } else {
-    position = readDigits(lexer, position, code);
-    code = body.charCodeAt(position);
-  }
-  if (code === 46) {
-    isFloat = true;
-    code = body.charCodeAt(++position);
-    position = readDigits(lexer, position, code);
-    code = body.charCodeAt(position);
-  }
-  if (code === 69 || code === 101) {
-    isFloat = true;
-    code = body.charCodeAt(++position);
-    if (code === 43 || code === 45) {
-      code = body.charCodeAt(++position);
-    }
-    position = readDigits(lexer, position, code);
-    code = body.charCodeAt(position);
-  }
-  if (code === 46 || isNameStart(code)) {
-    throw syntaxError(lexer.source, position, `Invalid number, expected digit but got: ${printCodePointAt(lexer, position)}.`);
-  }
-  return createToken(lexer, isFloat ? TokenKind.FLOAT : TokenKind.INT, start, position, body.slice(start, position));
-}
-function readDigits(lexer, start, firstCode) {
-  if (!isDigit(firstCode)) {
-    throw syntaxError(lexer.source, start, `Invalid number, expected digit but got: ${printCodePointAt(lexer, start)}.`);
-  }
-  const body = lexer.source.body;
-  let position = start + 1;
-  while (isDigit(body.charCodeAt(position))) {
-    ++position;
-  }
-  return position;
-}
-function readString(lexer, start) {
-  const body = lexer.source.body;
-  const bodyLength = body.length;
-  let position = start + 1;
-  let chunkStart = position;
-  let value = "";
-  while (position < bodyLength) {
-    const code = body.charCodeAt(position);
-    if (code === 34) {
-      value += body.slice(chunkStart, position);
-      return createToken(lexer, TokenKind.STRING, start, position + 1, value);
-    }
-    if (code === 92) {
-      value += body.slice(chunkStart, position);
-      const escape2 = body.charCodeAt(position + 1) === 117 ? body.charCodeAt(position + 2) === 123 ? readEscapedUnicodeVariableWidth(lexer, position) : readEscapedUnicodeFixedWidth(lexer, position) : readEscapedCharacter(lexer, position);
-      value += escape2.value;
-      position += escape2.size;
-      chunkStart = position;
-      continue;
-    }
-    if (code === 10 || code === 13) {
-      break;
-    }
-    if (isUnicodeScalarValue(code)) {
-      ++position;
-    } else if (isSupplementaryCodePoint(body, position)) {
-      position += 2;
-    } else {
-      throw syntaxError(lexer.source, position, `Invalid character within String: ${printCodePointAt(lexer, position)}.`);
-    }
-  }
-  throw syntaxError(lexer.source, position, "Unterminated string.");
-}
-function readEscapedUnicodeVariableWidth(lexer, position) {
-  const body = lexer.source.body;
-  let point = 0;
-  let size = 3;
-  while (size < 12) {
-    const code = body.charCodeAt(position + size++);
-    if (code === 125) {
-      if (size < 5 || !isUnicodeScalarValue(point)) {
-        break;
-      }
-      return {
-        value: String.fromCodePoint(point),
-        size
-      };
-    }
-    point = point << 4 | readHexDigit(code);
-    if (point < 0) {
-      break;
-    }
-  }
-  throw syntaxError(lexer.source, position, `Invalid Unicode escape sequence: "${body.slice(position, position + size)}".`);
-}
-function readEscapedUnicodeFixedWidth(lexer, position) {
-  const body = lexer.source.body;
-  const code = read16BitHexCode(body, position + 2);
-  if (isUnicodeScalarValue(code)) {
-    return {
-      value: String.fromCodePoint(code),
-      size: 6
-    };
-  }
-  if (isLeadingSurrogate(code)) {
-    if (body.charCodeAt(position + 6) === 92 && body.charCodeAt(position + 7) === 117) {
-      const trailingCode = read16BitHexCode(body, position + 8);
-      if (isTrailingSurrogate(trailingCode)) {
-        return {
-          value: String.fromCodePoint(code, trailingCode),
-          size: 12
-        };
-      }
-    }
-  }
-  throw syntaxError(lexer.source, position, `Invalid Unicode escape sequence: "${body.slice(position, position + 6)}".`);
-}
-function read16BitHexCode(body, position) {
-  return readHexDigit(body.charCodeAt(position)) << 12 | readHexDigit(body.charCodeAt(position + 1)) << 8 | readHexDigit(body.charCodeAt(position + 2)) << 4 | readHexDigit(body.charCodeAt(position + 3));
-}
-function readHexDigit(code) {
-  return code >= 48 && code <= 57 ? code - 48 : code >= 65 && code <= 70 ? code - 55 : code >= 97 && code <= 102 ? code - 87 : -1;
-}
-function readEscapedCharacter(lexer, position) {
-  const body = lexer.source.body;
-  const code = body.charCodeAt(position + 1);
-  switch (code) {
-    case 34:
-      return {
-        value: '"',
-        size: 2
-      };
-    case 92:
-      return {
-        value: "\\",
-        size: 2
-      };
-    case 47:
-      return {
-        value: "/",
-        size: 2
-      };
-    case 98:
-      return {
-        value: "\b",
-        size: 2
-      };
-    case 102:
-      return {
-        value: "\f",
-        size: 2
-      };
-    case 110:
-      return {
-        value: `
-`,
-        size: 2
-      };
-    case 114:
-      return {
-        value: "\r",
-        size: 2
-      };
-    case 116:
-      return {
-        value: "\t",
-        size: 2
-      };
-  }
-  throw syntaxError(lexer.source, position, `Invalid character escape sequence: "${body.slice(position, position + 2)}".`);
-}
-function readBlockString(lexer, start) {
-  const body = lexer.source.body;
-  const bodyLength = body.length;
-  let lineStart = lexer.lineStart;
-  let position = start + 3;
-  let chunkStart = position;
-  let currentLine = "";
-  const blockLines = [];
-  while (position < bodyLength) {
-    const code = body.charCodeAt(position);
-    if (code === 34 && body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34) {
-      currentLine += body.slice(chunkStart, position);
-      blockLines.push(currentLine);
-      const token = createToken(lexer, TokenKind.BLOCK_STRING, start, position + 3, dedentBlockStringLines(blockLines).join(`
-`));
-      lexer.line += blockLines.length - 1;
-      lexer.lineStart = lineStart;
-      return token;
-    }
-    if (code === 92 && body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34 && body.charCodeAt(position + 3) === 34) {
-      currentLine += body.slice(chunkStart, position);
-      chunkStart = position + 1;
-      position += 4;
-      continue;
-    }
-    if (code === 10 || code === 13) {
-      currentLine += body.slice(chunkStart, position);
-      blockLines.push(currentLine);
-      if (code === 13 && body.charCodeAt(position + 1) === 10) {
-        position += 2;
-      } else {
-        ++position;
-      }
-      currentLine = "";
-      chunkStart = position;
-      lineStart = position;
-      continue;
-    }
-    if (isUnicodeScalarValue(code)) {
-      ++position;
-    } else if (isSupplementaryCodePoint(body, position)) {
-      position += 2;
-    } else {
-      throw syntaxError(lexer.source, position, `Invalid character within String: ${printCodePointAt(lexer, position)}.`);
-    }
-  }
-  throw syntaxError(lexer.source, position, "Unterminated string.");
-}
-function readName(lexer, start) {
-  const body = lexer.source.body;
-  const bodyLength = body.length;
-  let position = start + 1;
-  while (position < bodyLength) {
-    const code = body.charCodeAt(position);
-    if (isNameContinue(code)) {
-      ++position;
-    } else {
-      break;
-    }
-  }
-  return createToken(lexer, TokenKind.NAME, start, position, body.slice(start, position));
-}
-
-// node_modules/graphql/language/directiveLocation.mjs
-var DirectiveLocation;
-(function(DirectiveLocation2) {
-  DirectiveLocation2["QUERY"] = "QUERY";
-  DirectiveLocation2["MUTATION"] = "MUTATION";
-  DirectiveLocation2["SUBSCRIPTION"] = "SUBSCRIPTION";
-  DirectiveLocation2["FIELD"] = "FIELD";
-  DirectiveLocation2["FRAGMENT_DEFINITION"] = "FRAGMENT_DEFINITION";
-  DirectiveLocation2["FRAGMENT_SPREAD"] = "FRAGMENT_SPREAD";
-  DirectiveLocation2["INLINE_FRAGMENT"] = "INLINE_FRAGMENT";
-  DirectiveLocation2["VARIABLE_DEFINITION"] = "VARIABLE_DEFINITION";
-  DirectiveLocation2["SCHEMA"] = "SCHEMA";
-  DirectiveLocation2["SCALAR"] = "SCALAR";
-  DirectiveLocation2["OBJECT"] = "OBJECT";
-  DirectiveLocation2["FIELD_DEFINITION"] = "FIELD_DEFINITION";
-  DirectiveLocation2["ARGUMENT_DEFINITION"] = "ARGUMENT_DEFINITION";
-  DirectiveLocation2["INTERFACE"] = "INTERFACE";
-  DirectiveLocation2["UNION"] = "UNION";
-  DirectiveLocation2["ENUM"] = "ENUM";
-  DirectiveLocation2["ENUM_VALUE"] = "ENUM_VALUE";
-  DirectiveLocation2["INPUT_OBJECT"] = "INPUT_OBJECT";
-  DirectiveLocation2["INPUT_FIELD_DEFINITION"] = "INPUT_FIELD_DEFINITION";
-})(DirectiveLocation || (DirectiveLocation = {}));
-
-// node_modules/graphql/language/parser.mjs
-function parse(source, options) {
-  const parser = new Parser(source, options);
-  const document2 = parser.parseDocument();
-  Object.defineProperty(document2, "tokenCount", {
-    enumerable: false,
-    value: parser.tokenCount
-  });
-  return document2;
-}
-class Parser {
-  constructor(source, options = {}) {
-    const sourceObj = isSource(source) ? source : new Source(source);
-    this._lexer = new Lexer(sourceObj);
-    this._options = options;
-    this._tokenCounter = 0;
-  }
-  get tokenCount() {
-    return this._tokenCounter;
-  }
-  parseName() {
-    const token = this.expectToken(TokenKind.NAME);
-    return this.node(token, {
-      kind: Kind.NAME,
-      value: token.value
-    });
-  }
-  parseDocument() {
-    return this.node(this._lexer.token, {
-      kind: Kind.DOCUMENT,
-      definitions: this.many(TokenKind.SOF, this.parseDefinition, TokenKind.EOF)
-    });
-  }
-  parseDefinition() {
-    if (this.peek(TokenKind.BRACE_L)) {
-      return this.parseOperationDefinition();
-    }
-    const hasDescription = this.peekDescription();
-    const keywordToken = hasDescription ? this._lexer.lookahead() : this._lexer.token;
-    if (keywordToken.kind === TokenKind.NAME) {
-      switch (keywordToken.value) {
-        case "schema":
-          return this.parseSchemaDefinition();
-        case "scalar":
-          return this.parseScalarTypeDefinition();
-        case "type":
-          return this.parseObjectTypeDefinition();
-        case "interface":
-          return this.parseInterfaceTypeDefinition();
-        case "union":
-          return this.parseUnionTypeDefinition();
-        case "enum":
-          return this.parseEnumTypeDefinition();
-        case "input":
-          return this.parseInputObjectTypeDefinition();
-        case "directive":
-          return this.parseDirectiveDefinition();
-      }
-      if (hasDescription) {
-        throw syntaxError(this._lexer.source, this._lexer.token.start, "Unexpected description, descriptions are supported only on type definitions.");
-      }
-      switch (keywordToken.value) {
-        case "query":
-        case "mutation":
-        case "subscription":
-          return this.parseOperationDefinition();
-        case "fragment":
-          return this.parseFragmentDefinition();
-        case "extend":
-          return this.parseTypeSystemExtension();
-      }
-    }
-    throw this.unexpected(keywordToken);
-  }
-  parseOperationDefinition() {
-    const start = this._lexer.token;
-    if (this.peek(TokenKind.BRACE_L)) {
-      return this.node(start, {
-        kind: Kind.OPERATION_DEFINITION,
-        operation: OperationTypeNode.QUERY,
-        name: undefined,
-        variableDefinitions: [],
-        directives: [],
-        selectionSet: this.parseSelectionSet()
-      });
-    }
-    const operation = this.parseOperationType();
-    let name;
-    if (this.peek(TokenKind.NAME)) {
-      name = this.parseName();
-    }
-    return this.node(start, {
-      kind: Kind.OPERATION_DEFINITION,
-      operation,
-      name,
-      variableDefinitions: this.parseVariableDefinitions(),
-      directives: this.parseDirectives(false),
-      selectionSet: this.parseSelectionSet()
-    });
-  }
-  parseOperationType() {
-    const operationToken = this.expectToken(TokenKind.NAME);
-    switch (operationToken.value) {
-      case "query":
-        return OperationTypeNode.QUERY;
-      case "mutation":
-        return OperationTypeNode.MUTATION;
-      case "subscription":
-        return OperationTypeNode.SUBSCRIPTION;
-    }
-    throw this.unexpected(operationToken);
-  }
-  parseVariableDefinitions() {
-    return this.optionalMany(TokenKind.PAREN_L, this.parseVariableDefinition, TokenKind.PAREN_R);
-  }
-  parseVariableDefinition() {
-    return this.node(this._lexer.token, {
-      kind: Kind.VARIABLE_DEFINITION,
-      variable: this.parseVariable(),
-      type: (this.expectToken(TokenKind.COLON), this.parseTypeReference()),
-      defaultValue: this.expectOptionalToken(TokenKind.EQUALS) ? this.parseConstValueLiteral() : undefined,
-      directives: this.parseConstDirectives()
-    });
-  }
-  parseVariable() {
-    const start = this._lexer.token;
-    this.expectToken(TokenKind.DOLLAR);
-    return this.node(start, {
-      kind: Kind.VARIABLE,
-      name: this.parseName()
-    });
-  }
-  parseSelectionSet() {
-    return this.node(this._lexer.token, {
-      kind: Kind.SELECTION_SET,
-      selections: this.many(TokenKind.BRACE_L, this.parseSelection, TokenKind.BRACE_R)
-    });
-  }
-  parseSelection() {
-    return this.peek(TokenKind.SPREAD) ? this.parseFragment() : this.parseField();
-  }
-  parseField() {
-    const start = this._lexer.token;
-    const nameOrAlias = this.parseName();
-    let alias;
-    let name;
-    if (this.expectOptionalToken(TokenKind.COLON)) {
-      alias = nameOrAlias;
-      name = this.parseName();
-    } else {
-      name = nameOrAlias;
-    }
-    return this.node(start, {
-      kind: Kind.FIELD,
-      alias,
-      name,
-      arguments: this.parseArguments(false),
-      directives: this.parseDirectives(false),
-      selectionSet: this.peek(TokenKind.BRACE_L) ? this.parseSelectionSet() : undefined
-    });
-  }
-  parseArguments(isConst) {
-    const item = isConst ? this.parseConstArgument : this.parseArgument;
-    return this.optionalMany(TokenKind.PAREN_L, item, TokenKind.PAREN_R);
-  }
-  parseArgument(isConst = false) {
-    const start = this._lexer.token;
-    const name = this.parseName();
-    this.expectToken(TokenKind.COLON);
-    return this.node(start, {
-      kind: Kind.ARGUMENT,
-      name,
-      value: this.parseValueLiteral(isConst)
-    });
-  }
-  parseConstArgument() {
-    return this.parseArgument(true);
-  }
-  parseFragment() {
-    const start = this._lexer.token;
-    this.expectToken(TokenKind.SPREAD);
-    const hasTypeCondition = this.expectOptionalKeyword("on");
-    if (!hasTypeCondition && this.peek(TokenKind.NAME)) {
-      return this.node(start, {
-        kind: Kind.FRAGMENT_SPREAD,
-        name: this.parseFragmentName(),
-        directives: this.parseDirectives(false)
-      });
-    }
-    return this.node(start, {
-      kind: Kind.INLINE_FRAGMENT,
-      typeCondition: hasTypeCondition ? this.parseNamedType() : undefined,
-      directives: this.parseDirectives(false),
-      selectionSet: this.parseSelectionSet()
-    });
-  }
-  parseFragmentDefinition() {
-    const start = this._lexer.token;
-    this.expectKeyword("fragment");
-    if (this._options.allowLegacyFragmentVariables === true) {
-      return this.node(start, {
-        kind: Kind.FRAGMENT_DEFINITION,
-        name: this.parseFragmentName(),
-        variableDefinitions: this.parseVariableDefinitions(),
-        typeCondition: (this.expectKeyword("on"), this.parseNamedType()),
-        directives: this.parseDirectives(false),
-        selectionSet: this.parseSelectionSet()
-      });
-    }
-    return this.node(start, {
-      kind: Kind.FRAGMENT_DEFINITION,
-      name: this.parseFragmentName(),
-      typeCondition: (this.expectKeyword("on"), this.parseNamedType()),
-      directives: this.parseDirectives(false),
-      selectionSet: this.parseSelectionSet()
-    });
-  }
-  parseFragmentName() {
-    if (this._lexer.token.value === "on") {
-      throw this.unexpected();
-    }
-    return this.parseName();
-  }
-  parseValueLiteral(isConst) {
-    const token = this._lexer.token;
-    switch (token.kind) {
-      case TokenKind.BRACKET_L:
-        return this.parseList(isConst);
-      case TokenKind.BRACE_L:
-        return this.parseObject(isConst);
-      case TokenKind.INT:
-        this.advanceLexer();
-        return this.node(token, {
-          kind: Kind.INT,
-          value: token.value
-        });
-      case TokenKind.FLOAT:
-        this.advanceLexer();
-        return this.node(token, {
-          kind: Kind.FLOAT,
-          value: token.value
-        });
-      case TokenKind.STRING:
-      case TokenKind.BLOCK_STRING:
-        return this.parseStringLiteral();
-      case TokenKind.NAME:
-        this.advanceLexer();
-        switch (token.value) {
-          case "true":
-            return this.node(token, {
-              kind: Kind.BOOLEAN,
-              value: true
-            });
-          case "false":
-            return this.node(token, {
-              kind: Kind.BOOLEAN,
-              value: false
-            });
-          case "null":
-            return this.node(token, {
-              kind: Kind.NULL
-            });
-          default:
-            return this.node(token, {
-              kind: Kind.ENUM,
-              value: token.value
-            });
-        }
-      case TokenKind.DOLLAR:
-        if (isConst) {
-          this.expectToken(TokenKind.DOLLAR);
-          if (this._lexer.token.kind === TokenKind.NAME) {
-            const varName = this._lexer.token.value;
-            throw syntaxError(this._lexer.source, token.start, `Unexpected variable "$${varName}" in constant value.`);
-          } else {
-            throw this.unexpected(token);
-          }
-        }
-        return this.parseVariable();
-      default:
-        throw this.unexpected();
-    }
-  }
-  parseConstValueLiteral() {
-    return this.parseValueLiteral(true);
-  }
-  parseStringLiteral() {
-    const token = this._lexer.token;
-    this.advanceLexer();
-    return this.node(token, {
-      kind: Kind.STRING,
-      value: token.value,
-      block: token.kind === TokenKind.BLOCK_STRING
-    });
-  }
-  parseList(isConst) {
-    const item = () => this.parseValueLiteral(isConst);
-    return this.node(this._lexer.token, {
-      kind: Kind.LIST,
-      values: this.any(TokenKind.BRACKET_L, item, TokenKind.BRACKET_R)
-    });
-  }
-  parseObject(isConst) {
-    const item = () => this.parseObjectField(isConst);
-    return this.node(this._lexer.token, {
-      kind: Kind.OBJECT,
-      fields: this.any(TokenKind.BRACE_L, item, TokenKind.BRACE_R)
-    });
-  }
-  parseObjectField(isConst) {
-    const start = this._lexer.token;
-    const name = this.parseName();
-    this.expectToken(TokenKind.COLON);
-    return this.node(start, {
-      kind: Kind.OBJECT_FIELD,
-      name,
-      value: this.parseValueLiteral(isConst)
-    });
-  }
-  parseDirectives(isConst) {
-    const directives = [];
-    while (this.peek(TokenKind.AT)) {
-      directives.push(this.parseDirective(isConst));
-    }
-    return directives;
-  }
-  parseConstDirectives() {
-    return this.parseDirectives(true);
-  }
-  parseDirective(isConst) {
-    const start = this._lexer.token;
-    this.expectToken(TokenKind.AT);
-    return this.node(start, {
-      kind: Kind.DIRECTIVE,
-      name: this.parseName(),
-      arguments: this.parseArguments(isConst)
-    });
-  }
-  parseTypeReference() {
-    const start = this._lexer.token;
-    let type;
-    if (this.expectOptionalToken(TokenKind.BRACKET_L)) {
-      const innerType = this.parseTypeReference();
-      this.expectToken(TokenKind.BRACKET_R);
-      type = this.node(start, {
-        kind: Kind.LIST_TYPE,
-        type: innerType
-      });
-    } else {
-      type = this.parseNamedType();
-    }
-    if (this.expectOptionalToken(TokenKind.BANG)) {
-      return this.node(start, {
-        kind: Kind.NON_NULL_TYPE,
-        type
-      });
-    }
-    return type;
-  }
-  parseNamedType() {
-    return this.node(this._lexer.token, {
-      kind: Kind.NAMED_TYPE,
-      name: this.parseName()
-    });
-  }
-  peekDescription() {
-    return this.peek(TokenKind.STRING) || this.peek(TokenKind.BLOCK_STRING);
-  }
-  parseDescription() {
-    if (this.peekDescription()) {
-      return this.parseStringLiteral();
-    }
-  }
-  parseSchemaDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("schema");
-    const directives = this.parseConstDirectives();
-    const operationTypes = this.many(TokenKind.BRACE_L, this.parseOperationTypeDefinition, TokenKind.BRACE_R);
-    return this.node(start, {
-      kind: Kind.SCHEMA_DEFINITION,
-      description,
-      directives,
-      operationTypes
-    });
-  }
-  parseOperationTypeDefinition() {
-    const start = this._lexer.token;
-    const operation = this.parseOperationType();
-    this.expectToken(TokenKind.COLON);
-    const type = this.parseNamedType();
-    return this.node(start, {
-      kind: Kind.OPERATION_TYPE_DEFINITION,
-      operation,
-      type
-    });
-  }
-  parseScalarTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("scalar");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    return this.node(start, {
-      kind: Kind.SCALAR_TYPE_DEFINITION,
-      description,
-      name,
-      directives
-    });
-  }
-  parseObjectTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("type");
-    const name = this.parseName();
-    const interfaces = this.parseImplementsInterfaces();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseFieldsDefinition();
-    return this.node(start, {
-      kind: Kind.OBJECT_TYPE_DEFINITION,
-      description,
-      name,
-      interfaces,
-      directives,
-      fields
-    });
-  }
-  parseImplementsInterfaces() {
-    return this.expectOptionalKeyword("implements") ? this.delimitedMany(TokenKind.AMP, this.parseNamedType) : [];
-  }
-  parseFieldsDefinition() {
-    return this.optionalMany(TokenKind.BRACE_L, this.parseFieldDefinition, TokenKind.BRACE_R);
-  }
-  parseFieldDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    const name = this.parseName();
-    const args = this.parseArgumentDefs();
-    this.expectToken(TokenKind.COLON);
-    const type = this.parseTypeReference();
-    const directives = this.parseConstDirectives();
-    return this.node(start, {
-      kind: Kind.FIELD_DEFINITION,
-      description,
-      name,
-      arguments: args,
-      type,
-      directives
-    });
-  }
-  parseArgumentDefs() {
-    return this.optionalMany(TokenKind.PAREN_L, this.parseInputValueDef, TokenKind.PAREN_R);
-  }
-  parseInputValueDef() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    const name = this.parseName();
-    this.expectToken(TokenKind.COLON);
-    const type = this.parseTypeReference();
-    let defaultValue;
-    if (this.expectOptionalToken(TokenKind.EQUALS)) {
-      defaultValue = this.parseConstValueLiteral();
-    }
-    const directives = this.parseConstDirectives();
-    return this.node(start, {
-      kind: Kind.INPUT_VALUE_DEFINITION,
-      description,
-      name,
-      type,
-      defaultValue,
-      directives
-    });
-  }
-  parseInterfaceTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("interface");
-    const name = this.parseName();
-    const interfaces = this.parseImplementsInterfaces();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseFieldsDefinition();
-    return this.node(start, {
-      kind: Kind.INTERFACE_TYPE_DEFINITION,
-      description,
-      name,
-      interfaces,
-      directives,
-      fields
-    });
-  }
-  parseUnionTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("union");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const types2 = this.parseUnionMemberTypes();
-    return this.node(start, {
-      kind: Kind.UNION_TYPE_DEFINITION,
-      description,
-      name,
-      directives,
-      types: types2
-    });
-  }
-  parseUnionMemberTypes() {
-    return this.expectOptionalToken(TokenKind.EQUALS) ? this.delimitedMany(TokenKind.PIPE, this.parseNamedType) : [];
-  }
-  parseEnumTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("enum");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const values = this.parseEnumValuesDefinition();
-    return this.node(start, {
-      kind: Kind.ENUM_TYPE_DEFINITION,
-      description,
-      name,
-      directives,
-      values
-    });
-  }
-  parseEnumValuesDefinition() {
-    return this.optionalMany(TokenKind.BRACE_L, this.parseEnumValueDefinition, TokenKind.BRACE_R);
-  }
-  parseEnumValueDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    const name = this.parseEnumValueName();
-    const directives = this.parseConstDirectives();
-    return this.node(start, {
-      kind: Kind.ENUM_VALUE_DEFINITION,
-      description,
-      name,
-      directives
-    });
-  }
-  parseEnumValueName() {
-    if (this._lexer.token.value === "true" || this._lexer.token.value === "false" || this._lexer.token.value === "null") {
-      throw syntaxError(this._lexer.source, this._lexer.token.start, `${getTokenDesc(this._lexer.token)} is reserved and cannot be used for an enum value.`);
-    }
-    return this.parseName();
-  }
-  parseInputObjectTypeDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("input");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseInputFieldsDefinition();
-    return this.node(start, {
-      kind: Kind.INPUT_OBJECT_TYPE_DEFINITION,
-      description,
-      name,
-      directives,
-      fields
-    });
-  }
-  parseInputFieldsDefinition() {
-    return this.optionalMany(TokenKind.BRACE_L, this.parseInputValueDef, TokenKind.BRACE_R);
-  }
-  parseTypeSystemExtension() {
-    const keywordToken = this._lexer.lookahead();
-    if (keywordToken.kind === TokenKind.NAME) {
-      switch (keywordToken.value) {
-        case "schema":
-          return this.parseSchemaExtension();
-        case "scalar":
-          return this.parseScalarTypeExtension();
-        case "type":
-          return this.parseObjectTypeExtension();
-        case "interface":
-          return this.parseInterfaceTypeExtension();
-        case "union":
-          return this.parseUnionTypeExtension();
-        case "enum":
-          return this.parseEnumTypeExtension();
-        case "input":
-          return this.parseInputObjectTypeExtension();
-      }
-    }
-    throw this.unexpected(keywordToken);
-  }
-  parseSchemaExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("schema");
-    const directives = this.parseConstDirectives();
-    const operationTypes = this.optionalMany(TokenKind.BRACE_L, this.parseOperationTypeDefinition, TokenKind.BRACE_R);
-    if (directives.length === 0 && operationTypes.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.SCHEMA_EXTENSION,
-      directives,
-      operationTypes
-    });
-  }
-  parseScalarTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("scalar");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    if (directives.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.SCALAR_TYPE_EXTENSION,
-      name,
-      directives
-    });
-  }
-  parseObjectTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("type");
-    const name = this.parseName();
-    const interfaces = this.parseImplementsInterfaces();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseFieldsDefinition();
-    if (interfaces.length === 0 && directives.length === 0 && fields.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.OBJECT_TYPE_EXTENSION,
-      name,
-      interfaces,
-      directives,
-      fields
-    });
-  }
-  parseInterfaceTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("interface");
-    const name = this.parseName();
-    const interfaces = this.parseImplementsInterfaces();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseFieldsDefinition();
-    if (interfaces.length === 0 && directives.length === 0 && fields.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.INTERFACE_TYPE_EXTENSION,
-      name,
-      interfaces,
-      directives,
-      fields
-    });
-  }
-  parseUnionTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("union");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const types2 = this.parseUnionMemberTypes();
-    if (directives.length === 0 && types2.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.UNION_TYPE_EXTENSION,
-      name,
-      directives,
-      types: types2
-    });
-  }
-  parseEnumTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("enum");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const values = this.parseEnumValuesDefinition();
-    if (directives.length === 0 && values.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.ENUM_TYPE_EXTENSION,
-      name,
-      directives,
-      values
-    });
-  }
-  parseInputObjectTypeExtension() {
-    const start = this._lexer.token;
-    this.expectKeyword("extend");
-    this.expectKeyword("input");
-    const name = this.parseName();
-    const directives = this.parseConstDirectives();
-    const fields = this.parseInputFieldsDefinition();
-    if (directives.length === 0 && fields.length === 0) {
-      throw this.unexpected();
-    }
-    return this.node(start, {
-      kind: Kind.INPUT_OBJECT_TYPE_EXTENSION,
-      name,
-      directives,
-      fields
-    });
-  }
-  parseDirectiveDefinition() {
-    const start = this._lexer.token;
-    const description = this.parseDescription();
-    this.expectKeyword("directive");
-    this.expectToken(TokenKind.AT);
-    const name = this.parseName();
-    const args = this.parseArgumentDefs();
-    const repeatable = this.expectOptionalKeyword("repeatable");
-    this.expectKeyword("on");
-    const locations = this.parseDirectiveLocations();
-    return this.node(start, {
-      kind: Kind.DIRECTIVE_DEFINITION,
-      description,
-      name,
-      arguments: args,
-      repeatable,
-      locations
-    });
-  }
-  parseDirectiveLocations() {
-    return this.delimitedMany(TokenKind.PIPE, this.parseDirectiveLocation);
-  }
-  parseDirectiveLocation() {
-    const start = this._lexer.token;
-    const name = this.parseName();
-    if (Object.prototype.hasOwnProperty.call(DirectiveLocation, name.value)) {
-      return name;
-    }
-    throw this.unexpected(start);
-  }
-  node(startToken, node) {
-    if (this._options.noLocation !== true) {
-      node.loc = new Location(startToken, this._lexer.lastToken, this._lexer.source);
-    }
-    return node;
-  }
-  peek(kind) {
-    return this._lexer.token.kind === kind;
-  }
-  expectToken(kind) {
-    const token = this._lexer.token;
-    if (token.kind === kind) {
-      this.advanceLexer();
-      return token;
-    }
-    throw syntaxError(this._lexer.source, token.start, `Expected ${getTokenKindDesc(kind)}, found ${getTokenDesc(token)}.`);
-  }
-  expectOptionalToken(kind) {
-    const token = this._lexer.token;
-    if (token.kind === kind) {
-      this.advanceLexer();
-      return true;
-    }
-    return false;
-  }
-  expectKeyword(value) {
-    const token = this._lexer.token;
-    if (token.kind === TokenKind.NAME && token.value === value) {
-      this.advanceLexer();
-    } else {
-      throw syntaxError(this._lexer.source, token.start, `Expected "${value}", found ${getTokenDesc(token)}.`);
-    }
-  }
-  expectOptionalKeyword(value) {
-    const token = this._lexer.token;
-    if (token.kind === TokenKind.NAME && token.value === value) {
-      this.advanceLexer();
-      return true;
-    }
-    return false;
-  }
-  unexpected(atToken) {
-    const token = atToken !== null && atToken !== undefined ? atToken : this._lexer.token;
-    return syntaxError(this._lexer.source, token.start, `Unexpected ${getTokenDesc(token)}.`);
-  }
-  any(openKind, parseFn, closeKind) {
-    this.expectToken(openKind);
-    const nodes = [];
-    while (!this.expectOptionalToken(closeKind)) {
-      nodes.push(parseFn.call(this));
-    }
-    return nodes;
-  }
-  optionalMany(openKind, parseFn, closeKind) {
-    if (this.expectOptionalToken(openKind)) {
-      const nodes = [];
-      do {
-        nodes.push(parseFn.call(this));
-      } while (!this.expectOptionalToken(closeKind));
-      return nodes;
-    }
-    return [];
-  }
-  many(openKind, parseFn, closeKind) {
-    this.expectToken(openKind);
-    const nodes = [];
-    do {
-      nodes.push(parseFn.call(this));
-    } while (!this.expectOptionalToken(closeKind));
-    return nodes;
-  }
-  delimitedMany(delimiterKind, parseFn) {
-    this.expectOptionalToken(delimiterKind);
-    const nodes = [];
-    do {
-      nodes.push(parseFn.call(this));
-    } while (this.expectOptionalToken(delimiterKind));
-    return nodes;
-  }
-  advanceLexer() {
-    const { maxTokens } = this._options;
-    const token = this._lexer.advance();
-    if (token.kind !== TokenKind.EOF) {
-      ++this._tokenCounter;
-      if (maxTokens !== undefined && this._tokenCounter > maxTokens) {
-        throw syntaxError(this._lexer.source, token.start, `Document contains more that ${maxTokens} tokens. Parsing aborted.`);
-      }
-    }
-  }
-}
-function getTokenDesc(token) {
-  const value = token.value;
-  return getTokenKindDesc(token.kind) + (value != null ? ` "${value}"` : "");
-}
-function getTokenKindDesc(kind) {
-  return isPunctuatorTokenKind(kind) ? `"${kind}"` : kind;
-}
 // src/helpers/introspection.ts
 var import_graphql = __toESM(require_graphql2(), 1);
 import { readFile } from "node:fs/promises";
@@ -49050,6 +47216,158 @@ async function introspectEndpoint(endpoint, headers) {
 async function introspectLocalSchema(path) {
   const schema = await readFile(path, "utf8");
   return schema;
+}
+
+// src/helpers/schema-optimizer.ts
+var import_graphql2 = __toESM(require_graphql2(), 1);
+
+class SchemaOptimizer {
+  schema = null;
+  fieldIndex = new Map;
+  typeCache = new Map;
+  async indexSchema(schemaData) {
+    this.schema = import_graphql2.buildClientSchema(schemaData);
+    this.fieldIndex.clear();
+    this.typeCache.clear();
+    const rootTypes = ["Query", "Mutation", "Subscription"];
+    for (const rootTypeName of rootTypes) {
+      const rootType = this.schema.getType(rootTypeName);
+      if (rootType && import_graphql2.isObjectType(rootType)) {
+        this.indexType(rootType, rootTypeName, 0, rootTypeName);
+      }
+    }
+  }
+  indexType(type, typeName, depth, path, visited = new Set) {
+    if (visited.has(typeName) || depth > 3)
+      return;
+    visited.add(typeName);
+    if (import_graphql2.isObjectType(type) || import_graphql2.isInterfaceType(type)) {
+      const fields = type.getFields();
+      Object.entries(fields).forEach(([fieldName, field]) => {
+        const fieldType = import_graphql2.getNamedType(field.type);
+        const schemaField = {
+          name: fieldName,
+          typeName: fieldType.name,
+          parentType: typeName,
+          description: field.description,
+          depth,
+          path: `${path}.${fieldName}`
+        };
+        const nameKey = fieldName.toLowerCase();
+        if (!this.fieldIndex.has(nameKey)) {
+          this.fieldIndex.set(nameKey, []);
+        }
+        this.fieldIndex.get(nameKey).push(schemaField);
+        if (field.description) {
+          const keywords = field.description.toLowerCase().split(/\s+/);
+          keywords.forEach((keyword) => {
+            if (keyword.length > 2) {
+              if (!this.fieldIndex.has(keyword)) {
+                this.fieldIndex.set(keyword, []);
+              }
+              this.fieldIndex.get(keyword).push(schemaField);
+            }
+          });
+        }
+        if (import_graphql2.isObjectType(fieldType) || import_graphql2.isInterfaceType(fieldType)) {
+          this.indexType(fieldType, fieldType.name, depth + 1, schemaField.path, new Set(visited));
+        }
+      });
+    }
+  }
+  searchFields(keywords, maxResults = 10) {
+    const results = new Map;
+    keywords.forEach((keyword) => {
+      const normalizedKeyword = keyword.toLowerCase();
+      const fields = this.fieldIndex.get(normalizedKeyword) || [];
+      fields.forEach((field) => {
+        const key = field.path;
+        const relevance = this.calculateRelevance(field, keyword);
+        if (!results.has(key) || results.get(key).relevance < relevance) {
+          results.set(key, { field, relevance });
+        }
+      });
+      this.fieldIndex.forEach((fields2, indexKey) => {
+        if (indexKey.includes(normalizedKeyword) || normalizedKeyword.includes(indexKey)) {
+          fields2.forEach((field) => {
+            const key = field.path;
+            const relevance = this.calculateRelevance(field, keyword) * 0.7;
+            if (!results.has(key) || results.get(key).relevance < relevance) {
+              results.set(key, { field, relevance });
+            }
+          });
+        }
+      });
+    });
+    return Array.from(results.values()).sort((a, b) => b.relevance - a.relevance).slice(0, maxResults);
+  }
+  calculateRelevance(field, keyword) {
+    let score = 0;
+    const normalizedKeyword = keyword.toLowerCase();
+    if (field.name.toLowerCase() === normalizedKeyword)
+      score += 10;
+    else if (field.name.toLowerCase().includes(normalizedKeyword))
+      score += 5;
+    if (field.description?.toLowerCase().includes(normalizedKeyword))
+      score += 3;
+    score -= field.depth * 0.5;
+    return score;
+  }
+  getTypeDefinition(typeName, maxDepth = 2) {
+    const cacheKey = `${typeName}_${maxDepth}`;
+    if (this.typeCache.has(cacheKey)) {
+      return this.typeCache.get(cacheKey);
+    }
+    if (!this.schema)
+      throw new Error("Schema not initialized");
+    const type = this.schema.getType(typeName);
+    if (!type)
+      throw new Error(`Type ${typeName} not found`);
+    const definition = this.buildTypeDefinition(type, maxDepth, new Set);
+    this.typeCache.set(cacheKey, definition);
+    return definition;
+  }
+  buildTypeDefinition(type, maxDepth, visited, currentDepth = 0) {
+    const namedType = import_graphql2.getNamedType(type);
+    if (visited.has(namedType.name) || currentDepth >= maxDepth) {
+      return namedType.name;
+    }
+    visited.add(namedType.name);
+    if (import_graphql2.isObjectType(namedType) || import_graphql2.isInterfaceType(namedType)) {
+      const fields = namedType.getFields();
+      const fieldDefs = Object.entries(fields).slice(0, 10).map(([fieldName, field]) => {
+        const fieldType = this.getTypeString(field.type, maxDepth, visited, currentDepth + 1);
+        return `  ${fieldName}: ${fieldType}`;
+      }).join(`
+`);
+      return `type ${namedType.name} {
+${fieldDefs}
+}`;
+    }
+    return namedType.name;
+  }
+  getTypeString(type, maxDepth, visited, currentDepth) {
+    if (import_graphql2.isNonNullType(type)) {
+      return `${this.getTypeString(type.ofType, maxDepth, visited, currentDepth)}!`;
+    }
+    if (import_graphql2.isListType(type)) {
+      return `[${this.getTypeString(type.ofType, maxDepth, visited, currentDepth)}]`;
+    }
+    const namedType = import_graphql2.getNamedType(type);
+    return currentDepth >= maxDepth ? namedType.name : namedType.name;
+  }
+  generateQueryTemplate(fields) {
+    const queryFields = fields.filter((f) => f.parentType === "Query").slice(0, 5).map((f) => {
+      if (["String", "Int", "Float", "Boolean", "ID"].includes(f.typeName)) {
+        return f.name;
+      }
+      return `${f.name} { # ${f.typeName} - add specific fields }`;
+    }).join(`
+  `);
+    return `query {
+  ${queryFields}
+}`;
+  }
 }
 
 // src/index.ts
@@ -49089,6 +47407,32 @@ var server = new McpServer({
   version: "2.0.4",
   description: `GraphQL MCP server for ${env.ENDPOINT}`
 });
+var schemaOptimizer = new SchemaOptimizer;
+var schemaInitialized = false;
+async function initializeSchema() {
+  if (schemaInitialized)
+    return;
+  try {
+    const response = await fetch(env.ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...env.HEADERS
+      },
+      body: JSON.stringify({ query: import_graphql3.getIntrospectionQuery() })
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to introspect schema: ${response.statusText}`);
+    }
+    const { data } = await response.json();
+    await schemaOptimizer.indexSchema(data);
+    schemaInitialized = true;
+    console.log("✅ Schema indexed successfully");
+  } catch (error) {
+    console.error("❌ Schema initialization failed:", error);
+    throw error;
+  }
+}
 server.resource("graphql-schema", new URL(env.ENDPOINT).href, async (uri) => {
   try {
     let schema;
@@ -49109,33 +47453,65 @@ server.resource("graphql-schema", new URL(env.ENDPOINT).href, async (uri) => {
     throw new Error(`Failed to get GraphQL schema: ${error}`);
   }
 });
-server.tool("introspect-schema", "Introspect the GraphQL schema, use this tool before doing a query to get the schema information if you do not have it available as a resource already.", {
-  __ignore__: exports_external.boolean().default(false).describe("This does not do anything")
-}, async () => {
+server.tool("search-schema", "Search GraphQL schema fields by keywords. Use this instead of full introspection to find relevant fields efficiently.", {
+  keywords: exports_external.array(exports_external.string()).describe("Keywords to search for in field names and descriptions"),
+  maxResults: exports_external.number().default(10).describe("Maximum number of results to return")
+}, async ({ keywords, maxResults }) => {
   try {
-    let schema;
-    if (env.SCHEMA) {
-      schema = await introspectLocalSchema(env.SCHEMA);
-    } else {
-      schema = await introspectEndpoint(env.ENDPOINT, env.HEADERS);
-    }
-    return {
-      content: [
-        {
+    await initializeSchema();
+    const results = schemaOptimizer.searchFields(keywords, maxResults);
+    if (results.length === 0) {
+      return {
+        content: [{
           type: "text",
-          text: schema
-        }
-      ]
+          text: `No fields found for keywords: ${keywords.join(", ")}`
+        }]
+      };
+    }
+    const searchResults = results.map((r) => `${r.field.path} (${r.field.typeName}) - depth: ${r.field.depth}${r.field.description ? ` - ${r.field.description}` : ""}`).join(`
+`);
+    const queryTemplate = schemaOptimizer.generateQueryTemplate(results.map((r) => r.field));
+    return {
+      content: [{
+        type: "text",
+        text: `Found ${results.length} relevant fields:
+
+${searchResults}
+
+=== Query Template ===
+${queryTemplate}`
+      }]
     };
   } catch (error) {
     return {
       isError: true,
-      content: [
-        {
-          type: "text",
-          text: `Failed to introspect schema: ${error}`
-        }
-      ]
+      content: [{
+        type: "text",
+        text: `Schema search failed: ${error}`
+      }]
+    };
+  }
+});
+server.tool("introspect-type", "Get detailed type definition for a specific GraphQL type with controlled depth.", {
+  typeName: exports_external.string().describe("Name of the GraphQL type to introspect"),
+  maxDepth: exports_external.number().default(2).describe("Maximum depth of nested types to include")
+}, async ({ typeName, maxDepth }) => {
+  try {
+    await initializeSchema();
+    const typeDefinition = schemaOptimizer.getTypeDefinition(typeName, maxDepth);
+    return {
+      content: [{
+        type: "text",
+        text: typeDefinition
+      }]
+    };
+  } catch (error) {
+    return {
+      isError: true,
+      content: [{
+        type: "text",
+        text: `Type introspection failed: ${error}`
+      }]
     };
   }
 });
@@ -49144,7 +47520,7 @@ server.tool("query-graphql", "Query a GraphQL endpoint with the given query and 
   variables: exports_external.string().optional()
 }, async ({ query, variables }) => {
   try {
-    const parsedQuery = parse(query);
+    const parsedQuery = import_graphql3.parse(query);
     const isMutation = parsedQuery.definitions.some((def) => def.kind === "OperationDefinition" && def.operation === "mutation");
     if (isMutation && !env.ALLOW_MUTATIONS) {
       return {
@@ -49241,11 +47617,17 @@ app.delete("/mcp", (req, res) => {
   transport.handleRequest(req, res);
 });
 async function main() {
+  try {
+    await initializeSchema();
+  } catch (error) {
+    console.warn("⚠️ Schema initialization failed on startup, will retry on first request");
+  }
   httpServer.listen(env.PORT, env.HOST, () => {
     console.log(`\uD83D\uDE80 MCP GraphQL Server started on ${env.HOST}:${env.PORT}`);
     console.log(`\uD83D\uDD17 GraphQL: ${env.ENDPOINT}`);
     console.log(`\uD83D\uDCCA Health: http://${env.HOST}:${env.PORT}/health`);
     console.log(`\uD83D\uDD0C MCP: http://${env.HOST}:${env.PORT}/mcp`);
+    console.log(`\uD83D\uDD0D Use 'search-schema' tool instead of 'introspect-schema' for better performance`);
   });
 }
 main().catch((error) => {
