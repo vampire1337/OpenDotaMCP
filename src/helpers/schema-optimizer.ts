@@ -21,22 +21,62 @@ export class SchemaOptimizer {
 
   async indexSchema(schemaData: any): Promise<void> {
     try {
+      console.log('🔄 Starting schema indexing...');
+      console.log('📊 Raw schema data keys:', Object.keys(schemaData || {}));
+      console.log('📊 Schema data __schema exists:', !!schemaData?.__schema);
+      
+      if (schemaData?.__schema?.types) {
+        const typeNames = schemaData.__schema.types.map((t: any) => t.name).slice(0, 10);
+        console.log('📋 First 10 types in schema:', typeNames);
+        
+        const rootTypes = schemaData.__schema.types.filter((t: any) => 
+          ['Query', 'Mutation', 'Subscription'].includes(t.name)
+        );
+        console.log('📋 Found root types:', rootTypes.map((t: any) => t.name));
+      }
+      
       this.schema = buildClientSchema(schemaData);
       this.fieldIndex.clear();
       this.typeCache.clear();
 
-      const rootTypes = ['Query', 'Mutation', 'Subscription'];
+      console.log('🔍 Built schema queryType:', !!this.schema.getQueryType());
+      console.log('🔍 Built schema mutationType:', !!this.schema.getMutationType());
+      console.log('🔍 Built schema subscriptionType:', !!this.schema.getSubscriptionType());
+
       let indexedFieldsCount = 0;
       
-      for (const rootTypeName of rootTypes) {
-        const rootType = this.schema.getType(rootTypeName);
-        if (rootType && isObjectType(rootType)) {
-          const fieldsCount = this.indexType(rootType, rootTypeName, 0, rootTypeName);
-          indexedFieldsCount += fieldsCount;
+      // Use proper GraphQL schema methods instead of getType()
+      const rootTypeMapping = [
+        { name: 'Query', type: this.schema.getQueryType() },
+        { name: 'Mutation', type: this.schema.getMutationType() },
+        { name: 'Subscription', type: this.schema.getSubscriptionType() }
+      ];
+      
+      for (const { name: rootTypeName, type: rootType } of rootTypeMapping) {
+        console.log(`🔍 Looking for ${rootTypeName} type... Found: ${rootType ? 'YES' : 'NO'}`);
+        
+        if (rootType) {
+          console.log(`  Type details: ${rootType.constructor.name}, isObjectType: ${isObjectType(rootType)}`);
+          
+          if (isObjectType(rootType)) {
+            console.log(`📋 Indexing ${rootTypeName} type...`);
+            const fieldsCount = this.indexType(rootType, rootTypeName, 0, rootTypeName);
+            indexedFieldsCount += fieldsCount;
+            console.log(`  ➤ Indexed ${fieldsCount} fields for ${rootTypeName}`);
+          } else {
+            console.log(`  ⚠️ ${rootTypeName} is not an ObjectType`);
+          }
         }
       }
 
-      console.log(`✅ Indexed ${indexedFieldsCount} fields across ${this.fieldIndex.size} keywords`);
+      console.log(`✅ Schema indexing complete:`);
+      console.log(`  ➤ Total fields: ${indexedFieldsCount}`);
+      console.log(`  ➤ Search keywords: ${this.fieldIndex.size}`);
+      console.log(`  ➤ Sample keywords: ${Array.from(this.fieldIndex.keys()).slice(0, 10).join(', ')}`);
+      
+      if (this.fieldIndex.size === 0) {
+        throw new Error('Schema indexing produced empty index - no fields found');
+      }
     } catch (error) {
       console.error('❌ Schema indexing failed:', error);
       throw error;
@@ -44,13 +84,18 @@ export class SchemaOptimizer {
   }
 
   private indexType(type: any, typeName: string, depth: number, path: string, visited = new Set<string>()): number {
-    if (visited.has(typeName) || depth > 3) return 0;
+    if (visited.has(typeName) || depth > 3) {
+      console.log(`  ⏭️ Skipping ${typeName} (visited: ${visited.has(typeName)}, depth: ${depth})`);
+      return 0;
+    }
     visited.add(typeName);
 
     let indexedCount = 0;
+    console.log(`  🔍 Processing type: ${typeName} (${type?.constructor?.name})`);
 
     if (isObjectType(type) || isInterfaceType(type)) {
       const fields = type.getFields();
+      console.log(`    📋 Found ${Object.keys(fields).length} fields in ${typeName}`);
       
       Object.entries(fields).forEach(([fieldName, field]: [string, GraphQLField<any, any>]) => {
         const fieldType = getNamedType(field.type);

@@ -1,13 +1,14 @@
-FROM node:18-alpine
+FROM oven/bun:1.2-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+# Copy package files and install deps
+COPY package.json bun.lockb* ./
+RUN bun install --production
 
+# Copy pre-built dist (build outside container to avoid WSL issues)
 COPY dist ./dist
-COPY schema.graphql ./
 
 EXPOSE 3001
 
-CMD ["npm", "start"]
+CMD ["bun", "dist/index.js"]

@@ -66,6 +66,8 @@ async function initializeSchema() {
 	if (schemaInitialized) return;
 	
 	try {
+		console.log(`🔗 Attempting to introspect schema from: ${env.ENDPOINT}`);
+		
 		const response = await fetch(env.ENDPOINT, {
 			method: "POST",
 			headers: {
@@ -75,17 +77,31 @@ async function initializeSchema() {
 			body: JSON.stringify({ query: getIntrospectionQuery() }),
 		});
 
+		console.log(`📡 API Response: ${response.status} ${response.statusText}`);
+
 		if (!response.ok) {
-			throw new Error(`Failed to introspect schema: ${response.statusText}`);
+			const errorText = await response.text();
+			console.error(`❌ API Error Response: ${errorText}`);
+			throw new Error(`Failed to introspect schema: ${response.status} ${response.statusText}\nResponse: ${errorText}`);
 		}
 
-		const { data } = await response.json();
-		await schemaOptimizer.indexSchema(data);
+		const responseData = await response.json();
+		console.log('📊 Received GraphQL response, checking for data...');
+		
+		if (!responseData.data) {
+			console.error('❌ No data in GraphQL response:', responseData);
+			throw new Error(`GraphQL introspection failed: ${JSON.stringify(responseData)}`);
+		}
+
+		console.log('🧠 Processing schema data...');
+		await schemaOptimizer.indexSchema(responseData.data);
 		schemaInitialized = true;
-		console.log("✅ Schema indexed successfully");
+		console.log("✅ Schema initialization complete");
 	} catch (error) {
 		console.error("❌ Schema initialization failed:", error);
-		throw error;
+		
+		// Don't re-throw - let tools handle gracefully
+		console.log("⚠️ Continuing without schema - tools will show helpful error messages");
 	}
 }
 
@@ -464,19 +480,19 @@ app.delete('/mcp', (req, res) => {
 });
 
 async function main() {
-	// Initialize schema on startup
-	try {
-		await initializeSchema();
-	} catch (error) {
-		console.warn("⚠️ Schema initialization failed on startup, will retry on first request");
-	}
-
 	httpServer.listen(env.PORT, env.HOST, () => {
 		console.log(`🚀 MCP GraphQL Server started on ${env.HOST}:${env.PORT}`);
 		console.log(`🔗 GraphQL: ${env.ENDPOINT}`);
 		console.log(`📊 Health: http://${env.HOST}:${env.PORT}/health`);
 		console.log(`🔌 MCP: http://${env.HOST}:${env.PORT}/mcp`);
-		console.log(`🔍 Use 'search-schema' tool instead of 'introspect-schema' for better performance`);
+		console.log(`🔍 Use 'debug-schema-status' first, then 'search-schema' for discovery`);
+		
+		// Initialize schema in background - don't block startup
+		initializeSchema().then(() => {
+			console.log("🎉 Background schema initialization successful");
+		}).catch(() => {
+			console.log("⚠️ Background schema initialization failed - use debug-schema-status for details");
+		});
 	});
 }
 

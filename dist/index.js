@@ -47226,23 +47226,65 @@ class SchemaOptimizer {
   fieldIndex = new Map;
   typeCache = new Map;
   async indexSchema(schemaData) {
-    this.schema = import_graphql2.buildClientSchema(schemaData);
-    this.fieldIndex.clear();
-    this.typeCache.clear();
-    const rootTypes = ["Query", "Mutation", "Subscription"];
-    for (const rootTypeName of rootTypes) {
-      const rootType = this.schema.getType(rootTypeName);
-      if (rootType && import_graphql2.isObjectType(rootType)) {
-        this.indexType(rootType, rootTypeName, 0, rootTypeName);
+    try {
+      console.log("\uD83D\uDD04 Starting schema indexing...");
+      console.log("\uD83D\uDCCA Raw schema data keys:", Object.keys(schemaData || {}));
+      console.log("\uD83D\uDCCA Schema data __schema exists:", !!schemaData?.__schema);
+      if (schemaData?.__schema?.types) {
+        const typeNames = schemaData.__schema.types.map((t) => t.name).slice(0, 10);
+        console.log("\uD83D\uDCCB First 10 types in schema:", typeNames);
+        const rootTypes = schemaData.__schema.types.filter((t) => ["Query", "Mutation", "Subscription"].includes(t.name));
+        console.log("\uD83D\uDCCB Found root types:", rootTypes.map((t) => t.name));
       }
+      this.schema = import_graphql2.buildClientSchema(schemaData);
+      this.fieldIndex.clear();
+      this.typeCache.clear();
+      console.log("\uD83D\uDD0D Built schema queryType:", !!this.schema.getQueryType());
+      console.log("\uD83D\uDD0D Built schema mutationType:", !!this.schema.getMutationType());
+      console.log("\uD83D\uDD0D Built schema subscriptionType:", !!this.schema.getSubscriptionType());
+      let indexedFieldsCount = 0;
+      const rootTypeMapping = [
+        { name: "Query", type: this.schema.getQueryType() },
+        { name: "Mutation", type: this.schema.getMutationType() },
+        { name: "Subscription", type: this.schema.getSubscriptionType() }
+      ];
+      for (const { name: rootTypeName, type: rootType } of rootTypeMapping) {
+        console.log(`\uD83D\uDD0D Looking for ${rootTypeName} type... Found: ${rootType ? "YES" : "NO"}`);
+        if (rootType) {
+          console.log(`  Type details: ${rootType.constructor.name}, isObjectType: ${import_graphql2.isObjectType(rootType)}`);
+          if (import_graphql2.isObjectType(rootType)) {
+            console.log(`\uD83D\uDCCB Indexing ${rootTypeName} type...`);
+            const fieldsCount = this.indexType(rootType, rootTypeName, 0, rootTypeName);
+            indexedFieldsCount += fieldsCount;
+            console.log(`  ➤ Indexed ${fieldsCount} fields for ${rootTypeName}`);
+          } else {
+            console.log(`  ⚠️ ${rootTypeName} is not an ObjectType`);
+          }
+        }
+      }
+      console.log(`✅ Schema indexing complete:`);
+      console.log(`  ➤ Total fields: ${indexedFieldsCount}`);
+      console.log(`  ➤ Search keywords: ${this.fieldIndex.size}`);
+      console.log(`  ➤ Sample keywords: ${Array.from(this.fieldIndex.keys()).slice(0, 10).join(", ")}`);
+      if (this.fieldIndex.size === 0) {
+        throw new Error("Schema indexing produced empty index - no fields found");
+      }
+    } catch (error) {
+      console.error("❌ Schema indexing failed:", error);
+      throw error;
     }
   }
   indexType(type, typeName, depth, path, visited = new Set) {
-    if (visited.has(typeName) || depth > 3)
-      return;
+    if (visited.has(typeName) || depth > 3) {
+      console.log(`  ⏭️ Skipping ${typeName} (visited: ${visited.has(typeName)}, depth: ${depth})`);
+      return 0;
+    }
     visited.add(typeName);
+    let indexedCount = 0;
+    console.log(`  \uD83D\uDD0D Processing type: ${typeName} (${type?.constructor?.name})`);
     if (import_graphql2.isObjectType(type) || import_graphql2.isInterfaceType(type)) {
       const fields = type.getFields();
+      console.log(`    \uD83D\uDCCB Found ${Object.keys(fields).length} fields in ${typeName}`);
       Object.entries(fields).forEach(([fieldName, field]) => {
         const fieldType = import_graphql2.getNamedType(field.type);
         const schemaField = {
@@ -47258,6 +47300,17 @@ class SchemaOptimizer {
           this.fieldIndex.set(nameKey, []);
         }
         this.fieldIndex.get(nameKey).push(schemaField);
+        indexedCount++;
+        const typeWords = fieldType.name.toLowerCase().replace(/type$/, "").split(/(?=[A-Z])/);
+        typeWords.forEach((word) => {
+          if (word.length > 2) {
+            const wordKey = word.toLowerCase();
+            if (!this.fieldIndex.has(wordKey)) {
+              this.fieldIndex.set(wordKey, []);
+            }
+            this.fieldIndex.get(wordKey).push(schemaField);
+          }
+        });
         if (field.description) {
           const keywords = field.description.toLowerCase().split(/\s+/);
           keywords.forEach((keyword) => {
@@ -47270,26 +47323,36 @@ class SchemaOptimizer {
           });
         }
         if (import_graphql2.isObjectType(fieldType) || import_graphql2.isInterfaceType(fieldType)) {
-          this.indexType(fieldType, fieldType.name, depth + 1, schemaField.path, new Set(visited));
+          indexedCount += this.indexType(fieldType, fieldType.name, depth + 1, schemaField.path, new Set(visited));
         }
       });
     }
+    return indexedCount;
   }
   searchFields(keywords, maxResults = 10) {
+    console.log(`\uD83D\uDD0D Searching for keywords: ${keywords.join(", ")}`);
+    console.log(`\uD83D\uDCCA Index has ${this.fieldIndex.size} keys`);
+    if (this.fieldIndex.size === 0) {
+      console.warn("⚠️ Schema index is empty - schema not initialized?");
+      return [];
+    }
     const results = new Map;
     keywords.forEach((keyword) => {
       const normalizedKeyword = keyword.toLowerCase();
-      const fields = this.fieldIndex.get(normalizedKeyword) || [];
-      fields.forEach((field) => {
+      const directFields = this.fieldIndex.get(normalizedKeyword) || [];
+      console.log(`\uD83C\uDFAF Direct matches for "${keyword}": ${directFields.length}`);
+      directFields.forEach((field) => {
         const key = field.path;
         const relevance = this.calculateRelevance(field, keyword);
         if (!results.has(key) || results.get(key).relevance < relevance) {
           results.set(key, { field, relevance });
         }
       });
-      this.fieldIndex.forEach((fields2, indexKey) => {
+      let fuzzyMatches = 0;
+      this.fieldIndex.forEach((fields, indexKey) => {
         if (indexKey.includes(normalizedKeyword) || normalizedKeyword.includes(indexKey)) {
-          fields2.forEach((field) => {
+          fuzzyMatches += fields.length;
+          fields.forEach((field) => {
             const key = field.path;
             const relevance = this.calculateRelevance(field, keyword) * 0.7;
             if (!results.has(key) || results.get(key).relevance < relevance) {
@@ -47298,8 +47361,11 @@ class SchemaOptimizer {
           });
         }
       });
+      console.log(`\uD83D\uDD0E Fuzzy matches for "${keyword}": ${fuzzyMatches}`);
     });
-    return Array.from(results.values()).sort((a, b) => b.relevance - a.relevance).slice(0, maxResults);
+    const sortedResults = Array.from(results.values()).sort((a, b) => b.relevance - a.relevance).slice(0, maxResults);
+    console.log(`✅ Total results found: ${sortedResults.length}`);
+    return sortedResults;
   }
   calculateRelevance(field, keyword) {
     let score = 0;
@@ -47368,6 +47434,154 @@ ${fieldDefs}
   ${queryFields}
 }`;
   }
+  getIndexSize() {
+    return this.fieldIndex.size;
+  }
+  getSchemaStatus() {
+    return {
+      initialized: this.schema !== null,
+      indexSize: this.fieldIndex.size,
+      hasCachedTypes: this.typeCache.size
+    };
+  }
+}
+
+// src/helpers/query-examples.ts
+var DOTA_QUERY_EXAMPLES = {
+  searchPatterns: {
+    player: ["player", "steam", "account", "profile", "user"],
+    playerStats: ["winrate", "matches", "performance", "ranking", "mmr", "behavior"],
+    match: ["match", "game", "duration", "winner", "radiant", "dire"],
+    matchDetails: ["players", "heroes", "items", "builds", "picks", "bans"],
+    hero: ["hero", "character", "champion", "abilities", "talents"],
+    heroStats: ["winrate", "popularity", "meta", "performance", "counters"],
+    league: ["league", "tournament", "professional", "esports", "competition"],
+    leagueData: ["teams", "matches", "standings", "bracket", "schedule"]
+  },
+  templates: {
+    playerBasicInfo: {
+      description: "Get basic player information and statistics",
+      keywords: ["player", "steam", "profile"],
+      query: `query GetPlayer($steamId: Long!) {
+  player(steamAccountId: $steamId) {
+    steamAccount {
+      name
+      avatar
+      profileUri
+    }
+    matchCount
+    winCount
+    imp
+    # More fields available - use search-schema to discover
+  }
+}`,
+      variables: '{"steamId": "123456789"}',
+      notes: "Replace steamId with actual Steam ID (32-bit format)"
+    },
+    playerHeroPerformance: {
+      description: "Analyze player performance with specific heroes",
+      keywords: ["player", "hero", "performance", "winrate"],
+      query: `query GetPlayerHeroes($steamId: Long!, $take: Int = 10) {
+  player(steamAccountId: $steamId) {
+    heroesPerformance(take: $take) {
+      hero {
+        displayName
+        shortName
+      }
+      matchCount
+      winCount
+      avgImp
+      # Use introspect-type on HeroPerformanceType for more fields
+    }
+  }
+}`,
+      variables: '{"steamId": "123456789", "take": 10}',
+      notes: "Shows top heroes by match count with win statistics"
+    },
+    matchDetails: {
+      description: "Get comprehensive match information",
+      keywords: ["match", "players", "heroes", "duration"],
+      query: `query GetMatch($matchId: Long!) {
+  match(id: $matchId) {
+    durationSeconds
+    didRadiantWin
+    gameMode
+    startDateTime
+    players {
+      steamAccount { name }
+      hero { displayName }
+      kills
+      deaths
+      assists
+      networth
+      level
+      # Much more available - search for "player", "stats"
+    }
+  }
+}`,
+      variables: '{"matchId": "7891234567"}',
+      notes: "Use 64-bit match ID from match history"
+    },
+    heroMetaStats: {
+      description: "Get hero popularity and win rate statistics",
+      keywords: ["hero", "winrate", "popularity", "meta"],
+      query: `query GetHeroStats($heroId: Short, $bracket: RankBracket) {
+  heroStats {
+    heroVsHeroMatchup(heroId: $heroId, bracket: $bracket) {
+      hero { displayName }
+      winCount
+      matchCount
+      # Search for "advantage", "matchup" for more fields
+    }
+  }
+}`,
+      variables: '{"heroId": 1, "bracket": "DIVINE_IMMORTAL"}',
+      notes: "Analyze hero performance in different skill brackets"
+    }
+  },
+  workflows: {
+    playerAnalysis: [
+      'search-schema(keywords: ["player", "steam"])',
+      "query-graphql(query: playerBasicInfo template)",
+      'search-schema(keywords: ["player", "hero", "performance"])',
+      "query-graphql(query: playerHeroPerformance template)"
+    ],
+    matchAnalysis: [
+      'search-schema(keywords: ["match", "duration", "players"])',
+      "query-graphql(query: matchDetails template)",
+      'search-schema(keywords: ["match", "items", "builds"])',
+      'introspect-type(typeName: "MatchPlayerType", maxDepth: 2)'
+    ],
+    heroResearch: [
+      'search-schema(keywords: ["hero", "stats", "winrate"])',
+      'introspect-type(typeName: "HeroType", maxDepth: 2)',
+      'search-schema(keywords: ["hero", "matchup", "advantage"])',
+      "query-graphql(query: heroMetaStats template)"
+    ]
+  },
+  steamIdNotes: `
+Steam ID Formats:
+- Steam3 ID: [U:1:123456789] → Use 123456789
+- Steam64 ID: 76561198083722517 → Convert to 32-bit: subtract 76561197960265728
+- Steam Community URL: /profiles/76561198083722517/ → Extract and convert
+- Profile URL: /id/customname/ → Need to resolve to Steam ID first
+`,
+  commonErrors: {
+    "Player not found": "Check Steam ID format (use 32-bit account ID)",
+    "Match not found": "Verify match ID is correct 64-bit format",
+    "Field does not exist": "Use search-schema to find correct field names",
+    "Authentication required": "Some data requires valid API token in headers"
+  }
+};
+function suggestKeywords(query) {
+  const queryLower = query.toLowerCase();
+  const suggestions = [];
+  Object.entries(DOTA_QUERY_EXAMPLES.searchPatterns).forEach(([category, keywords]) => {
+    if (keywords.some((keyword) => queryLower.includes(keyword))) {
+      suggestions.push(...keywords);
+    }
+  });
+  return [...new Set(suggestions)].slice(0, 8);
 }
 
 // src/index.ts
@@ -47413,6 +47627,7 @@ async function initializeSchema() {
   if (schemaInitialized)
     return;
   try {
+    console.log(`\uD83D\uDD17 Attempting to introspect schema from: ${env.ENDPOINT}`);
     const response = await fetch(env.ENDPOINT, {
       method: "POST",
       headers: {
@@ -47421,16 +47636,26 @@ async function initializeSchema() {
       },
       body: JSON.stringify({ query: import_graphql3.getIntrospectionQuery() })
     });
+    console.log(`\uD83D\uDCE1 API Response: ${response.status} ${response.statusText}`);
     if (!response.ok) {
-      throw new Error(`Failed to introspect schema: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error(`❌ API Error Response: ${errorText}`);
+      throw new Error(`Failed to introspect schema: ${response.status} ${response.statusText}
+Response: ${errorText}`);
     }
-    const { data } = await response.json();
-    await schemaOptimizer.indexSchema(data);
+    const responseData = await response.json();
+    console.log("\uD83D\uDCCA Received GraphQL response, checking for data...");
+    if (!responseData.data) {
+      console.error("❌ No data in GraphQL response:", responseData);
+      throw new Error(`GraphQL introspection failed: ${JSON.stringify(responseData)}`);
+    }
+    console.log("\uD83E\uDDE0 Processing schema data...");
+    await schemaOptimizer.indexSchema(responseData.data);
     schemaInitialized = true;
-    console.log("✅ Schema indexed successfully");
+    console.log("✅ Schema initialization complete");
   } catch (error) {
     console.error("❌ Schema initialization failed:", error);
-    throw error;
+    console.log("⚠️ Continuing without schema - tools will show helpful error messages");
   }
 }
 server.resource("graphql-schema", new URL(env.ENDPOINT).href, async (uri) => {
@@ -47453,24 +47678,109 @@ server.resource("graphql-schema", new URL(env.ENDPOINT).href, async (uri) => {
     throw new Error(`Failed to get GraphQL schema: ${error}`);
   }
 });
-server.tool("search-schema", "Search GraphQL schema fields by keywords. Use this instead of full introspection to find relevant fields efficiently.", {
-  keywords: exports_external.array(exports_external.string()).describe("Keywords to search for in field names and descriptions"),
-  maxResults: exports_external.number().default(10).describe("Maximum number of results to return")
+server.tool("debug-schema-status", "\uD83D\uDD27 DEBUG: Check schema initialization status, API connectivity, and index statistics. Use this if search-schema returns no results.", {
+  includeHeaders: exports_external.boolean().default(false).describe("Include request headers in output for debugging")
+}, async ({ includeHeaders }) => {
+  try {
+    let debugInfo = `=== Schema Debug Information ===
+`;
+    debugInfo += `Schema initialized: ${schemaInitialized}
+`;
+    debugInfo += `Endpoint: ${env.ENDPOINT}
+`;
+    debugInfo += `Index size: ${schemaOptimizer.getIndexSize()} keywords
+`;
+    if (includeHeaders) {
+      debugInfo += `Headers: ${JSON.stringify(env.HEADERS, null, 2)}
+`;
+    }
+    try {
+      const testResponse = await fetch(env.ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...env.HEADERS
+        },
+        body: JSON.stringify({
+          query: "{ __typename }"
+        })
+      });
+      debugInfo += `API Test Status: ${testResponse.status} ${testResponse.statusText}
+`;
+      if (!testResponse.ok) {
+        const errorText = await testResponse.text();
+        debugInfo += `API Error Response: ${errorText}
+`;
+      }
+    } catch (apiError) {
+      debugInfo += `API Connection Error: ${apiError}
+`;
+    }
+    try {
+      await initializeSchema();
+      debugInfo += `Schema reinitialization: SUCCESS
+`;
+      debugInfo += `Index size after reinit: ${schemaOptimizer.getIndexSize()} keywords
+`;
+    } catch (initError) {
+      debugInfo += `Schema reinitialization: FAILED - ${initError}
+`;
+    }
+    return {
+      content: [{
+        type: "text",
+        text: debugInfo
+      }]
+    };
+  } catch (error) {
+    return {
+      isError: true,
+      content: [{
+        type: "text",
+        text: `Debug failed: ${error}`
+      }]
+    };
+  }
+});
+server.tool("search-schema", "\uD83D\uDD0D ALWAYS START HERE: Intelligently search GraphQL schema fields by keywords. This tool prevents context explosion by finding only relevant fields. Use broad keywords first (player, match, hero), then narrow down (winrate, performance). Returns field paths, types, descriptions, and auto-generated query templates.", {
+  keywords: exports_external.array(exports_external.string()).describe("Search keywords - use Dota 2 concepts like: player, match, hero, winrate, steam, performance, tournament, league, items, abilities, statistics"),
+  maxResults: exports_external.number().default(10).describe("Maximum results (default: 10). Increase for broader discovery, decrease for focused results")
 }, async ({ keywords, maxResults }) => {
   try {
     await initializeSchema();
     const results = schemaOptimizer.searchFields(keywords, maxResults);
     if (results.length === 0) {
+      const suggestions = suggestKeywords(keywords.join(" "));
       return {
         content: [{
           type: "text",
-          text: `No fields found for keywords: ${keywords.join(", ")}`
+          text: `No fields found for keywords: ${keywords.join(", ")}
+
+\uD83D\uDCA1 Try these Dota 2 related keywords instead:
+${suggestions.join(", ")}
+
+\uD83D\uDD0D Common search patterns:
+• Player data: ${DOTA_QUERY_EXAMPLES.searchPatterns.player.join(", ")}
+• Match data: ${DOTA_QUERY_EXAMPLES.searchPatterns.match.join(", ")}
+• Hero data: ${DOTA_QUERY_EXAMPLES.searchPatterns.hero.join(", ")}`
         }]
       };
     }
     const searchResults = results.map((r) => `${r.field.path} (${r.field.typeName}) - depth: ${r.field.depth}${r.field.description ? ` - ${r.field.description}` : ""}`).join(`
 `);
     const queryTemplate = schemaOptimizer.generateQueryTemplate(results.map((r) => r.field));
+    const exampleQueries = Object.values(DOTA_QUERY_EXAMPLES.templates).filter((template) => template.keywords.some((keyword) => keywords.some((k) => k.toLowerCase().includes(keyword.toLowerCase())))).slice(0, 2);
+    let exampleSection = "";
+    if (exampleQueries.length > 0) {
+      exampleSection = `
+
+=== Contextual Examples ===
+${exampleQueries.map((ex) => `${ex.description}:
+${ex.query}
+Variables: ${ex.variables}
+`).join(`
+`)}`;
+    }
     return {
       content: [{
         type: "text",
@@ -47479,7 +47789,7 @@ server.tool("search-schema", "Search GraphQL schema fields by keywords. Use this
 ${searchResults}
 
 === Query Template ===
-${queryTemplate}`
+${queryTemplate}${exampleSection}`
       }]
     };
   } catch (error) {
@@ -47492,9 +47802,9 @@ ${queryTemplate}`
     };
   }
 });
-server.tool("introspect-type", "Get detailed type definition for a specific GraphQL type with controlled depth.", {
-  typeName: exports_external.string().describe("Name of the GraphQL type to introspect"),
-  maxDepth: exports_external.number().default(2).describe("Maximum depth of nested types to include")
+server.tool("introspect-type", "\uD83C\uDFAF DEEP DIVE: Get detailed structure of a specific GraphQL type with controlled depth. Use this AFTER search-schema when you need to explore a specific type (like PlayerType, MatchType, HeroType). Controls nesting depth to prevent context overflow.", {
+  typeName: exports_external.string().describe("GraphQL type name from search results (e.g., PlayerType, MatchType, HeroType, LeagueType)"),
+  maxDepth: exports_external.number().default(2).describe("Depth control: 1=shallow (field names only), 2=moderate (2 levels), 3=deep (3 levels max)")
 }, async ({ typeName, maxDepth }) => {
   try {
     await initializeSchema();
@@ -47515,9 +47825,93 @@ server.tool("introspect-type", "Get detailed type definition for a specific Grap
     };
   }
 });
-server.tool("query-graphql", "Query a GraphQL endpoint with the given query and variables", {
-  query: exports_external.string(),
-  variables: exports_external.string().optional()
+server.tool("get-query-examples", "\uD83D\uDCA1 GUIDANCE: Get curated query examples, workflows, and best practices for common Dota 2 data analysis tasks. Use when you need inspiration or guidance on how to structure queries.", {
+  category: exports_external.enum(["player", "match", "hero", "league", "workflow", "all"]).default("all").describe("Category of examples: player analysis, match analysis, hero research, league data, workflow patterns, or all examples")
+}, async ({ category }) => {
+  try {
+    let content = "";
+    if (category === "all" || category === "workflow") {
+      content += `=== Recommended Workflows ===
+`;
+      Object.entries(DOTA_QUERY_EXAMPLES.workflows).forEach(([name, steps]) => {
+        content += `
+${name.toUpperCase()}:
+${steps.map((step, i) => `${i + 1}. ${step}`).join(`
+`)}
+`;
+      });
+    }
+    if (category === "all" || category === "player") {
+      content += `
+=== Player Analysis Examples ===
+`;
+      const playerExamples = Object.values(DOTA_QUERY_EXAMPLES.templates).filter((t) => t.keywords.includes("player"));
+      playerExamples.forEach((example) => {
+        content += `
+${example.description}:
+${example.query}
+Variables: ${example.variables}
+Notes: ${example.notes}
+`;
+      });
+    }
+    if (category === "all" || category === "match") {
+      content += `
+=== Match Analysis Examples ===
+`;
+      const matchExamples = Object.values(DOTA_QUERY_EXAMPLES.templates).filter((t) => t.keywords.includes("match"));
+      matchExamples.forEach((example) => {
+        content += `
+${example.description}:
+${example.query}
+Variables: ${example.variables}
+Notes: ${example.notes}
+`;
+      });
+    }
+    if (category === "all" || category === "hero") {
+      content += `
+=== Hero Research Examples ===
+`;
+      const heroExamples = Object.values(DOTA_QUERY_EXAMPLES.templates).filter((t) => t.keywords.includes("hero"));
+      heroExamples.forEach((example) => {
+        content += `
+${example.description}:
+${example.query}
+Variables: ${example.variables}
+Notes: ${example.notes}
+`;
+      });
+    }
+    content += `
+=== Steam ID Notes ===
+${DOTA_QUERY_EXAMPLES.steamIdNotes}`;
+    content += `
+=== Common Errors & Solutions ===
+`;
+    Object.entries(DOTA_QUERY_EXAMPLES.commonErrors).forEach(([error, solution]) => {
+      content += `• ${error}: ${solution}
+`;
+    });
+    return {
+      content: [{
+        type: "text",
+        text: content
+      }]
+    };
+  } catch (error) {
+    return {
+      isError: true,
+      content: [{
+        type: "text",
+        text: `Failed to get examples: ${error}`
+      }]
+    };
+  }
+});
+server.tool("query-graphql", "\uD83D\uDCCA EXECUTE: Run GraphQL queries against the Dota 2 API. Use query templates from search-schema as starting points. Always use variables for dynamic values (player IDs, match IDs). Check for errors and iterate. Mutations are disabled for safety.", {
+  query: exports_external.string().describe("GraphQL query - start with templates from search-schema, use variables for dynamic values like: query($steamId: Long!) { player(steamAccountId: $steamId) { ... } }"),
+  variables: exports_external.string().optional().describe(`JSON string with query variables, e.g., '{"steamId": "123456789", "matchId": "7891234567"}'`)
 }, async ({ query, variables }) => {
   try {
     const parsedQuery = import_graphql3.parse(query);
@@ -47617,17 +48011,17 @@ app.delete("/mcp", (req, res) => {
   transport.handleRequest(req, res);
 });
 async function main() {
-  try {
-    await initializeSchema();
-  } catch (error) {
-    console.warn("⚠️ Schema initialization failed on startup, will retry on first request");
-  }
   httpServer.listen(env.PORT, env.HOST, () => {
     console.log(`\uD83D\uDE80 MCP GraphQL Server started on ${env.HOST}:${env.PORT}`);
     console.log(`\uD83D\uDD17 GraphQL: ${env.ENDPOINT}`);
     console.log(`\uD83D\uDCCA Health: http://${env.HOST}:${env.PORT}/health`);
     console.log(`\uD83D\uDD0C MCP: http://${env.HOST}:${env.PORT}/mcp`);
-    console.log(`\uD83D\uDD0D Use 'search-schema' tool instead of 'introspect-schema' for better performance`);
+    console.log(`\uD83D\uDD0D Use 'debug-schema-status' first, then 'search-schema' for discovery`);
+    initializeSchema().then(() => {
+      console.log("\uD83C\uDF89 Background schema initialization successful");
+    }).catch(() => {
+      console.log("⚠️ Background schema initialization failed - use debug-schema-status for details");
+    });
   });
 }
 main().catch((error) => {

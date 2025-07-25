@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   mcp-graphql:
-    build: .
+    build: 
+      context: .
+      no_cache: true
     ports:
       - "3001:3001"
     environment:
       - NAME=stratz-graphql-mcp
       - ENDPOINT=https://api.stratz.com/graphql
-      - SCHEMA=./schema.graphql
+      # УБИРАЕМ SCHEMA - пусть использует API introspection
       - PORT=3001
       - HOST=0.0.0.0
       - ALLOW_MUTATIONS=false

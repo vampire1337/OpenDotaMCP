@@ -28,7 +28,9 @@
       "Bash(docker-compose up:*)",
       "Bash(docker compose:*)",
       "Bash(bun build:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(chmod:*)",
+      "Bash(docker-compose:*)"
     ],
     "deny": []
   }
