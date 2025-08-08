@@ -14,5 +14,5 @@ services:
       - PORT=3001
       - HOST=0.0.0.0
       - ALLOW_MUTATIONS=false
-      - HEADERS={"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiOTllMjFhZDMtNjEzMi00MzM2LThkMmItYTllOWFkNTM1Yjc1IiwiU3RlYW1JZCI6IjExNDYwMDkwNTEiLCJBUElVc2VyIjoidHJ1ZSIsIm5iZiI6MTc1MzI4NzM2OSwiZXhwIjoxNzg0ODIzMzY5LCJpYXQiOjE3NTMyODczNjksImlzcyI6Imh0dHBzOi8vYXBpLnN0cmF0ei5jb20ifQ.ntpKNm3d0pOMt6cbQY90NLNRqMJur86f30Xgqeb3fwE"}
+      - HEADERS={"Authorization":"Bearer YOUR TOKEN"}
     restart: unless-stopped
