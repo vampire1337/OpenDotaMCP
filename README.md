@@ -1,4 +1,4 @@
-# 🚀 OpenDota MCP Server
+# OpenDota MCP Server
 
 <div align="center">
 
@@ -43,7 +43,7 @@ Traditional GraphQL MCP servers **crash AI agents** with context explosion:
 
 <div align="center">
 
-### 🔥 **Performance Gains**
+### **Performance Gains**
 
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
@@ -56,13 +56,13 @@ Traditional GraphQL MCP servers **crash AI agents** with context explosion:
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 <table>
 <tr>
 <td width="50%">
 
-### 🐳 **Docker (Recommended)**
+### **Docker (Recommended)**
 ```bash
 git clone [repo-url]
 cd OpenDotaMCP
@@ -77,7 +77,7 @@ docker run -p 3001:3001 \
 </td>
 <td width="50%">
 
-### 💻 **Local Development**
+### **Local Development**
 ```bash
 # Install & configure
 bun install
@@ -96,9 +96,9 @@ npx mcp-inspector http://localhost:3001/mcp
 
 ---
 
-## 🛠️ Smart Tools
+## Smart Tools
 
-### 🔍 **search-schema** → *Intelligent Field Discovery*
+### **search-schema** → *Intelligent Field Discovery*
 
 Find relevant GraphQL fields without context explosion:
 
@@ -110,7 +110,7 @@ interface SearchParams {
 ```
 
 <details>
-<summary><b>💡 Usage Examples</b></summary>
+<summary><b> Usage Examples</b></summary>
 
 ```javascript
 // Find player-related fields
@@ -124,7 +124,7 @@ search-schema(keywords: ["match", "duration", "winner"])
 
 </details>
 
-### 🎯 **introspect-type** → *Progressive Type Loading*
+### **introspect-type** → *Progressive Type Loading*
 
 Get specific type definitions with controlled depth:
 
@@ -136,7 +136,7 @@ interface IntrospectParams {
 ```
 
 <details>
-<summary><b>💡 Usage Examples</b></summary>
+<summary><b> Usage Examples</b></summary>
 
 ```javascript
 // Explore player structure
@@ -150,7 +150,7 @@ introspect-type(typeName: "MatchType", maxDepth: 1)
 
 </details>
 
-### 📊 **query-graphql** → *Optimized Query Execution*
+### **query-graphql** → *Optimized Query Execution*
 
 Execute GraphQL queries with enhanced error handling:
 
@@ -169,7 +169,7 @@ interface QueryParams {
 <tr>
 <td width="50%">
 
-### 🌍 **Environment Variables**
+### **Environment Variables**
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -182,7 +182,7 @@ interface QueryParams {
 </td>
 <td width="50%">
 
-### 🔒 **Security Features**
+### **Security Features**
 
 - ✅ **Mutations disabled** by default
 - ✅ **Depth limiting** prevents recursion attacks  
@@ -196,23 +196,23 @@ interface QueryParams {
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 graph TB
-    subgraph "🧠 Schema Optimizer"
+    subgraph "Schema Optimizer"
         A[Field Index] --> B[Relevance Scoring]
         C[Type Cache] --> D[Progressive Loading]
         E[Search Engine] --> F[Fuzzy Matching]
     end
     
-    subgraph "🛠️ MCP Tools"
+    subgraph "MCP Tools"
         G[search-schema] --> A
         H[introspect-type] --> C
         I[query-graphql] --> J[GraphQL API]
     end
     
-    subgraph "🤖 AI Agents"
+    subgraph "AI Agents"
         K[Claude] --> G
         L[GPT-4] --> H
         M[Custom LLM] --> I
@@ -223,10 +223,10 @@ graph TB
 
 ---
 
-## 🎮 Real-World Examples
+## Real-World Examples
 
 <details>
-<summary><b>🔍 Discovering Dota 2 Player Data</b></summary>
+<summary><b> Discovering Dota 2 Player Data</b></summary>
 
 ```javascript
 // 1. Search for player-related fields
@@ -259,7 +259,7 @@ query-graphql(query: `
 </details>
 
 <details>
-<summary><b>📊 Analyzing Match Statistics</b></summary>
+<summary><b> Analyzing Match Statistics</b></summary>
 
 ```javascript
 // 1. Find match-related fields
@@ -298,18 +298,18 @@ query-graphql(query: `
 
 ---
 
-## 📚 Documentation
+##  Documentation
 
 | Resource | Description |
 |----------|-------------|
-| [🔧 **API Reference**](docs/api.md) | Complete tool documentation |
-| [🏗️ **Architecture Guide**](docs/architecture.md) | Technical deep-dive |
-| [🚀 **Deployment Guide**](docs/deployment.md) | Production setup |
-| [🐛 **Troubleshooting**](docs/troubleshooting.md) | Common issues & solutions |
+| [ **API Reference**](docs/api.md) | Complete tool documentation |
+| [ **Architecture Guide**](docs/architecture.md) | Technical deep-dive |
+| [ **Deployment Guide**](docs/deployment.md) | Production setup |
+| [ **Troubleshooting**](docs/troubleshooting.md) | Common issues & solutions |
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Here's how to get started:
 
@@ -317,7 +317,7 @@ We welcome contributions! Here's how to get started:
 <tr>
 <td width="50%">
 
-### 🛠️ **Development Setup**
+###  **Development Setup**
 ```bash
 # Clone and setup
 git clone [repo-url]
@@ -334,7 +334,7 @@ bun run dev
 </td>
 <td width="50%">
 
-### ✅ **PR Checklist**
+###  **PR Checklist**
 - [ ] Tests pass (`bun test`)
 - [ ] Linting passes (`bun run lint`) 
 - [ ] TypeScript compiles (`bun run build`)
@@ -347,13 +347,13 @@ bun run dev
 
 ---
 
-## 📄 License
+##  License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🔗 Ecosystem
+##  Ecosystem
 
 <div align="center">
 
@@ -370,9 +370,9 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-**Built with ❤️ for the AI & Gaming community**
+**Built with  for the AI & Gaming community**
 
-[⭐ **Star us**](https://github.com/yourusername/OpenDotaMCP/stargazers) • [🐛 **Report Bug**](https://github.com/yourusername/OpenDotaMCP/issues) • [💡 **Request Feature**](https://github.com/yourusername/OpenDotaMCP/discussions)
+[ **Star us**](https://github.com/yourusername/OpenDotaMCP/stargazers) • [🐛 **Report Bug**](https://github.com/yourusername/OpenDotaMCP/issues) • [ **Request Feature**](https://github.com/yourusername/OpenDotaMCP/discussions)
 
 **Made possible by:** [Anthropic](https://anthropic.com) • [Bun](https://bun.sh) • [GraphQL](https://graphql.org) • [TypeScript](https://typescriptlang.org)
 
