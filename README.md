@@ -11,7 +11,7 @@
 **Next-generation GraphQL MCP server that eliminates context explosion**  
 *Intelligent schema discovery • Progressive introspection • Enterprise-ready*
 
-[🇺🇸 English](README.md) • [🇷🇺 Русский](README.ru.md) • [📖 Docs](#documentation) • [🚀 Install](#installation)
+[🇺🇸 English](README.md) • [🇷🇺 Русский](README.ru.md) • [Docs](#documentation) • [Install](#installation)
 
 [![smithery badge](https://smithery.ai/badge/mcp-graphql)](https://smithery.ai/server/mcp-graphql)
 
@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 The Problem
+## The Problem
 
 Traditional GraphQL MCP servers **crash AI agents** with context explosion:
 
@@ -30,7 +30,7 @@ Traditional GraphQL MCP servers **crash AI agents** with context explosion:
 - No intelligent discovery → Manual field hunting
 ```
 
-## ✨ Our Solution
+## Our Solution
 
 **Search + Introspect + Execute** pattern with intelligent optimization:
 
@@ -163,7 +163,7 @@ interface QueryParams {
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 <table>
 <tr>
