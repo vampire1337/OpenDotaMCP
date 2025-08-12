@@ -34,7 +34,11 @@
       "WebFetch(domain:docs.flowiseai.com)",
       "Bash(wc:*)",
       "Bash(grep:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "WebSearch",
+      "WebFetch(domain:stratz.com)",
+      "WebFetch(domain:bo3.gg)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
