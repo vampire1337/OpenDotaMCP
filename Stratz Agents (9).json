@@ -1,0 +1,2508 @@
+{
+  "nodes": [
+    {
+      "id": "startAgentflow_0",
+      "type": "agentFlow",
+      "position": {
+        "x": -291.254169719856,
+        "y": -416.1384039605945
+      },
+      "data": {
+        "id": "startAgentflow_0",
+        "label": "Start",
+        "version": 1.1,
+        "name": "startAgentflow",
+        "type": "Start",
+        "color": "#7EE787",
+        "hideInput": true,
+        "baseClasses": [
+          "Start"
+        ],
+        "category": "Agent Flows",
+        "description": "Starting point of the Dota 2 analytics agentflow",
+        "inputParams": [
+          {
+            "label": "Input Type",
+            "name": "startInputType",
+            "type": "options",
+            "options": [
+              {
+                "label": "Chat Input",
+                "name": "chatInput",
+                "description": "Start the conversation with chat input"
+              }
+            ],
+            "default": "chatInput",
+            "id": "startAgentflow_0-input-startInputType-options",
+            "display": true
+          },
+          {
+            "label": "Flow State",
+            "name": "startState",
+            "description": "Runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "string",
+                "placeholder": "Foo"
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "placeholder": "Bar",
+                "optional": true
+              }
+            ],
+            "id": "startAgentflow_0-input-startState-array",
+            "display": true
+          },
+          {
+            "label": "Persist State",
+            "name": "startPersistState",
+            "type": "boolean",
+            "description": "Persist the state in the same session",
+            "optional": true,
+            "id": "startAgentflow_0-input-startPersistState-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "startInputType": "chatInput",
+          "startState": [
+            {
+              "key": "analysisType",
+              "value": ""
+            },
+            {
+              "key": "steamId",
+              "value": ""
+            },
+            {
+              "key": "matchId",
+              "value": ""
+            },
+            {
+              "key": "heroName",
+              "value": ""
+            },
+            {
+              "key": "currentPatch",
+              "value": "7.37e"
+            },
+            {
+              "key": "queryData",
+              "value": "{}"
+            },
+            {
+              "key": "userSkillLevel",
+              "value": ""
+            },
+            {
+              "key": "metaContext",
+              "value": "{\"topTierHeroes\":{\"mid\":[\"Puck\",\"Earthshaker\",\"Earth Spirit\",\"Lina\",\"Storm Spirit\"],\"carry\":[\"Wraith King\",\"Lifestealer\",\"Medusa\",\"Spectre\"],\"support\":[\"Lich\",\"Clockwerk\",\"Ancient Apparition\",\"Winter Wyvern\"]},\"patchChanges\":{\"miranaShardNerfed\":true,\"auraItemsNerfed\":true,\"statItemsChanged\":true,\"ironTalonReturned\":true},\"proScene\":{\"popularStrategies\":[\"Early push with aura items\",\"Mobile ganking compositions\",\"Late game scaling cores\"],\"banPriority\":[\"Mirana\",\"Clockwerk\",\"Puck\"]},\"mmrBrackets\":{\"divine\":[\"Abaddon\",\"Lich\",\"Bloodseeker\"],\"immortal\":[\"Puck\",\"Storm Spirit\",\"Earth Spirit\"]}}"
+            },
+            {
+              "key": "analysisDepth",
+              "value": "comprehensive"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": ""
+            }
+          ],
+          "startPersistState": true
+        },
+        "outputAnchors": [
+          {
+            "id": "startAgentflow_0-output-startAgentflow",
+            "label": "Start",
+            "name": "startAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 103,
+      "height": 66,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -291.254169719856,
+        "y": -416.1384039605945
+      },
+      "dragging": false
+    },
+    {
+      "id": "agentAgentflow_0",
+      "position": {
+        "x": 535.4093149904168,
+        "y": -639.0688793747329
+      },
+      "data": {
+        "id": "agentAgentflow_0",
+        "label": "Разбор матча",
+        "version": 1,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Agent Flows",
+        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_0-input-agentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  },
+                  {
+                    "label": "Developer",
+                    "name": "developer"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "generateInstruction": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_0-input-agentMessages-array",
+            "display": true
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Tool",
+                "name": "agentSelectedTool",
+                "type": "asyncOptions",
+                "loadMethod": "listTools",
+                "loadConfig": true
+              },
+              {
+                "label": "Require Human Input",
+                "name": "agentSelectedToolRequiresHumanInput",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "id": "agentAgentflow_0-input-agentTools-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
+            "array": [
+              {
+                "label": "Document Store",
+                "name": "documentStore",
+                "type": "asyncOptions",
+                "loadMethod": "listStores"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "docStoreDescription",
+                "type": "string",
+                "generateDocStoreDescription": true,
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentKnowledgeDocumentStores-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Vector Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
+            "array": [
+              {
+                "label": "Vector Store",
+                "name": "vectorStore",
+                "type": "asyncOptions",
+                "loadMethod": "listVectorStores",
+                "loadConfig": true
+              },
+              {
+                "label": "Embedding Model",
+                "name": "embeddingModel",
+                "type": "asyncOptions",
+                "loadMethod": "listEmbeddings",
+                "loadConfig": true
+              },
+              {
+                "label": "Knowledge Name",
+                "name": "knowledgeName",
+                "type": "string",
+                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "knowledgeDescription",
+                "type": "string",
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentKnowledgeVSEmbeddings-array",
+            "display": true
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "description": "Enable memory for the conversation thread",
+            "default": true,
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentEnableMemory-boolean",
+            "display": true
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages",
+                "description": "Retrieve all messages from the conversation"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize",
+                "description": "Uses a fixed window size to surface the last N messages"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary",
+                "description": "Summarizes the whole conversation"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer",
+                "description": "Summarize conversations once token limit is reached. Default to 2000"
+              }
+            ],
+            "optional": true,
+            "default": "allMessages",
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_0-input-agentMemoryType-options",
+            "display": true
+          },
+          {
+            "label": "Window Size",
+            "name": "agentMemoryWindowSize",
+            "type": "number",
+            "default": "20",
+            "description": "Uses a fixed window size to surface the last N messages",
+            "show": {
+              "agentMemoryType": "windowSize"
+            },
+            "id": "agentAgentflow_0-input-agentMemoryWindowSize-number",
+            "display": false
+          },
+          {
+            "label": "Max Token Limit",
+            "name": "agentMemoryMaxTokenLimit",
+            "type": "number",
+            "default": "2000",
+            "description": "Summarize conversations once token limit is reached. Default to 2000",
+            "show": {
+              "agentMemoryType": "conversationSummaryBuffer"
+            },
+            "id": "agentAgentflow_0-input-agentMemoryMaxTokenLimit-number",
+            "display": false
+          },
+          {
+            "label": "Input Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "description": "Add an input message as user message at the end of the conversation",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_0-input-agentUserMessage-string",
+            "display": true
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_0-input-agentReturnResponseAs-options",
+            "display": true
+          },
+          {
+            "label": "Update Flow State",
+            "name": "agentUpdateState",
+            "description": "Update runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "asyncOptions",
+                "loadMethod": "listRuntimeStateKeys",
+                "freeSolo": true
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true,
+                "acceptNodeOutputAsVariable": true
+              }
+            ],
+            "id": "agentAgentflow_0-input-agentUpdateState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "agentModel": "chatOpenRouter",
+          "agentMessages": [
+            {
+              "role": "system",
+              "content": "<p># 🏆 DOTA 2 PRO ANALYTICS MASTER COORDINATOR V2.0\\n\\n**Ты - элитный аналитик Dota 2 с глубоким пониманием профессиональной сцены и текущей мета patch 7.37e. Твой уровень - топ-аналитики команд уровня Team Liquid, OG, PSG.LGD.**\\n\\n## 🎯 Твоя Миссия\\nПредоставлять world-class анализ данных Dota 2, используя передовые методы профессиональных аналитиков команд уровня TI. Каждый твой ответ должен быть на уровне аналитики топ команд.\\n\\n## 🧠 Ключевые Компетенции\\n\\n### 📊 Статистический Анализ Pro-Level\\n- **Винрейт по ролям и MMR брекетам** (Divine+, Immortal, Pro Scene)\\n- **Тренды пиков/банов** по турнирам и патчам\\n- **Экономические метрики**: GPM/XPM progression, item timings, farming efficiency\\n- **Командные метрики**: vision score, roam patterns, objective control\\n\\n### 🎮 Мета-Аналитика 7.37e\\n- **S-Tier герои**: Puck (мид), Wraith King (керри), Lich (саппорт)\\n- **Нерфы патча**: Mirana shard, aura items (Pipe, Crimson, Greaves)\\n- **Emerging picks**: Earthshaker мид, Earth Spirit core\\n- **Ban priorities**: Clockwerk (53.5% WR), Storm Spirit\\n\\n### 🔬 Профессиональные Запросы\\n1. **Детальная статистика игроков**: KDA trends, hero pool analysis, performance vs tier-1 teams\\n2. **Продвинутый матч-анализ**: draft phase analysis, economy curves, team fight breakdowns\\n3. **Мета-прогнозирование**: upcoming tournament trends, counter-meta strategies\\n4. **Coaching insights**: specific improvement areas, skill progression tracking\\n\\n## 🚀 Workflow Intelligence\\n\\n### Этап 1: Intelligent Query Analysis\\n```\\nANALYZE: Тип запроса → Извлечь parameters → Определить глубину анализа\\nEXTRACT: Steam ID/Match ID/Hero names/MMR bracket\\nUPDATE: $flow.state с контекстными данными\\nROUTE: К специализированному analyst-agent\\n```\\n\\n### Этап 2: Dynamic FlowState Management\\n- **analysisType**: player/match/hero/meta/draft/pro-scene\\n- **userSkillLevel**: calibrate analysis complexity\\n- **metaContext**: current patch meta, pro scene trends\\n- **analysisDepth**: surface/comprehensive/pro-level\\n\\n### Этап 3: Data-Driven Insights\\nИспользуй MCP tools для получения real-time данных:\\n- `search-schema`: найти актуальные поля данных\\n- `query-graphql`: выполнить complex queries\\n- `get-query-examples`: изучить доступные запросы\\n\\n## 💡 Response Excellence Standards\\n\\n### 📈 Структура Анализа\\n1. **KEY METRICS**: Главная статистика с контекстом\\n2. **TREND ANALYSIS**: Что изменилось и почему\\n3. **ACTIONABLE INSIGHTS**: Конкретные рекомендации\\n4. **META CONTEXT**: Связь с текущим патчем и про-сценой\\n\\n### 🎯 Персонализация\\n- **Для новичков**: Базовые концепции с примерами\\n- **Для продвинутых**: Глубокий анализ с цифрами\\n- **Для про-игроков**: Детальная статистика с benchmarks\\n\\n## ⚡ Execution Guidelines\\n\\n**ВСЕГДА начинай с обновления FlowState:**\\n1. Определи тип анализа и обнови `$flow.state.analysisType`\\n2. Извлеки все ID/параметры из запроса\\n3. Установи уровень глубины анализа\\n4. Используй metaContext для актуальных трендов\\n\\n**НИКОГДА не давай generic советы.** Каждый ответ должен содержать конкретные данные, цифры, и actionable insights на уровне профессиональной аналитики.\\n\\n*Твоя цель - быть лучшим Dota 2 аналитиком в мире.*</p>"
+            },
+            {
+              "role": "user",
+              "content": "<p>🎮 Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br><br>📊 Текущее состояние:<br>• Тип анализа: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.analysisType\" data-label=\"$flow.state.analysisType\">{{ $flow.state.analysisType }}</span><br>• Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>• Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span><br>• История: <span class=\"variable\" data-type=\"mention\" data-id=\"chat_history\" data-label=\"chat_history\">{{ chat_history }}</span><br>• Время: <span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            }
+          ],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolRequiresHumanInput": "",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\n\"url\":\n\"https://opendotamcp-production.up.railway.app/mcp\"\n}",
+                "mcpActions": "[\"debug-schema-status\",\"get-query-examples\",\"introspect-type\",\"query-graphql\",\"search-schema\"]",
+                "agentSelectedTool": "customMCP"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [
+            {
+              "vectorStore": "memoryVectorStore",
+              "embeddingModel": "openAIEmbeddings",
+              "knowledgeName": "Dota 2 Professional Analytics Database",
+              "knowledgeDescription": "Comprehensive knowledge base containing professional Dota 2 analytics data including: current meta heroes and their win rates across different MMR brackets, professional tournament statistics and trends, hero interaction matrices and synergies, item build optimization data, patch change analysis and impact assessments, coaching methodologies and skill improvement frameworks, draft phase strategies and ban/pick priorities for patch 7.37e.",
+              "returnSourceDocuments": "",
+              "vectorStoreConfig": {
+                "document": "",
+                "embeddings": "",
+                "topK": "",
+                "vectorStore": "memoryVectorStore"
+              },
+              "embeddingModelConfig": {
+                "modelName": "text-embedding-3-small",
+                "stripNewLines": "",
+                "batchSize": "1000",
+                "timeout": "",
+                "basepath": "",
+                "dimensions": "",
+                "embeddingModel": "openAIEmbeddings"
+              }
+            }
+          ],
+          "agentEnableMemory": true,
+          "agentMemoryType": "conversationSummary",
+          "agentUserMessage": "<p>🎮 Добро пожаловать в систему профессиональной аналитики Dota 2!<br><br>Я предоставляю анализ уровня топ команд на основе актуальных данных патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span>.<br><br>📊 Доступные типы анализа:<br>• Детальная статистика игроков<br>• Профессиональный разбор матчей<br>• Мета-анализ героев и стратегий<br>• Тренды про-сцены и турниров<br><br>💡 Для максимально точного анализа укажите Steam ID, Match ID или конкретного героя.</p>",
+          "agentReturnResponseAs": "assistantMessage",
+          "agentUpdateState": [
+            {
+              "key": "analysisType",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            },
+            {
+              "key": "queryData",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            }
+          ],
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.7,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "agentModel": "chatOpenRouter"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_0-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 164,
+      "height": 128,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 535.4093149904168,
+        "y": -639.0688793747329
+      }
+    },
+    {
+      "id": "conditionAgentAgentflow_0",
+      "position": {
+        "x": 7.124142900207829,
+        "y": -456.24461591250844
+      },
+      "data": {
+        "id": "conditionAgentAgentflow_0",
+        "label": "Condition Agent 0",
+        "version": 1.1,
+        "name": "conditionAgentAgentflow",
+        "type": "ConditionAgent",
+        "color": "#ff8fab",
+        "baseClasses": [
+          "ConditionAgent"
+        ],
+        "category": "Agent Flows",
+        "description": "Utilize an agent to split flows based on dynamic conditions",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "conditionAgentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "conditionAgentAgentflow_0-input-conditionAgentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Instructions",
+            "name": "conditionAgentInstructions",
+            "type": "string",
+            "description": "A general instructions of what the condition agent should do",
+            "rows": 4,
+            "acceptVariable": true,
+            "placeholder": "Determine if the user is interested in learning about AI",
+            "id": "conditionAgentAgentflow_0-input-conditionAgentInstructions-string",
+            "display": true
+          },
+          {
+            "label": "Input",
+            "name": "conditionAgentInput",
+            "type": "string",
+            "description": "Input to be used for the condition agent",
+            "rows": 4,
+            "acceptVariable": true,
+            "default": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span> </p>",
+            "id": "conditionAgentAgentflow_0-input-conditionAgentInput-string",
+            "display": true
+          },
+          {
+            "label": "Scenarios",
+            "name": "conditionAgentScenarios",
+            "description": "Define the scenarios that will be used as the conditions to split the flow",
+            "type": "array",
+            "array": [
+              {
+                "label": "Scenario",
+                "name": "scenario",
+                "type": "string",
+                "placeholder": "User is asking for a pizza"
+              }
+            ],
+            "default": [
+              {
+                "scenario": "DSFdS"
+              },
+              {
+                "scenario": "ADFsdf"
+              }
+            ],
+            "id": "conditionAgentAgentflow_0-input-conditionAgentScenarios-array",
+            "display": true
+          },
+          {
+            "label": "Override System Prompt",
+            "name": "conditionAgentOverrideSystemPrompt",
+            "type": "boolean",
+            "description": "Override initial system prompt for Condition Agent",
+            "optional": true,
+            "id": "conditionAgentAgentflow_0-input-conditionAgentOverrideSystemPrompt-boolean",
+            "display": true
+          },
+          {
+            "label": "Node System Prompt",
+            "name": "conditionAgentSystemPrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "default": "<p>You are part of a multi-agent system designed to make agent coordination and execution easy. Your task is to analyze the given input and select one matching scenario from a provided set of scenarios.</p>\n    <ul>\n        <li><strong>Input</strong>: A string representing the user's query, message or data.</li>\n        <li><strong>Scenarios</strong>: A list of predefined scenarios that relate to the input.</li>\n        <li><strong>Instruction</strong>: Determine which of the provided scenarios is the best fit for the input.</li>\n    </ul>\n    <h2>Steps</h2>\n    <ol>\n        <li><strong>Read the input string</strong> and the list of scenarios.</li>\n        <li><strong>Analyze the content of the input</strong> to identify its main topic or intention.</li>\n        <li><strong>Compare the input with each scenario</strong>: Evaluate how well the input's topic or intention aligns with each of the provided scenarios and select the one that is the best fit.</li>\n        <li><strong>Output the result</strong>: Return the selected scenario in the specified JSON format.</li>\n    </ol>\n    <h2>Output Format</h2>\n    <p>Output should be a JSON object that names the selected scenario, like this: <code>{\"output\": \"<selected_scenario_name>\"}</code>. No explanation is needed.</p>\n    <h2>Examples</h2>\n    <ol>\n       <li>\n            <p><strong>Input</strong>: <code>{\"input\": \"Hello\", \"scenarios\": [\"user is asking about AI\", \"user is not asking about AI\"], \"instruction\": \"Your task is to check if the user is asking about AI.\"}</code></p>\n            <p><strong>Output</strong>: <code>{\"output\": \"user is not asking about AI\"}</code></p>\n        </li>\n        <li>\n            <p><strong>Input</strong>: <code>{\"input\": \"What is AIGC?\", \"scenarios\": [\"user is asking about AI\", \"user is asking about the weather\"], \"instruction\": \"Your task is to check and see if the user is asking a topic about AI.\"}</code></p>\n            <p><strong>Output</strong>: <code>{\"output\": \"user is asking about AI\"}</code></p>\n        </li>\n        <li>\n            <p><strong>Input</strong>: <code>{\"input\": \"Can you explain deep learning?\", \"scenarios\": [\"user is interested in AI topics\", \"user wants to order food\"], \"instruction\": \"Determine if the user is interested in learning about AI.\"}</code></p>\n            <p><strong>Output</strong>: <code>{\"output\": \"user is interested in AI topics\"}</code></p>\n        </li>\n    </ol>\n    <h2>Note</h2>\n    <ul>\n        <li>Ensure that the input scenarios align well with potential user queries for accurate matching.</li>\n        <li>DO NOT include anything other than the JSON in your response.</li>\n    </ul>",
+            "description": "Expert use only. Modifying this can significantly alter agent behavior. Leave default if unsure",
+            "show": {
+              "conditionAgentOverrideSystemPrompt": true
+            },
+            "id": "conditionAgentAgentflow_0-input-conditionAgentSystemPrompt-string",
+            "display": false
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "conditionAgentModel": "chatOpenRouter",
+          "conditionAgentInstructions": "<p>Проанализируй запрос пользователя о Dota 2 и определи наиболее подходящий тип анализа. Учитывай контекст текущего патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span> и мета-информацию <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span>. Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>",
+          "conditionAgentInput": "<p>Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br>Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>Уровень пользователя: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.userSkillLevel\" data-label=\"$flow.state.userSkillLevel\">{{ $flow.state.userSkillLevel }}</span><br>Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span></p>",
+          "conditionAgentScenarios": [
+            {
+              "scenario": "Анализ конкретного игрока (требует Steam ID или никнейм)"
+            },
+            {
+              "scenario": "Разбор конкретного матча (требует Match ID)"
+            },
+            {
+              "scenario": "Анализ героя и мета-позиционирования"
+            },
+            {
+              "scenario": "Профессиональная аналитика и турнирные тренды"
+            },
+            {
+              "scenario": "Общие вопросы и обучающий контент"
+            }
+          ],
+          "conditionAgentOverrideSystemPrompt": "",
+          "conditionAgentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.3,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "conditionAgentModel": "chatOpenRouter"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "conditionAgentAgentflow_0-output-0",
+            "label": 0,
+            "name": 0,
+            "description": "Condition 0"
+          },
+          {
+            "id": "conditionAgentAgentflow_0-output-1",
+            "label": 1,
+            "name": 1,
+            "description": "Condition 1"
+          },
+          {
+            "id": "conditionAgentAgentflow_0-output-2",
+            "label": 2,
+            "name": 2,
+            "description": "Condition 2"
+          },
+          {
+            "id": "conditionAgentAgentflow_0-output-3",
+            "label": 3,
+            "name": 3,
+            "description": "Condition 3"
+          },
+          {
+            "id": "conditionAgentAgentflow_0-output-4",
+            "label": 4,
+            "name": 4,
+            "description": "Condition 4"
+          }
+        ],
+        "outputs": {
+          "conditionAgentAgentflow": ""
+        },
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 190,
+      "height": 140,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 7.124142900207829,
+        "y": -456.24461591250844
+      }
+    },
+    {
+      "id": "directReplyAgentflow_0",
+      "position": {
+        "x": 1334.3266886522179,
+        "y": -425.56769908502906
+      },
+      "data": {
+        "id": "directReplyAgentflow_0",
+        "label": "Direct Reply 0",
+        "version": 1,
+        "name": "directReplyAgentflow",
+        "type": "DirectReply",
+        "color": "#4DDBBB",
+        "hideOutput": true,
+        "baseClasses": [
+          "DirectReply"
+        ],
+        "category": "Agent Flows",
+        "description": "Directly reply to the user with a message",
+        "inputParams": [
+          {
+            "label": "Message",
+            "name": "directReplyMessage",
+            "type": "string",
+            "rows": 4,
+            "acceptVariable": true,
+            "id": "directReplyAgentflow_0-input-directReplyMessage-string",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "directReplyMessage": "<p>🏆 Добро пожаловать в систему элитной Dota 2 аналитики!<br><br>Я - ваш персональный аналитик уровня команд Team Liquid и PSG.LGD. Предоставляю профессиональный анализ на основе актуальной мета патча 7.37e.<br><br>📈 Что я умею:<br>• Детальный анализ игроков и их прогресса<br>• Разбор матчей с focus на улучшение<br>• Мета-анализ героев и стратегий<br>• Профессиональные insights от про-сцены<br><br>💡 Просто спросите что вас интересует, или предоставьте Steam ID/Match ID для глубокого анализа!</p>"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 163,
+      "height": 66,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1334.3266886522179,
+        "y": -425.56769908502906
+      }
+    },
+    {
+      "id": "agentAgentflow_1",
+      "position": {
+        "x": 458.9449471112318,
+        "y": -485.35851128755803
+      },
+      "data": {
+        "id": "agentAgentflow_1",
+        "label": "Анализ героя и мета-позиционирования",
+        "version": 1,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Agent Flows",
+        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_1-input-agentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  },
+                  {
+                    "label": "Developer",
+                    "name": "developer"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "generateInstruction": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_1-input-agentMessages-array",
+            "display": true
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Tool",
+                "name": "agentSelectedTool",
+                "type": "asyncOptions",
+                "loadMethod": "listTools",
+                "loadConfig": true
+              },
+              {
+                "label": "Require Human Input",
+                "name": "agentSelectedToolRequiresHumanInput",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "id": "agentAgentflow_1-input-agentTools-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
+            "array": [
+              {
+                "label": "Document Store",
+                "name": "documentStore",
+                "type": "asyncOptions",
+                "loadMethod": "listStores"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "docStoreDescription",
+                "type": "string",
+                "generateDocStoreDescription": true,
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentKnowledgeDocumentStores-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Vector Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
+            "array": [
+              {
+                "label": "Vector Store",
+                "name": "vectorStore",
+                "type": "asyncOptions",
+                "loadMethod": "listVectorStores",
+                "loadConfig": true
+              },
+              {
+                "label": "Embedding Model",
+                "name": "embeddingModel",
+                "type": "asyncOptions",
+                "loadMethod": "listEmbeddings",
+                "loadConfig": true
+              },
+              {
+                "label": "Knowledge Name",
+                "name": "knowledgeName",
+                "type": "string",
+                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "knowledgeDescription",
+                "type": "string",
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentKnowledgeVSEmbeddings-array",
+            "display": true
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "description": "Enable memory for the conversation thread",
+            "default": true,
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentEnableMemory-boolean",
+            "display": true
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages",
+                "description": "Retrieve all messages from the conversation"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize",
+                "description": "Uses a fixed window size to surface the last N messages"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary",
+                "description": "Summarizes the whole conversation"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer",
+                "description": "Summarize conversations once token limit is reached. Default to 2000"
+              }
+            ],
+            "optional": true,
+            "default": "allMessages",
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_1-input-agentMemoryType-options",
+            "display": true
+          },
+          {
+            "label": "Window Size",
+            "name": "agentMemoryWindowSize",
+            "type": "number",
+            "default": "20",
+            "description": "Uses a fixed window size to surface the last N messages",
+            "show": {
+              "agentMemoryType": "windowSize"
+            },
+            "id": "agentAgentflow_1-input-agentMemoryWindowSize-number",
+            "display": false
+          },
+          {
+            "label": "Max Token Limit",
+            "name": "agentMemoryMaxTokenLimit",
+            "type": "number",
+            "default": "2000",
+            "description": "Summarize conversations once token limit is reached. Default to 2000",
+            "show": {
+              "agentMemoryType": "conversationSummaryBuffer"
+            },
+            "id": "agentAgentflow_1-input-agentMemoryMaxTokenLimit-number",
+            "display": false
+          },
+          {
+            "label": "Input Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "description": "Add an input message as user message at the end of the conversation",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_1-input-agentUserMessage-string",
+            "display": true
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_1-input-agentReturnResponseAs-options",
+            "display": true
+          },
+          {
+            "label": "Update Flow State",
+            "name": "agentUpdateState",
+            "description": "Update runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "asyncOptions",
+                "loadMethod": "listRuntimeStateKeys",
+                "freeSolo": true
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true,
+                "acceptNodeOutputAsVariable": true
+              }
+            ],
+            "id": "agentAgentflow_1-input-agentUpdateState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "agentModel": "chatOpenRouter",
+          "agentMessages": [
+            {
+              "role": "system",
+              "content": "<p># 🏆 DOTA 2 PRO ANALYTICS MASTER COORDINATOR V2.0\\n\\n**Ты - элитный аналитик Dota 2 с глубоким пониманием профессиональной сцены и текущей мета patch 7.37e. Твой уровень - топ-аналитики команд уровня Team Liquid, OG, PSG.LGD.**\\n\\n## 🎯 Твоя Миссия\\nПредоставлять world-class анализ данных Dota 2, используя передовые методы профессиональных аналитиков команд уровня TI. Каждый твой ответ должен быть на уровне аналитики топ команд.\\n\\n## 🧠 Ключевые Компетенции\\n\\n### 📊 Статистический Анализ Pro-Level\\n- **Винрейт по ролям и MMR брекетам** (Divine+, Immortal, Pro Scene)\\n- **Тренды пиков/банов** по турнирам и патчам\\n- **Экономические метрики**: GPM/XPM progression, item timings, farming efficiency\\n- **Командные метрики**: vision score, roam patterns, objective control\\n\\n### 🎮 Мета-Аналитика 7.37e\\n- **S-Tier герои**: Puck (мид), Wraith King (керри), Lich (саппорт)\\n- **Нерфы патча**: Mirana shard, aura items (Pipe, Crimson, Greaves)\\n- **Emerging picks**: Earthshaker мид, Earth Spirit core\\n- **Ban priorities**: Clockwerk (53.5% WR), Storm Spirit\\n\\n### 🔬 Профессиональные Запросы\\n1. **Детальная статистика игроков**: KDA trends, hero pool analysis, performance vs tier-1 teams\\n2. **Продвинутый матч-анализ**: draft phase analysis, economy curves, team fight breakdowns\\n3. **Мета-прогнозирование**: upcoming tournament trends, counter-meta strategies\\n4. **Coaching insights**: specific improvement areas, skill progression tracking\\n\\n## 🚀 Workflow Intelligence\\n\\n### Этап 1: Intelligent Query Analysis\\n```\\nANALYZE: Тип запроса → Извлечь parameters → Определить глубину анализа\\nEXTRACT: Steam ID/Match ID/Hero names/MMR bracket\\nUPDATE: $flow.state с контекстными данными\\nROUTE: К специализированному analyst-agent\\n```\\n\\n### Этап 2: Dynamic FlowState Management\\n- **analysisType**: player/match/hero/meta/draft/pro-scene\\n- **userSkillLevel**: calibrate analysis complexity\\n- **metaContext**: current patch meta, pro scene trends\\n- **analysisDepth**: surface/comprehensive/pro-level\\n\\n### Этап 3: Data-Driven Insights\\nИспользуй MCP tools для получения real-time данных:\\n- `search-schema`: найти актуальные поля данных\\n- `query-graphql`: выполнить complex queries\\n- `get-query-examples`: изучить доступные запросы\\n\\n## 💡 Response Excellence Standards\\n\\n### 📈 Структура Анализа\\n1. **KEY METRICS**: Главная статистика с контекстом\\n2. **TREND ANALYSIS**: Что изменилось и почему\\n3. **ACTIONABLE INSIGHTS**: Конкретные рекомендации\\n4. **META CONTEXT**: Связь с текущим патчем и про-сценой\\n\\n### 🎯 Персонализация\\n- **Для новичков**: Базовые концепции с примерами\\n- **Для продвинутых**: Глубокий анализ с цифрами\\n- **Для про-игроков**: Детальная статистика с benchmarks\\n\\n## ⚡ Execution Guidelines\\n\\n**ВСЕГДА начинай с обновления FlowState:**\\n1. Определи тип анализа и обнови `$flow.state.analysisType`\\n2. Извлеки все ID/параметры из запроса\\n3. Установи уровень глубины анализа\\n4. Используй metaContext для актуальных трендов\\n\\n**НИКОГДА не давай generic советы.** Каждый ответ должен содержать конкретные данные, цифры, и actionable insights на уровне профессиональной аналитики.\\n\\n*Твоя цель - быть лучшим Dota 2 аналитиком в мире.*</p>"
+            },
+            {
+              "role": "user",
+              "content": "<p>🎮 Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br><br>📊 Текущее состояние:<br>• Тип анализа: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.analysisType\" data-label=\"$flow.state.analysisType\">{{ $flow.state.analysisType }}</span><br>• Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>• Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span><br>• История: <span class=\"variable\" data-type=\"mention\" data-id=\"chat_history\" data-label=\"chat_history\">{{ chat_history }}</span><br>• Время: <span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            }
+          ],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolRequiresHumanInput": "",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\n\"url\":\n\"https://opendotamcp-production.up.railway.app/mcp\"\n}",
+                "mcpActions": "[\"debug-schema-status\",\"get-query-examples\",\"introspect-type\",\"query-graphql\",\"search-schema\"]",
+                "agentSelectedTool": "customMCP"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [
+            {
+              "vectorStore": "memoryVectorStore",
+              "embeddingModel": "openAIEmbeddings",
+              "knowledgeName": "Dota 2 Professional Analytics Database",
+              "knowledgeDescription": "Comprehensive knowledge base containing professional Dota 2 analytics data including: current meta heroes and their win rates across different MMR brackets, professional tournament statistics and trends, hero interaction matrices and synergies, item build optimization data, patch change analysis and impact assessments, coaching methodologies and skill improvement frameworks, draft phase strategies and ban/pick priorities for patch 7.37e.",
+              "returnSourceDocuments": "",
+              "vectorStoreConfig": {
+                "document": "",
+                "embeddings": "",
+                "topK": "",
+                "vectorStore": "memoryVectorStore"
+              },
+              "embeddingModelConfig": {
+                "modelName": "text-embedding-3-small",
+                "stripNewLines": "",
+                "batchSize": "1000",
+                "timeout": "",
+                "basepath": "",
+                "dimensions": "",
+                "embeddingModel": "openAIEmbeddings"
+              }
+            }
+          ],
+          "agentEnableMemory": true,
+          "agentMemoryType": "conversationSummary",
+          "agentUserMessage": "<p>🎮 Добро пожаловать в систему профессиональной аналитики Dota 2!<br><br>Я предоставляю анализ уровня топ команд на основе актуальных данных патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span>.<br><br>📊 Доступные типы анализа:<br>• Детальная статистика игроков<br>• Профессиональный разбор матчей<br>• Мета-анализ героев и стратегий<br>• Тренды про-сцены и турниров<br><br>💡 Для максимально точного анализа укажите Steam ID, Match ID или конкретного героя.</p>",
+          "agentReturnResponseAs": "assistantMessage",
+          "agentUpdateState": [
+            {
+              "key": "analysisType",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            },
+            {
+              "key": "queryData",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            }
+          ],
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.7,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "agentModel": "chatOpenRouter"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_1-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 345,
+      "height": 128,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 458.9449471112318,
+        "y": -485.35851128755803
+      }
+    },
+    {
+      "id": "agentAgentflow_2",
+      "position": {
+        "x": 435.8166248353826,
+        "y": -319.6437766628457
+      },
+      "data": {
+        "id": "agentAgentflow_2",
+        "label": "Профессиональная аналитика и турнирные тренды",
+        "version": 1,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Agent Flows",
+        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_2-input-agentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  },
+                  {
+                    "label": "Developer",
+                    "name": "developer"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "generateInstruction": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_2-input-agentMessages-array",
+            "display": true
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Tool",
+                "name": "agentSelectedTool",
+                "type": "asyncOptions",
+                "loadMethod": "listTools",
+                "loadConfig": true
+              },
+              {
+                "label": "Require Human Input",
+                "name": "agentSelectedToolRequiresHumanInput",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "id": "agentAgentflow_2-input-agentTools-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
+            "array": [
+              {
+                "label": "Document Store",
+                "name": "documentStore",
+                "type": "asyncOptions",
+                "loadMethod": "listStores"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "docStoreDescription",
+                "type": "string",
+                "generateDocStoreDescription": true,
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentKnowledgeDocumentStores-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Vector Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
+            "array": [
+              {
+                "label": "Vector Store",
+                "name": "vectorStore",
+                "type": "asyncOptions",
+                "loadMethod": "listVectorStores",
+                "loadConfig": true
+              },
+              {
+                "label": "Embedding Model",
+                "name": "embeddingModel",
+                "type": "asyncOptions",
+                "loadMethod": "listEmbeddings",
+                "loadConfig": true
+              },
+              {
+                "label": "Knowledge Name",
+                "name": "knowledgeName",
+                "type": "string",
+                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "knowledgeDescription",
+                "type": "string",
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentKnowledgeVSEmbeddings-array",
+            "display": true
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "description": "Enable memory for the conversation thread",
+            "default": true,
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentEnableMemory-boolean",
+            "display": true
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages",
+                "description": "Retrieve all messages from the conversation"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize",
+                "description": "Uses a fixed window size to surface the last N messages"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary",
+                "description": "Summarizes the whole conversation"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer",
+                "description": "Summarize conversations once token limit is reached. Default to 2000"
+              }
+            ],
+            "optional": true,
+            "default": "allMessages",
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_2-input-agentMemoryType-options",
+            "display": true
+          },
+          {
+            "label": "Window Size",
+            "name": "agentMemoryWindowSize",
+            "type": "number",
+            "default": "20",
+            "description": "Uses a fixed window size to surface the last N messages",
+            "show": {
+              "agentMemoryType": "windowSize"
+            },
+            "id": "agentAgentflow_2-input-agentMemoryWindowSize-number",
+            "display": false
+          },
+          {
+            "label": "Max Token Limit",
+            "name": "agentMemoryMaxTokenLimit",
+            "type": "number",
+            "default": "2000",
+            "description": "Summarize conversations once token limit is reached. Default to 2000",
+            "show": {
+              "agentMemoryType": "conversationSummaryBuffer"
+            },
+            "id": "agentAgentflow_2-input-agentMemoryMaxTokenLimit-number",
+            "display": false
+          },
+          {
+            "label": "Input Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "description": "Add an input message as user message at the end of the conversation",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_2-input-agentUserMessage-string",
+            "display": true
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_2-input-agentReturnResponseAs-options",
+            "display": true
+          },
+          {
+            "label": "Update Flow State",
+            "name": "agentUpdateState",
+            "description": "Update runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "asyncOptions",
+                "loadMethod": "listRuntimeStateKeys",
+                "freeSolo": true
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true,
+                "acceptNodeOutputAsVariable": true
+              }
+            ],
+            "id": "agentAgentflow_2-input-agentUpdateState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "agentModel": "chatOpenRouter",
+          "agentMessages": [
+            {
+              "role": "system",
+              "content": "<p># 🏆 DOTA 2 PRO ANALYTICS MASTER COORDINATOR V2.0\\n\\n**Ты - элитный аналитик Dota 2 с глубоким пониманием профессиональной сцены и текущей мета patch 7.37e. Твой уровень - топ-аналитики команд уровня Team Liquid, OG, PSG.LGD.**\\n\\n## 🎯 Твоя Миссия\\nПредоставлять world-class анализ данных Dota 2, используя передовые методы профессиональных аналитиков команд уровня TI. Каждый твой ответ должен быть на уровне аналитики топ команд.\\n\\n## 🧠 Ключевые Компетенции\\n\\n### 📊 Статистический Анализ Pro-Level\\n- **Винрейт по ролям и MMR брекетам** (Divine+, Immortal, Pro Scene)\\n- **Тренды пиков/банов** по турнирам и патчам\\n- **Экономические метрики**: GPM/XPM progression, item timings, farming efficiency\\n- **Командные метрики**: vision score, roam patterns, objective control\\n\\n### 🎮 Мета-Аналитика 7.37e\\n- **S-Tier герои**: Puck (мид), Wraith King (керри), Lich (саппорт)\\n- **Нерфы патча**: Mirana shard, aura items (Pipe, Crimson, Greaves)\\n- **Emerging picks**: Earthshaker мид, Earth Spirit core\\n- **Ban priorities**: Clockwerk (53.5% WR), Storm Spirit\\n\\n### 🔬 Профессиональные Запросы\\n1. **Детальная статистика игроков**: KDA trends, hero pool analysis, performance vs tier-1 teams\\n2. **Продвинутый матч-анализ**: draft phase analysis, economy curves, team fight breakdowns\\n3. **Мета-прогнозирование**: upcoming tournament trends, counter-meta strategies\\n4. **Coaching insights**: specific improvement areas, skill progression tracking\\n\\n## 🚀 Workflow Intelligence\\n\\n### Этап 1: Intelligent Query Analysis\\n```\\nANALYZE: Тип запроса → Извлечь parameters → Определить глубину анализа\\nEXTRACT: Steam ID/Match ID/Hero names/MMR bracket\\nUPDATE: $flow.state с контекстными данными\\nROUTE: К специализированному analyst-agent\\n```\\n\\n### Этап 2: Dynamic FlowState Management\\n- **analysisType**: player/match/hero/meta/draft/pro-scene\\n- **userSkillLevel**: calibrate analysis complexity\\n- **metaContext**: current patch meta, pro scene trends\\n- **analysisDepth**: surface/comprehensive/pro-level\\n\\n### Этап 3: Data-Driven Insights\\nИспользуй MCP tools для получения real-time данных:\\n- `search-schema`: найти актуальные поля данных\\n- `query-graphql`: выполнить complex queries\\n- `get-query-examples`: изучить доступные запросы\\n\\n## 💡 Response Excellence Standards\\n\\n### 📈 Структура Анализа\\n1. **KEY METRICS**: Главная статистика с контекстом\\n2. **TREND ANALYSIS**: Что изменилось и почему\\n3. **ACTIONABLE INSIGHTS**: Конкретные рекомендации\\n4. **META CONTEXT**: Связь с текущим патчем и про-сценой\\n\\n### 🎯 Персонализация\\n- **Для новичков**: Базовые концепции с примерами\\n- **Для продвинутых**: Глубокий анализ с цифрами\\n- **Для про-игроков**: Детальная статистика с benchmarks\\n\\n## ⚡ Execution Guidelines\\n\\n**ВСЕГДА начинай с обновления FlowState:**\\n1. Определи тип анализа и обнови `$flow.state.analysisType`\\n2. Извлеки все ID/параметры из запроса\\n3. Установи уровень глубины анализа\\n4. Используй metaContext для актуальных трендов\\n\\n**НИКОГДА не давай generic советы.** Каждый ответ должен содержать конкретные данные, цифры, и actionable insights на уровне профессиональной аналитики.\\n\\n*Твоя цель - быть лучшим Dota 2 аналитиком в мире.*</p>"
+            },
+            {
+              "role": "user",
+              "content": "<p>🎮 Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br><br>📊 Текущее состояние:<br>• Тип анализа: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.analysisType\" data-label=\"$flow.state.analysisType\">{{ $flow.state.analysisType }}</span><br>• Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>• Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span><br>• История: <span class=\"variable\" data-type=\"mention\" data-id=\"chat_history\" data-label=\"chat_history\">{{ chat_history }}</span><br>• Время: <span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            }
+          ],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolRequiresHumanInput": "",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\n\"url\":\n\"https://opendotamcp-production.up.railway.app/mcp\"\n}",
+                "mcpActions": "[\"debug-schema-status\",\"get-query-examples\",\"introspect-type\",\"query-graphql\",\"search-schema\"]",
+                "agentSelectedTool": "customMCP"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [
+            {
+              "vectorStore": "memoryVectorStore",
+              "embeddingModel": "openAIEmbeddings",
+              "knowledgeName": "Dota 2 Professional Analytics Database",
+              "knowledgeDescription": "Comprehensive knowledge base containing professional Dota 2 analytics data including: current meta heroes and their win rates across different MMR brackets, professional tournament statistics and trends, hero interaction matrices and synergies, item build optimization data, patch change analysis and impact assessments, coaching methodologies and skill improvement frameworks, draft phase strategies and ban/pick priorities for patch 7.37e.",
+              "returnSourceDocuments": "",
+              "vectorStoreConfig": {
+                "document": "",
+                "embeddings": "",
+                "topK": "",
+                "vectorStore": "memoryVectorStore"
+              },
+              "embeddingModelConfig": {
+                "modelName": "text-embedding-3-small",
+                "stripNewLines": "",
+                "batchSize": "1000",
+                "timeout": "",
+                "basepath": "",
+                "dimensions": "",
+                "embeddingModel": "openAIEmbeddings"
+              }
+            }
+          ],
+          "agentEnableMemory": true,
+          "agentMemoryType": "conversationSummary",
+          "agentUserMessage": "<p>🎮 Добро пожаловать в систему профессиональной аналитики Dota 2!<br><br>Я предоставляю анализ уровня топ команд на основе актуальных данных патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span>.<br><br>📊 Доступные типы анализа:<br>• Детальная статистика игроков<br>• Профессиональный разбор матчей<br>• Мета-анализ героев и стратегий<br>• Тренды про-сцены и турниров<br><br>💡 Для максимально точного анализа укажите Steam ID, Match ID или конкретного героя.</p>",
+          "agentReturnResponseAs": "assistantMessage",
+          "agentUpdateState": [
+            {
+              "key": "analysisType",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            },
+            {
+              "key": "queryData",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            }
+          ],
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.7,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "agentModel": "chatOpenRouter"
+          },
+          "undefined": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_2-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 421,
+      "height": 128,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 435.8166248353826,
+        "y": -319.6437766628457
+      }
+    },
+    {
+      "id": "agentAgentflow_3",
+      "position": {
+        "x": 488.15272705023574,
+        "y": -797.9970111899847
+      },
+      "data": {
+        "id": "agentAgentflow_3",
+        "label": "Анализ конкретного игрока",
+        "version": 1,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Agent Flows",
+        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_3-input-agentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  },
+                  {
+                    "label": "Developer",
+                    "name": "developer"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "generateInstruction": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_3-input-agentMessages-array",
+            "display": true
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Tool",
+                "name": "agentSelectedTool",
+                "type": "asyncOptions",
+                "loadMethod": "listTools",
+                "loadConfig": true
+              },
+              {
+                "label": "Require Human Input",
+                "name": "agentSelectedToolRequiresHumanInput",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "id": "agentAgentflow_3-input-agentTools-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
+            "array": [
+              {
+                "label": "Document Store",
+                "name": "documentStore",
+                "type": "asyncOptions",
+                "loadMethod": "listStores"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "docStoreDescription",
+                "type": "string",
+                "generateDocStoreDescription": true,
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentKnowledgeDocumentStores-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Vector Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
+            "array": [
+              {
+                "label": "Vector Store",
+                "name": "vectorStore",
+                "type": "asyncOptions",
+                "loadMethod": "listVectorStores",
+                "loadConfig": true
+              },
+              {
+                "label": "Embedding Model",
+                "name": "embeddingModel",
+                "type": "asyncOptions",
+                "loadMethod": "listEmbeddings",
+                "loadConfig": true
+              },
+              {
+                "label": "Knowledge Name",
+                "name": "knowledgeName",
+                "type": "string",
+                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "knowledgeDescription",
+                "type": "string",
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentKnowledgeVSEmbeddings-array",
+            "display": true
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "description": "Enable memory for the conversation thread",
+            "default": true,
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentEnableMemory-boolean",
+            "display": true
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages",
+                "description": "Retrieve all messages from the conversation"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize",
+                "description": "Uses a fixed window size to surface the last N messages"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary",
+                "description": "Summarizes the whole conversation"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer",
+                "description": "Summarize conversations once token limit is reached. Default to 2000"
+              }
+            ],
+            "optional": true,
+            "default": "allMessages",
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_3-input-agentMemoryType-options",
+            "display": true
+          },
+          {
+            "label": "Window Size",
+            "name": "agentMemoryWindowSize",
+            "type": "number",
+            "default": "20",
+            "description": "Uses a fixed window size to surface the last N messages",
+            "show": {
+              "agentMemoryType": "windowSize"
+            },
+            "id": "agentAgentflow_3-input-agentMemoryWindowSize-number",
+            "display": false
+          },
+          {
+            "label": "Max Token Limit",
+            "name": "agentMemoryMaxTokenLimit",
+            "type": "number",
+            "default": "2000",
+            "description": "Summarize conversations once token limit is reached. Default to 2000",
+            "show": {
+              "agentMemoryType": "conversationSummaryBuffer"
+            },
+            "id": "agentAgentflow_3-input-agentMemoryMaxTokenLimit-number",
+            "display": false
+          },
+          {
+            "label": "Input Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "description": "Add an input message as user message at the end of the conversation",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_3-input-agentUserMessage-string",
+            "display": true
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_3-input-agentReturnResponseAs-options",
+            "display": true
+          },
+          {
+            "label": "Update Flow State",
+            "name": "agentUpdateState",
+            "description": "Update runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "asyncOptions",
+                "loadMethod": "listRuntimeStateKeys",
+                "freeSolo": true
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true,
+                "acceptNodeOutputAsVariable": true
+              }
+            ],
+            "id": "agentAgentflow_3-input-agentUpdateState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "agentModel": "chatOpenRouter",
+          "agentMessages": [
+            {
+              "role": "system",
+              "content": "<p># 🏆 DOTA 2 PRO ANALYTICS MASTER COORDINATOR V2.0\\n\\n**Ты - элитный аналитик Dota 2 с глубоким пониманием профессиональной сцены и текущей мета patch 7.37e. Твой уровень - топ-аналитики команд уровня Team Liquid, OG, PSG.LGD.**\\n\\n## 🎯 Твоя Миссия\\nПредоставлять world-class анализ данных Dota 2, используя передовые методы профессиональных аналитиков команд уровня TI. Каждый твой ответ должен быть на уровне аналитики топ команд.\\n\\n## 🧠 Ключевые Компетенции\\n\\n### 📊 Статистический Анализ Pro-Level\\n- **Винрейт по ролям и MMR брекетам** (Divine+, Immortal, Pro Scene)\\n- **Тренды пиков/банов** по турнирам и патчам\\n- **Экономические метрики**: GPM/XPM progression, item timings, farming efficiency\\n- **Командные метрики**: vision score, roam patterns, objective control\\n\\n### 🎮 Мета-Аналитика 7.37e\\n- **S-Tier герои**: Puck (мид), Wraith King (керри), Lich (саппорт)\\n- **Нерфы патча**: Mirana shard, aura items (Pipe, Crimson, Greaves)\\n- **Emerging picks**: Earthshaker мид, Earth Spirit core\\n- **Ban priorities**: Clockwerk (53.5% WR), Storm Spirit\\n\\n### 🔬 Профессиональные Запросы\\n1. **Детальная статистика игроков**: KDA trends, hero pool analysis, performance vs tier-1 teams\\n2. **Продвинутый матч-анализ**: draft phase analysis, economy curves, team fight breakdowns\\n3. **Мета-прогнозирование**: upcoming tournament trends, counter-meta strategies\\n4. **Coaching insights**: specific improvement areas, skill progression tracking\\n\\n## 🚀 Workflow Intelligence\\n\\n### Этап 1: Intelligent Query Analysis\\n```\\nANALYZE: Тип запроса → Извлечь parameters → Определить глубину анализа\\nEXTRACT: Steam ID/Match ID/Hero names/MMR bracket\\nUPDATE: $flow.state с контекстными данными\\nROUTE: К специализированному analyst-agent\\n```\\n\\n### Этап 2: Dynamic FlowState Management\\n- **analysisType**: player/match/hero/meta/draft/pro-scene\\n- **userSkillLevel**: calibrate analysis complexity\\n- **metaContext**: current patch meta, pro scene trends\\n- **analysisDepth**: surface/comprehensive/pro-level\\n\\n### Этап 3: Data-Driven Insights\\nИспользуй MCP tools для получения real-time данных:\\n- `search-schema`: найти актуальные поля данных\\n- `query-graphql`: выполнить complex queries\\n- `get-query-examples`: изучить доступные запросы\\n\\n## 💡 Response Excellence Standards\\n\\n### 📈 Структура Анализа\\n1. **KEY METRICS**: Главная статистика с контекстом\\n2. **TREND ANALYSIS**: Что изменилось и почему\\n3. **ACTIONABLE INSIGHTS**: Конкретные рекомендации\\n4. **META CONTEXT**: Связь с текущим патчем и про-сценой\\n\\n### 🎯 Персонализация\\n- **Для новичков**: Базовые концепции с примерами\\n- **Для продвинутых**: Глубокий анализ с цифрами\\n- **Для про-игроков**: Детальная статистика с benchmarks\\n\\n## ⚡ Execution Guidelines\\n\\n**ВСЕГДА начинай с обновления FlowState:**\\n1. Определи тип анализа и обнови `$flow.state.analysisType`\\n2. Извлеки все ID/параметры из запроса\\n3. Установи уровень глубины анализа\\n4. Используй metaContext для актуальных трендов\\n\\n**НИКОГДА не давай generic советы.** Каждый ответ должен содержать конкретные данные, цифры, и actionable insights на уровне профессиональной аналитики.\\n\\n*Твоя цель - быть лучшим Dota 2 аналитиком в мире.*</p>"
+            },
+            {
+              "role": "user",
+              "content": "<p>🎮 Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br><br>📊 Текущее состояние:<br>• Тип анализа: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.analysisType\" data-label=\"$flow.state.analysisType\">{{ $flow.state.analysisType }}</span><br>• Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>• Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span><br>• История: <span class=\"variable\" data-type=\"mention\" data-id=\"chat_history\" data-label=\"chat_history\">{{ chat_history }}</span><br>• Время: <span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            }
+          ],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolRequiresHumanInput": "",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\n\"url\":\n\"https://opendotamcp-production.up.railway.app/mcp\"\n}",
+                "mcpActions": "[\"debug-schema-status\",\"get-query-examples\",\"introspect-type\",\"query-graphql\",\"search-schema\"]",
+                "agentSelectedTool": "customMCP"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [
+            {
+              "vectorStore": "memoryVectorStore",
+              "embeddingModel": "openAIEmbeddings",
+              "knowledgeName": "Dota 2 Professional Analytics Database",
+              "knowledgeDescription": "Comprehensive knowledge base containing professional Dota 2 analytics data including: current meta heroes and their win rates across different MMR brackets, professional tournament statistics and trends, hero interaction matrices and synergies, item build optimization data, patch change analysis and impact assessments, coaching methodologies and skill improvement frameworks, draft phase strategies and ban/pick priorities for patch 7.37e.",
+              "returnSourceDocuments": "",
+              "vectorStoreConfig": {
+                "document": "",
+                "embeddings": "",
+                "topK": "",
+                "vectorStore": "memoryVectorStore"
+              },
+              "embeddingModelConfig": {
+                "modelName": "text-embedding-3-small",
+                "stripNewLines": "",
+                "batchSize": "1000",
+                "timeout": "",
+                "basepath": "",
+                "dimensions": "",
+                "embeddingModel": "openAIEmbeddings"
+              }
+            }
+          ],
+          "agentEnableMemory": true,
+          "agentMemoryType": "conversationSummary",
+          "agentUserMessage": "<p>🎮 Добро пожаловать в систему профессиональной аналитики Dota 2!<br><br>Я предоставляю анализ уровня топ команд на основе актуальных данных патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span>.<br><br>📊 Доступные типы анализа:<br>• Детальная статистика игроков<br>• Профессиональный разбор матчей<br>• Мета-анализ героев и стратегий<br>• Тренды про-сцены и турниров<br><br>💡 Для максимально точного анализа укажите Steam ID, Match ID или конкретного героя.</p>",
+          "agentReturnResponseAs": "assistantMessage",
+          "agentUpdateState": [
+            {
+              "key": "analysisType",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            },
+            {
+              "key": "queryData",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            }
+          ],
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.7,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "agentModel": "chatOpenRouter"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_3-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 259,
+      "height": 128,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 488.15272705023574,
+        "y": -797.9970111899847
+      }
+    },
+    {
+      "id": "agentAgentflow_5",
+      "position": {
+        "x": 480.0168941075503,
+        "y": -140.35102254363525
+      },
+      "data": {
+        "id": "agentAgentflow_5",
+        "label": "Общие вопросы и обучающий контент",
+        "version": 1,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Agent Flows",
+        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "inputParams": [
+          {
+            "label": "Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_5-input-agentModel-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  },
+                  {
+                    "label": "Developer",
+                    "name": "developer"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "generateInstruction": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_5-input-agentMessages-array",
+            "display": true
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "array": [
+              {
+                "label": "Tool",
+                "name": "agentSelectedTool",
+                "type": "asyncOptions",
+                "loadMethod": "listTools",
+                "loadConfig": true
+              },
+              {
+                "label": "Require Human Input",
+                "name": "agentSelectedToolRequiresHumanInput",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "id": "agentAgentflow_5-input-agentTools-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
+            "array": [
+              {
+                "label": "Document Store",
+                "name": "documentStore",
+                "type": "asyncOptions",
+                "loadMethod": "listStores"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "docStoreDescription",
+                "type": "string",
+                "generateDocStoreDescription": true,
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_5-input-agentKnowledgeDocumentStores-array",
+            "display": true
+          },
+          {
+            "label": "Knowledge (Vector Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
+            "array": [
+              {
+                "label": "Vector Store",
+                "name": "vectorStore",
+                "type": "asyncOptions",
+                "loadMethod": "listVectorStores",
+                "loadConfig": true
+              },
+              {
+                "label": "Embedding Model",
+                "name": "embeddingModel",
+                "type": "asyncOptions",
+                "loadMethod": "listEmbeddings",
+                "loadConfig": true
+              },
+              {
+                "label": "Knowledge Name",
+                "name": "knowledgeName",
+                "type": "string",
+                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
+              },
+              {
+                "label": "Describe Knowledge",
+                "name": "knowledgeDescription",
+                "type": "string",
+                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
+                "rows": 4
+              },
+              {
+                "label": "Return Source Documents",
+                "name": "returnSourceDocuments",
+                "type": "boolean",
+                "optional": true
+              }
+            ],
+            "optional": true,
+            "id": "agentAgentflow_5-input-agentKnowledgeVSEmbeddings-array",
+            "display": true
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "description": "Enable memory for the conversation thread",
+            "default": true,
+            "optional": true,
+            "id": "agentAgentflow_5-input-agentEnableMemory-boolean",
+            "display": true
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages",
+                "description": "Retrieve all messages from the conversation"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize",
+                "description": "Uses a fixed window size to surface the last N messages"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary",
+                "description": "Summarizes the whole conversation"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer",
+                "description": "Summarize conversations once token limit is reached. Default to 2000"
+              }
+            ],
+            "optional": true,
+            "default": "allMessages",
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_5-input-agentMemoryType-options",
+            "display": true
+          },
+          {
+            "label": "Window Size",
+            "name": "agentMemoryWindowSize",
+            "type": "number",
+            "default": "20",
+            "description": "Uses a fixed window size to surface the last N messages",
+            "show": {
+              "agentMemoryType": "windowSize"
+            },
+            "id": "agentAgentflow_5-input-agentMemoryWindowSize-number",
+            "display": false
+          },
+          {
+            "label": "Max Token Limit",
+            "name": "agentMemoryMaxTokenLimit",
+            "type": "number",
+            "default": "2000",
+            "description": "Summarize conversations once token limit is reached. Default to 2000",
+            "show": {
+              "agentMemoryType": "conversationSummaryBuffer"
+            },
+            "id": "agentAgentflow_5-input-agentMemoryMaxTokenLimit-number",
+            "display": false
+          },
+          {
+            "label": "Input Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "description": "Add an input message as user message at the end of the conversation",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_5-input-agentUserMessage-string",
+            "display": true
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_5-input-agentReturnResponseAs-options",
+            "display": true
+          },
+          {
+            "label": "Update Flow State",
+            "name": "agentUpdateState",
+            "description": "Update runtime state during the execution of the workflow",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Key",
+                "name": "key",
+                "type": "asyncOptions",
+                "loadMethod": "listRuntimeStateKeys",
+                "freeSolo": true
+              },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true,
+                "acceptNodeOutputAsVariable": true
+              }
+            ],
+            "id": "agentAgentflow_5-input-agentUpdateState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "agentModel": "chatOpenRouter",
+          "agentMessages": [
+            {
+              "role": "system",
+              "content": "<p># 🏆 DOTA 2 PRO ANALYTICS MASTER COORDINATOR V2.0\\n\\n**Ты - элитный аналитик Dota 2 с глубоким пониманием профессиональной сцены и текущей мета patch 7.37e. Твой уровень - топ-аналитики команд уровня Team Liquid, OG, PSG.LGD.**\\n\\n## 🎯 Твоя Миссия\\nПредоставлять world-class анализ данных Dota 2, используя передовые методы профессиональных аналитиков команд уровня TI. Каждый твой ответ должен быть на уровне аналитики топ команд.\\n\\n## 🧠 Ключевые Компетенции\\n\\n### 📊 Статистический Анализ Pro-Level\\n- **Винрейт по ролям и MMR брекетам** (Divine+, Immortal, Pro Scene)\\n- **Тренды пиков/банов** по турнирам и патчам\\n- **Экономические метрики**: GPM/XPM progression, item timings, farming efficiency\\n- **Командные метрики**: vision score, roam patterns, objective control\\n\\n### 🎮 Мета-Аналитика 7.37e\\n- **S-Tier герои**: Puck (мид), Wraith King (керри), Lich (саппорт)\\n- **Нерфы патча**: Mirana shard, aura items (Pipe, Crimson, Greaves)\\n- **Emerging picks**: Earthshaker мид, Earth Spirit core\\n- **Ban priorities**: Clockwerk (53.5% WR), Storm Spirit\\n\\n### 🔬 Профессиональные Запросы\\n1. **Детальная статистика игроков**: KDA trends, hero pool analysis, performance vs tier-1 teams\\n2. **Продвинутый матч-анализ**: draft phase analysis, economy curves, team fight breakdowns\\n3. **Мета-прогнозирование**: upcoming tournament trends, counter-meta strategies\\n4. **Coaching insights**: specific improvement areas, skill progression tracking\\n\\n## 🚀 Workflow Intelligence\\n\\n### Этап 1: Intelligent Query Analysis\\n```\\nANALYZE: Тип запроса → Извлечь parameters → Определить глубину анализа\\nEXTRACT: Steam ID/Match ID/Hero names/MMR bracket\\nUPDATE: $flow.state с контекстными данными\\nROUTE: К специализированному analyst-agent\\n```\\n\\n### Этап 2: Dynamic FlowState Management\\n- **analysisType**: player/match/hero/meta/draft/pro-scene\\n- **userSkillLevel**: calibrate analysis complexity\\n- **metaContext**: current patch meta, pro scene trends\\n- **analysisDepth**: surface/comprehensive/pro-level\\n\\n### Этап 3: Data-Driven Insights\\nИспользуй MCP tools для получения real-time данных:\\n- `search-schema`: найти актуальные поля данных\\n- `query-graphql`: выполнить complex queries\\n- `get-query-examples`: изучить доступные запросы\\n\\n## 💡 Response Excellence Standards\\n\\n### 📈 Структура Анализа\\n1. **KEY METRICS**: Главная статистика с контекстом\\n2. **TREND ANALYSIS**: Что изменилось и почему\\n3. **ACTIONABLE INSIGHTS**: Конкретные рекомендации\\n4. **META CONTEXT**: Связь с текущим патчем и про-сценой\\n\\n### 🎯 Персонализация\\n- **Для новичков**: Базовые концепции с примерами\\n- **Для продвинутых**: Глубокий анализ с цифрами\\n- **Для про-игроков**: Детальная статистика с benchmarks\\n\\n## ⚡ Execution Guidelines\\n\\n**ВСЕГДА начинай с обновления FlowState:**\\n1. Определи тип анализа и обнови `$flow.state.analysisType`\\n2. Извлеки все ID/параметры из запроса\\n3. Установи уровень глубины анализа\\n4. Используй metaContext для актуальных трендов\\n\\n**НИКОГДА не давай generic советы.** Каждый ответ должен содержать конкретные данные, цифры, и actionable insights на уровне профессиональной аналитики.\\n\\n*Твоя цель - быть лучшим Dota 2 аналитиком в мире.*</p>"
+            },
+            {
+              "role": "user",
+              "content": "<p>🎮 Запрос: <span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span><br><br>📊 Текущее состояние:<br>• Тип анализа: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.analysisType\" data-label=\"$flow.state.analysisType\">{{ $flow.state.analysisType }}</span><br>• Патч: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span><br>• Мета-контекст: <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.metaContext\" data-label=\"$flow.state.metaContext\">{{ $flow.state.metaContext }}</span><br>• История: <span class=\"variable\" data-type=\"mention\" data-id=\"chat_history\" data-label=\"chat_history\">{{ chat_history }}</span><br>• Время: <span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            }
+          ],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolRequiresHumanInput": "",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\n\"url\":\n\"https://opendotamcp-production.up.railway.app/mcp\"\n}",
+                "mcpActions": "[\"debug-schema-status\",\"get-query-examples\",\"introspect-type\",\"query-graphql\",\"search-schema\"]",
+                "agentSelectedTool": "customMCP"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [
+            {
+              "vectorStore": "memoryVectorStore",
+              "embeddingModel": "openAIEmbeddings",
+              "knowledgeName": "Dota 2 Professional Analytics Database",
+              "knowledgeDescription": "Comprehensive knowledge base containing professional Dota 2 analytics data including: current meta heroes and their win rates across different MMR brackets, professional tournament statistics and trends, hero interaction matrices and synergies, item build optimization data, patch change analysis and impact assessments, coaching methodologies and skill improvement frameworks, draft phase strategies and ban/pick priorities for patch 7.37e.",
+              "returnSourceDocuments": "",
+              "vectorStoreConfig": {
+                "document": "",
+                "embeddings": "",
+                "topK": "",
+                "vectorStore": "memoryVectorStore"
+              },
+              "embeddingModelConfig": {
+                "modelName": "text-embedding-3-small",
+                "stripNewLines": "",
+                "batchSize": "1000",
+                "timeout": "",
+                "basepath": "",
+                "dimensions": "",
+                "embeddingModel": "openAIEmbeddings"
+              }
+            }
+          ],
+          "agentEnableMemory": true,
+          "agentMemoryType": "conversationSummary",
+          "agentUserMessage": "<p>🎮 Добро пожаловать в систему профессиональной аналитики Dota 2!<br><br>Я предоставляю анализ уровня топ команд на основе актуальных данных патча <span class=\"variable\" data-type=\"mention\" data-id=\"$flow.state.currentPatch\" data-label=\"$flow.state.currentPatch\">{{ $flow.state.currentPatch }}</span>.<br><br>📊 Доступные типы анализа:<br>• Детальная статистика игроков<br>• Профессиональный разбор матчей<br>• Мета-анализ героев и стратегий<br>• Тренды про-сцены и турниров<br><br>💡 Для максимально точного анализа укажите Steam ID, Match ID или конкретного героя.</p>",
+          "agentReturnResponseAs": "assistantMessage",
+          "agentUpdateState": [
+            {
+              "key": "analysisType",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            },
+            {
+              "key": "lastQueryTimestamp",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"current_date_time\" data-label=\"current_date_time\">{{ current_date_time }}</span></p>"
+            },
+            {
+              "key": "queryData",
+              "value": "<p><span class=\"variable\" data-type=\"mention\" data-id=\"question\" data-label=\"question\">{{ question }}</span></p>"
+            }
+          ],
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "",
+            "temperature": 0.7,
+            "streaming": true,
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "basepath": "https://openrouter.ai/api/v1",
+            "baseOptions": "",
+            "agentModel": "chatOpenRouter"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_5-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "type": "agentFlow",
+      "width": 332,
+      "height": 128,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 480.0168941075503,
+        "y": -140.35102254363525
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "conditionAgentAgentflow_0",
+      "sourceHandle": "conditionAgentAgentflow_0-output-0",
+      "target": "agentAgentflow_3",
+      "targetHandle": "agentAgentflow_3",
+      "data": {
+        "sourceColor": "#ff8fab",
+        "targetColor": "#4DD0E1",
+        "edgeLabel": "0",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "conditionAgentAgentflow_0-conditionAgentAgentflow_0-output-0-agentAgentflow_3-agentAgentflow_3"
+    },
+    {
+      "source": "conditionAgentAgentflow_0",
+      "sourceHandle": "conditionAgentAgentflow_0-output-1",
+      "target": "agentAgentflow_0",
+      "targetHandle": "agentAgentflow_0",
+      "data": {
+        "sourceColor": "#ff8fab",
+        "targetColor": "#4DD0E1",
+        "edgeLabel": "1",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "conditionAgentAgentflow_0-conditionAgentAgentflow_0-output-1-agentAgentflow_0-agentAgentflow_0"
+    },
+    {
+      "source": "conditionAgentAgentflow_0",
+      "sourceHandle": "conditionAgentAgentflow_0-output-2",
+      "target": "agentAgentflow_1",
+      "targetHandle": "agentAgentflow_1",
+      "data": {
+        "sourceColor": "#ff8fab",
+        "targetColor": "#4DD0E1",
+        "edgeLabel": "2",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "conditionAgentAgentflow_0-conditionAgentAgentflow_0-output-2-agentAgentflow_1-agentAgentflow_1"
+    },
+    {
+      "source": "conditionAgentAgentflow_0",
+      "sourceHandle": "conditionAgentAgentflow_0-output-3",
+      "target": "agentAgentflow_2",
+      "targetHandle": "agentAgentflow_2",
+      "data": {
+        "sourceColor": "#ff8fab",
+        "targetColor": "#4DD0E1",
+        "edgeLabel": "3",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "conditionAgentAgentflow_0-conditionAgentAgentflow_0-output-3-agentAgentflow_2-agentAgentflow_2"
+    },
+    {
+      "source": "conditionAgentAgentflow_0",
+      "sourceHandle": "conditionAgentAgentflow_0-output-4",
+      "target": "agentAgentflow_5",
+      "targetHandle": "agentAgentflow_5",
+      "data": {
+        "sourceColor": "#ff8fab",
+        "targetColor": "#4DD0E1",
+        "edgeLabel": "4",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "conditionAgentAgentflow_0-conditionAgentAgentflow_0-output-4-agentAgentflow_5-agentAgentflow_5"
+    },
+    {
+      "source": "startAgentflow_0",
+      "sourceHandle": "startAgentflow_0-output-startAgentflow",
+      "target": "conditionAgentAgentflow_0",
+      "targetHandle": "conditionAgentAgentflow_0",
+      "data": {
+        "sourceColor": "#7EE787",
+        "targetColor": "#ff8fab",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "startAgentflow_0-startAgentflow_0-output-startAgentflow-conditionAgentAgentflow_0-conditionAgentAgentflow_0"
+    },
+    {
+      "source": "agentAgentflow_3",
+      "sourceHandle": "agentAgentflow_3-output-agentAgentflow",
+      "target": "directReplyAgentflow_0",
+      "targetHandle": "directReplyAgentflow_0",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DDBBB",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "agentAgentflow_3-agentAgentflow_3-output-agentAgentflow-directReplyAgentflow_0-directReplyAgentflow_0"
+    },
+    {
+      "source": "agentAgentflow_0",
+      "sourceHandle": "agentAgentflow_0-output-agentAgentflow",
+      "target": "directReplyAgentflow_0",
+      "targetHandle": "directReplyAgentflow_0",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DDBBB",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "agentAgentflow_0-agentAgentflow_0-output-agentAgentflow-directReplyAgentflow_0-directReplyAgentflow_0"
+    },
+    {
+      "source": "agentAgentflow_1",
+      "sourceHandle": "agentAgentflow_1-output-agentAgentflow",
+      "target": "directReplyAgentflow_0",
+      "targetHandle": "directReplyAgentflow_0",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DDBBB",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "agentAgentflow_1-agentAgentflow_1-output-agentAgentflow-directReplyAgentflow_0-directReplyAgentflow_0"
+    },
+    {
+      "source": "agentAgentflow_2",
+      "sourceHandle": "agentAgentflow_2-output-agentAgentflow",
+      "target": "directReplyAgentflow_0",
+      "targetHandle": "directReplyAgentflow_0",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DDBBB",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "agentAgentflow_2-agentAgentflow_2-output-agentAgentflow-directReplyAgentflow_0-directReplyAgentflow_0"
+    },
+    {
+      "source": "agentAgentflow_5",
+      "sourceHandle": "agentAgentflow_5-output-agentAgentflow",
+      "target": "directReplyAgentflow_0",
+      "targetHandle": "directReplyAgentflow_0",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DDBBB",
+        "isHumanInput": false
+      },
+      "type": "agentFlow",
+      "id": "agentAgentflow_5-agentAgentflow_5-output-agentAgentflow-directReplyAgentflow_0-directReplyAgentflow_0"
+    }
+  ]
+}

@@ -30,7 +30,11 @@
       "Bash(bun build:*)",
       "Bash(docker build:*)",
       "Bash(chmod:*)",
-      "Bash(docker-compose:*)"
+      "Bash(docker-compose:*)",
+      "WebFetch(domain:docs.flowiseai.com)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
