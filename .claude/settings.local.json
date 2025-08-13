@@ -38,7 +38,18 @@
       "WebSearch",
       "WebFetch(domain:stratz.com)",
       "WebFetch(domain:bo3.gg)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(powershell:*)",
+      "Bash(copy:*)",
+      "Bash(bun run:*)",
+      "Bash(bun check:*)",
+      "Bash(bun:*)",
+      "Bash(PORT=3003 bun src/improved-dota-mcp.ts)",
+      "Bash(taskkill:*)",
+      "mcp__browserbase__browserbase_session_create",
+      "mcp__browserbase__browserbase_stagehand_navigate",
+      "mcp__browserbase__browserbase_stagehand_act",
+      "mcp__browserbase__multi_browserbase_stagehand_session_create"
     ],
     "deny": []
   }

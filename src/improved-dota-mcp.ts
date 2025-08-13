@@ -693,12 +693,15 @@ server.tool(
 						heroDamage
 						towerDamage
 						heroHealing
-						lastHits
-						denies
-						items {
-							itemId
-							timeCreated
-						}
+						numLastHits
+						numDenies
+						item0Id
+						item1Id
+						item2Id
+						item3Id
+						item4Id
+						item5Id
+						neutral0Id
 					}
 				}
 			}
@@ -733,20 +736,19 @@ server.tool(
 	},
 	async ({ patch, bracket }) => {
 		const query = `
-			query HeroStats($patch: String, $bracket: RankBracket) {
+			query HeroStats {
 				heroStats {
-					heroId
-					matchCount
-					winCount
-					winRate
-					pickRate
-					banRate
+					stats {
+						heroId
+						matchCount
+						winCount
+					}
 				}
 			}
 		`;
 
 		try {
-			const data = await executeGraphQL(query, { patch, bracket });
+			const data = await executeGraphQL(query, {});
 			return {
 				content: [{
 					type: "text",
@@ -771,37 +773,30 @@ server.tool(
 	"Get hero counters and weak matchups with win rates and sample sizes",
 	{
 		heroId: z.number().describe("Hero ID to analyze counters for"),
-		bracket: z.enum(["HERALD", "GUARDIAN", "CRUSADER", "ARCHON", "LEGEND", "ANCIENT", "DIVINE", "IMMORTAL"]).optional().describe("Rank bracket filter"),
-		patch: z.string().optional().describe("Patch version (defaults to current)")
+		take: z.number().optional().default(15).describe("Number of matchups to return")
 	},
-	async ({ heroId, bracket, patch }) => {
+	async ({ heroId, take = 15 }) => {
 		const query = `
-			query HeroCounters($heroId: Short!, $bracket: RankBracket, $patch: String) {
-				heroStats(bracket: [$bracket], gameModeIds: [RANKED]) {
-					heroVsHeroMatchup(heroId: $heroId, take: 20) {
-						vs {
+			query HeroCounters($heroId: Short!, $take: Int) {
+				heroStats {
+					heroVsHeroMatchup(heroId: $heroId, take: $take) {
+						disadvantage {
 							heroId2
-							hero {
-								id
-								displayName
-								aliases
-							}
 							matchCount
 							winCount
-							winRate
-							synergy
+							duration
+							heroDamage
+							towerDamage
+							goldEarned
 						}
-						with {
+						advantage {
 							heroId2
-							hero {
-								id
-								displayName
-								aliases
-							}
 							matchCount
 							winCount
-							winRate
-							synergy
+							duration
+							heroDamage
+							towerDamage
+							goldEarned
 						}
 					}
 				}
@@ -809,32 +804,34 @@ server.tool(
 		`;
 
 		try {
-			const data = await executeGraphQL(query, { heroId, bracket, patch });
+			const data = await executeGraphQL(query, { heroId, take });
 			
-			// Process and rank counters
-			const counters = data.heroStats?.heroVsHeroMatchup?.vs || [];
-			const strongCounters = counters
-				.filter(m => m.matchCount >= 100) // Minimum sample size
-				.sort((a, b) => a.winRate - b.winRate) // Worst matchups first
-				.slice(0, 10);
-
-			const analysis = {
+			const processedData = {
 				heroId,
-				bracket: bracket || "ALL",
-				strongestCounters: strongCounters.map(c => ({
-					heroName: c.hero.displayName,
-					heroId: c.heroId2,
-					winRate: c.winRate,
-					matchCount: c.matchCount,
-					disadvantage: `${((1 - c.winRate) * 100).toFixed(1)}%`
-				})),
-				rawData: data
+				counters: data?.heroStats?.heroVsHeroMatchup?.disadvantage?.map(h => ({
+					heroId: h.heroId2,
+					matchCount: h.matchCount,
+					winCount: h.winCount,
+					winRate: h.matchCount > 0 ? (h.winCount / h.matchCount) : 0,
+					avgDuration: h.duration,
+					avgHeroDamage: h.heroDamage,
+					avgGold: h.goldEarned
+				})) || [],
+				strongAgainst: data?.heroStats?.heroVsHeroMatchup?.advantage?.map(h => ({
+					heroId: h.heroId2,
+					matchCount: h.matchCount,
+					winCount: h.winCount,
+					winRate: h.matchCount > 0 ? (h.winCount / h.matchCount) : 0,
+					avgDuration: h.duration,
+					avgHeroDamage: h.heroDamage,
+					avgGold: h.goldEarned
+				})) || []
 			};
 
 			return {
 				content: [{
 					type: "text",
-					text: JSON.stringify(analysis, null, 2)
+					text: JSON.stringify(processedData, null, 2)
 				}]
 			};
 		} catch (error) {
