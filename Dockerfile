@@ -11,4 +11,4 @@ COPY dist ./dist
 
 EXPOSE 3001
 
-CMD ["bun", "dist/index.js"]
+CMD ["bun", "dist/improved-dota-mcp.js"]

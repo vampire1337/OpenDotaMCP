@@ -16,7 +16,7 @@
       "Bash(mkdir:*)",
       "Bash(npm install)",
       "Bash(npm run build:*)",
-      "Bash(SCHEMA=./schema.graphql ENDPOINT=https://api.opendota.com/api/graphql node dist/index.js --help)",
+      "Bash(SCHEMA=./schema.graphql ENDPOINT=https://api.stratz.com/graphql bun dist/improved-dota-mcp.js --help)",
       "Bash(timeout:*)",
       "Bash(true)",
       "Bash(npm start)",
